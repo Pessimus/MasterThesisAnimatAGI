@@ -1,6 +1,7 @@
 from node import *
 from nodes import *
 from temporalNodes import *
+from environment import *
 
 def test_if_nodes_update_when_they_should():
 	print("----------------Testing if nodes update----------------")
@@ -94,10 +95,45 @@ def test_if_nodes_update_to_the_value_they_should():
 	i = i +1;
 	print("\t should be True,\n\t -------is %s" % (temporalSeqNodeTestNode.isActive()))
 
+def test_if_sensors_react_to_input():
+	print("----------------Testing sensors----------------")
+	testEnvironment = Environment()
+	testSensor = SensorNode(name = "d-sensor",sensor = "d", environment =  testEnvironment)
+	i = 1
+	testSensor.tick(i)
+	print("\t should be False,\n\t -------is %s" % (testSensor.isActive()))
+
+	testSensor.tick(i, 1, True)
+	print("\t should be False,\n\t -------is %s" % (testSensor.isActive()))
+
+	testEnvironment.input = {"d", "o", "g"}
+	i=i+1
+	testSensor.tick(i)
+	print("\t should be True,\n\t -------is %s" % (testSensor.isActive()))
+
+	testEnvironment.input = {"g", "o", "g"}
+	i=i+1
+	testSensor.tick(i)
+	print("\t should be False,\n\t -------is %s" % (testSensor.isActive()))
+
+	testEnvironment.temporalInput = ["d", "o", "g"]
+	i=i+1
+	testSensor.tick(i, 1, True)
+	print("\t should be True,\n\t -------is %s" % (testSensor.isActive()))
+
+	testSensor.tick(i, 2, True)
+	print("\t should be False,\n\t -------is %s" % (testSensor.isActive()))
+
+	testEnvironment.input = {"d", "o", "g"}
+	testSensor.tick(i, 3, True)
+	print("\t should be False,\n\t -------is %s" % (testSensor.isActive()))
+
+
 def testNodes():
-	print "------------------------Starting Node Tests------------------------"
+	print ("------------------------Starting Node Tests------------------------")
 	test_if_nodes_update_when_they_should()
 	test_if_nodes_update_to_the_value_they_should()
+	test_if_sensors_react_to_input()
 
 
 def init():

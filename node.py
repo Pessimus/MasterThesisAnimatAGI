@@ -22,7 +22,7 @@ def makeName(kind, nodes, sort=True):
 
 # A class reprecenting a node. Including functionallity common for all node-types.
 class Node:
-	def __init__(self, name=None, inputs=None, temporal = False):
+	def __init__(self, name=None, inputs=None, temporal = False, permanent = False):
 		self.name = name
 		self.temporal = temporal
 		self.active = False
@@ -32,6 +32,7 @@ class Node:
 		self.time = 0
 		self.activations = 0
 		self.createdAt = 0
+		self.permanent = permanent
 	#End __init__
 
 	# Method for updating the node each time-step.

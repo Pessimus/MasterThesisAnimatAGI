@@ -72,3 +72,44 @@ class SEQNode(Node):
 		else:
 			return False
 #End SEQNode
+
+#Node representing one of the Animats sensors 
+class SensorNode(Node):
+	def __init__(self, name, sensor, environment):
+		Node.__init__(self, name, temporal=True, permanent=True)
+		self.sensor = sensor
+		self.environment = environment
+	#End __init__()
+
+
+	def tick(self, time, temporalTime=0, temporal=False):
+		if Node.tick(self,time,temporalTime, temporal):
+			if self.readSensor(temporalTime,temporal):
+				self.activate(time)
+			else:
+				self.deactivate(time)
+			return True
+		else:
+			return False
+	#End tick()
+
+	def readSensor(self, temporalTime=0, temporal=False):
+		if self.sensor == "true":
+			return 1
+		if temporal:
+			currentInput = self.environment.temporalInput
+			if(len(currentInput) > 0 and len(currentInput) >= temporalTime):
+				return currentInput[temporalTime-1] == self.sensor
+			else:
+				return False
+		else:
+			currentInput = self.environment.input
+			for element in currentInput:
+				if element == self.sensor:
+					return True
+			return False
+	#End readSensor()
+
+
+#End SensorNode
+
