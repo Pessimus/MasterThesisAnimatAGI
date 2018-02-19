@@ -2,6 +2,7 @@ from node import *
 from nodes import *
 from temporalNodes import *
 from environment import *
+import random
 
 def test_if_nodes_update_when_they_should():
 	print("----------------Testing if nodes update----------------")
@@ -128,6 +129,56 @@ def test_if_sensors_react_to_input():
 	testSensor.tick(i, 3, True)
 	print("\t should be False,\n\t -------is %s" % (testSensor.isActive()))
 
+def test_if_dog_can_be_found():
+	testEnvironment = Environment()
+	
+	sensor_node_d = SensorNode(name = "d-sensor",sensor = "d", environment =  testEnvironment)
+	sensor_node_o = SensorNode(name = "o-sensor",sensor = "o", environment =  testEnvironment)
+	sensor_node_g = SensorNode(name = "g-sensor",sensor = "g", environment =  testEnvironment)
+
+	sensor_node_c = SensorNode(name = "c-sensor",sensor = "c", environment =  testEnvironment)
+	sensor_node_a = SensorNode(name = "a-sensor",sensor = "a", environment =  testEnvironment)
+	sensor_node_t = SensorNode(name = "t-sensor",sensor = "t", environment =  testEnvironment)
+
+	t_seq_do = TemporalSEQNode(inputs = [sensor_node_d, sensor_node_o])
+	t_seq_dog = TemporalSEQNode(inputs = [t_seq_do, sensor_node_g])
+	t_seq_ca = TemporalSEQNode(inputs = [sensor_node_c, sensor_node_a])
+	t_seq_cat = TemporalSEQNode(inputs = [t_seq_ca,sensor_node_t])
+	
+	all_nodes = {sensor_node_d,sensor_node_o,sensor_node_g,t_seq_do,t_seq_dog,sensor_node_c,sensor_node_a,sensor_node_t,t_seq_ca,t_seq_cat}
+
+	if random.randint(0, 1) == 1:
+		testEnvironment.temporalInput = ["d","o","g"]
+	else:
+		testEnvironment.temporalInput = ["c","a","t"]
+
+	for n in all_nodes:
+		n.tick(1,1,True)
+
+	#print(sensor_node_d.isActive())
+	#print("--1--")
+
+	for n in all_nodes:
+		n.tick(1,2,True)
+
+	#print(sensor_node_o.isActive())
+	#print(t_seq_do.isActive())
+	#print("--2--")
+
+	for n in all_nodes:
+		n.tick(1,3,True)
+
+	#print(sensor_node_g.isActive())
+	#print(t_seq_ca.isActive())
+	#print(t_seq_cat.isActive())
+	#print("--3--")
+
+	if(t_seq_dog.isActive()):
+		print("THE DOG IS ACTIVE!!!!!!!!!!!!! OMG OMG")
+
+	if(t_seq_cat.isActive()):
+		print("THE CAT IS ACTIVE!!!!!!!!!!!!! OMG OMG")
+
 
 def testNodes():
 	print ("------------------------Starting Node Tests------------------------")
@@ -137,7 +188,8 @@ def testNodes():
 
 
 def init():
-	testNodes()
+	#testNodes()
+	test_if_dog_can_be_found()
 
 if __name__ == "__main__":
 	init()

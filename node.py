@@ -78,10 +78,13 @@ class Node:
 		return self.previousActive
  	#End wasActive()
 
- 	# Returns if the node was active the last temporal step within the current time-step.
+	# Returns if the node was active the last temporal step within the current time-step.
 	def wasTemporalActive(self):
 		return self.previousTemporalActive
- 	#End wasActive()
+	#End wasActive()
+
+	def getName(self):
+		return self.name
 
 #End Class
 
