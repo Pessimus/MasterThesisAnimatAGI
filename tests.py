@@ -4,6 +4,7 @@ from temporalNodes import *
 from environment import *
 from actionNodes import *
 from temporalActionNodes import *
+from textHandler import *
 import random
 
 
@@ -310,6 +311,33 @@ def test_if_animat_can_hear_it_self():
 	else:
 		print("Where is the dog? :'(")
 
+def test_if_filereader_works():
+	print ("------------------test_if_filereader_works------------------")
+	file = fileReader("inputText.txt")
+	testSentence = fileReader.getNextSentence(file)
+	print("---Reading a sentence from a file:---")
+	print(testSentence)
+	testSentence = removeSignFromString(testSentence)
+	print("---Removing all special signs from the sentence:---")
+	print(testSentence)
+
+	testList = convertSentenceToList(testSentence)
+	print("---Converting the sentence to a list of words:---")
+	print(testList)
+
+	testSentence2 = convertListToSentence(testList)
+	print("---Converting the list back into a sentence:---")
+	print(testSentence2)
+
+	wordList = convertWordToList("doggo")
+	print("---Converting the word 'doggo' into a list of chars:---")
+	print(wordList)
+
+	word = convertListToWord(wordList)
+	print("---And converting it back into a word:---")
+	print(word)
+
+	file.closeFile()
 
 
 def run_tests():
@@ -320,3 +348,4 @@ def run_tests():
 	test_if_dog_can_be_found()
 	test_if_motors_produce_things()
 	test_if_animat_can_hear_it_self()
+	test_if_filereader_works()
