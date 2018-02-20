@@ -245,6 +245,57 @@ def test_if_motors_produce_things():
 	print(testEnvironment.output)
 	print(testEnvironment.temporalOutput)
 	
+def test_if_animat_can_hear_it_self():
+	testEnvironment = Environment()
+
+	motor_node_d = MotorNode(name = "d-motor",motor = "d", environment =  testEnvironment)
+	motor_node_o = MotorNode(name = "o-motor",motor = "o", environment =  testEnvironment)
+	motor_node_g = MotorNode(name = "g-motor",motor = "g", environment =  testEnvironment)
+
+	sensor_node_d = SensorNode(name = "d-sensor",sensor = "d", environment =  testEnvironment)
+	sensor_node_o = SensorNode(name = "o-sensor",sensor = "o", environment =  testEnvironment)
+	sensor_node_g = SensorNode(name = "g-sensor",sensor = "g", environment =  testEnvironment)
+
+	testTemporalAction_do = TemporalASEQNode(outputs=[motor_node_d,motor_node_o])
+	testTemporalAction_dog = TemporalASEQNode(outputs=[testTemporalAction_do,motor_node_g])
+
+	t_seq_do = TemporalSEQNode(inputs = [sensor_node_d, sensor_node_o])
+	t_seq_dog = TemporalSEQNode(inputs = [t_seq_do, sensor_node_g])
+
+	all_sensor_nodes = {sensor_node_d,sensor_node_o,sensor_node_g,t_seq_do,t_seq_dog}
+
+	testTemporalAction_dog.activate(1,True)
+
+	print("Animat says 'dog', thus environment should have 'dog'.")
+	print(testEnvironment.temporalOutput)
+
+	print("---Updating Environment---")
+	testEnvironment.input = testEnvironment.output
+	testEnvironment.temporalInput = testEnvironment.temporalOutput
+	testEnvironment.input.add(testEnvironment.temporalOutput[len(testEnvironment.temporalOutput)-1])
+	testEnvironment.output = set()
+	testEnvironment.temporalOutput = [];
+	#Possibly add more input if wanted. 
+	
+	print("environment should now have [dog] and {g}")
+	print(testEnvironment.temporalInput)
+	print(testEnvironment.input)
+
+	for n in all_sensor_nodes:
+		n.tick(1,1,True)
+	for n in all_sensor_nodes:
+		n.tick(1,2,True)
+	for n in all_sensor_nodes:
+		n.tick(1,3,True)
+
+	print("Animat has processed input, should now have heard 'dog'.")
+	if(t_seq_dog.isActive()):
+		print("THE DOG IS ACTIVE!!!!!!!!!!!!! OMG OMG")
+	else:
+		print("Where is the dog? :'(")
+
+
+
 
 def testNodes():
 	print ("------------------------Starting Node Tests------------------------")
@@ -257,7 +308,7 @@ def testNodes():
 def init():
 	#testNodes()
 #	test_if_motors_produce_things()
-	test_if_dog_can_be_found()
+	test_if_animat_can_hear_it_self()
 
 if __name__ == "__main__":
 	init()
