@@ -12,7 +12,7 @@ def truth(v):
 	return (on, off, total)
 #End truth()
 
-# Method for creating a string of the name of a node.
+# Method for creating a string to use as the name of a node. Called from subclasses in "nodes" and "temporalNodes".
 def makeName(kind, nodes, sort=True):
 	if sort:
 		return "%s(%s)" % (kind, ", ".join(sorted([x.getName() for x in nodes])))
@@ -43,17 +43,15 @@ class Node:
 	# Returns if the node updates or not.
 	def tick(self, time, temporalTime = 0, temporal = False):
 		if (self.time > time or (self.time==time and (not self.temporal or (self.temporalTime >= temporalTime)))):
-			#print("Returning False\n")#TODO: remove after debug.
 			return False
 		self.time = time
 		self.temporalTime = temporalTime
 
 		for node in self.inputs:
-			node.tick(time,temporalTime,True)
+			node.tick(time,temporalTime,temporal)
 
 		self.previousTemporalActive = self.active
 
-		#print("Returning True\n")#TODO: remove after debug.
 		return True
 	#End tick()
 
@@ -83,8 +81,19 @@ class Node:
 		return self.previousTemporalActive
 	#End wasActive()
 
+	# Returns the name of this node.
 	def getName(self):
 		return self.name
+	#End getName()
+
+	# Method for debugging, returns the 'word' reprecented by this node.
+	def getWord(self):
+		if len(self.inputs) > 1:
+			return self.inputs[0].getWord() + self.inputs[1].getWord()
+		if len(self.inputs) == 1:
+			return self.inputs[0].getWord()
+		return ""
+	#End getWord
 
 #End Class
 

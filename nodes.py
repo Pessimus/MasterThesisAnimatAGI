@@ -111,6 +111,10 @@ class SensorNode(Node):
 			return False
 	#End readSensor()
 
+	# Method for debugging, returns the 'word' reprecented by this node.
+	def getWord(self):
+		return self.sensor
+	#End getWord
 
 #End SensorNode
 
