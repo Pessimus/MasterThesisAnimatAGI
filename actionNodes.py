@@ -34,9 +34,9 @@ class MotorNode(ActionNode):
 
 	def activateMotor(self, temporal=False):
 		if temporal:
-			self.environment.temporalOutput.append(self.motor)
+			self.environment.addEnvironmentalTemporalInput(self.motor)
 		else:
-			self.environment.output.add(self.motor)
+			self.environment.addEnvironmentalInput(self.motor)
 	#End readSensor()
 
 	# Method for debugging, returns the 'word' reprecented by this node.
