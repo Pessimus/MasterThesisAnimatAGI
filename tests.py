@@ -120,17 +120,17 @@ def test_if_sensors_react_to_input():
 	testSensor.tick(i, 1, True)
 	print("\t should be False,\n\t -------is %s" % (testSensor.isActive()))
 
-	testEnvironment.input = {"d", "o", "g"}
+	testEnvironment.state = {"d", "o", "g"}
 	i=i+1
 	testSensor.tick(i)
 	print("\t should be True,\n\t -------is %s" % (testSensor.isActive()))
 
-	testEnvironment.input = {"g", "o", "g"}
+	testEnvironment.state = {"g", "o", "g"}
 	i=i+1
 	testSensor.tick(i)
 	print("\t should be False,\n\t -------is %s" % (testSensor.isActive()))
 
-	testEnvironment.temporalInput = ["d", "o", "g"]
+	testEnvironment.temporalState = ["d", "o", "g"]
 	i=i+1
 	testSensor.tick(i, 1, True)
 	print("\t should be True,\n\t -------is %s" % (testSensor.isActive()))
@@ -138,7 +138,7 @@ def test_if_sensors_react_to_input():
 	testSensor.tick(i, 2, True)
 	print("\t should be False,\n\t -------is %s" % (testSensor.isActive()))
 
-	testEnvironment.input = {"d", "o", "g"}
+	testEnvironment.state = {"d", "o", "g"}
 	testSensor.tick(i, 3, True)
 	print("\t should be False,\n\t -------is %s" % (testSensor.isActive()))
 
@@ -164,9 +164,9 @@ def test_if_dog_can_be_found():
 	all_nodes = {sensor_node_d,sensor_node_o,sensor_node_g,t_seq_do,t_seq_dog,sensor_node_c,sensor_node_a,sensor_node_t,t_seq_ca,t_seq_cat}
 
 	if random.randint(0, 1) == 1:
-		testEnvironment.temporalInput = ["d","o","g"]
+		testEnvironment.temporalState = ["d","o","g"]
 	else:
-		testEnvironment.temporalInput = ["c","a","t"]
+		testEnvironment.temporalState = ["c","a","t"]
 
 	for n in all_nodes:
 		n.tick(1,1,True)
@@ -211,45 +211,45 @@ def test_if_motors_produce_things():
 	
 	motor_node_d.activate(1)
 	print("Testing the motor node 'd'. Environment (first print) should contain 'd'. And contains:")
-	print(testEnvironment.output)
-	print(testEnvironment.temporalOutput)
+	print(testEnvironment.nextState)
+	print(testEnvironment.nextTemporalState)
 
-	testEnvironment.output = set()
+	testEnvironment.nextState = set()
 	motor_node_d.activate(2)
 	motor_node_o.activate(2)
 	print("Testing the motor node 'd' & 'o'. Environment (first print) should contain 'd' & 'o'. And contains:")
-	print(testEnvironment.output)
-	print(testEnvironment.temporalOutput)
+	print(testEnvironment.nextState)
+	print(testEnvironment.nextTemporalState)
 
-	testEnvironment.output = set()
+	testEnvironment.nextState = set()
 	motor_node_d.activate(2,True)
 	motor_node_o.activate(2,True)
 	print("Testing the motor node 'd' & 'o'. Environment (second print) should contain 'd' & 'o'. And contains:")
-	print(testEnvironment.output)
-	print(testEnvironment.temporalOutput)
+	print(testEnvironment.nextState)
+	print(testEnvironment.nextTemporalState)
 
-	testEnvironment.temporalOutput = []
+	testEnvironment.nextTemporalState = []
 	motor_node_d.active = False
 	motor_node_o.active = False
 	testAction_do = ActionAndNode(outputs=[motor_node_d,motor_node_o])
 	testAction_do.activate(3)
 	print("Testing the motor node 'd&o'. Environment (first print) should contain 'd' & 'o'. And contains:")
-	print(testEnvironment.output)
-	print(testEnvironment.temporalOutput)
+	print(testEnvironment.nextState)
+	print(testEnvironment.nextTemporalState)
 
-	testEnvironment.temporalOutput = []
-	testEnvironment.output = set()
+	testEnvironment.nextTemporalState = []
+	testEnvironment.state = set()
 	motor_node_d.active = False
 	motor_node_o.active = False
 
 	testTemporalAction_do = TemporalASEQNode(outputs=[motor_node_d,motor_node_o])
 	testTemporalAction_do.activate(4, True)
 	print("Testing the motor node 'do'. Environment (second print) should contain 'd' & 'o'. And contains:")
-	print(testEnvironment.output)
-	print(testEnvironment.temporalOutput)
+	print(testEnvironment.state)
+	print(testEnvironment.nextTemporalState)
 
-	testEnvironment.temporalOutput = []
-	testEnvironment.output = set()
+	testEnvironment.nextTemporalState = []
+	testEnvironment.state = set()
 	motor_node_d.active = False
 	motor_node_o.active = False
 	testTemporalAction_do.active = False
@@ -257,8 +257,8 @@ def test_if_motors_produce_things():
 	testTemporalAction_dog = TemporalASEQNode(outputs=[testTemporalAction_do,motor_node_g])
 	testTemporalAction_dog.activate(5, True)
 	print("Testing the motor node 'dog'. Environment (second print) should contain 'd' & 'o' & 'g'. And contains:")
-	print(testEnvironment.output)
-	print(testEnvironment.temporalOutput)
+	print(testEnvironment.state)
+	print(testEnvironment.nextTemporalState)
 	
 def test_if_animat_can_hear_it_self():
 	print ("------------------test_if_animat_can_hear_it_self------------------")
@@ -283,19 +283,19 @@ def test_if_animat_can_hear_it_self():
 	testTemporalAction_dog.activate(1,True)
 
 	print("Animat says 'dog', thus environment should have 'dog'.")
-	print(testEnvironment.temporalOutput)
+	print(testEnvironment.nextTemporalState)
 
 	print("---Updating Environment---")
-	testEnvironment.input = testEnvironment.output
-	testEnvironment.temporalInput = testEnvironment.temporalOutput
-	testEnvironment.input.add(testEnvironment.temporalOutput[len(testEnvironment.temporalOutput)-1])
-	testEnvironment.output = set()
-	testEnvironment.temporalOutput = [];
+	testEnvironment.state = testEnvironment.state
+	testEnvironment.temporalState = testEnvironment.nextTemporalState
+	testEnvironment.state.add(testEnvironment.nextTemporalState[len(testEnvironment.nextTemporalState)-1])
+	testEnvironment.nextState = set()
+	testEnvironment.nextTemporalState = [];
 	#Possibly add more input if wanted. 
 	
 	print("environment should now have [dog] and {g}")
-	print(testEnvironment.temporalInput)
-	print(testEnvironment.input)
+	print(testEnvironment.temporalState)
+	print(testEnvironment.state)
 
 	for n in all_sensor_nodes:
 		n.tick(1,1,True)
