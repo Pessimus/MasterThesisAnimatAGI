@@ -337,6 +337,11 @@ def test_if_filereader_works():
 	print("---And converting it back into a word:---")
 	print(word)
 
+	print("---Printing the rest of the file word by word:---")
+	while not file.end_of_file:
+		nextWord = file.getNextWord()
+		print(nextWord)
+
 	file.closeFile()
 
 

@@ -5,12 +5,24 @@ class fileReader:
 	def __init__(self, fileName):
 		self.fileName = fileName
 		self.fileObject = open(fileName, "r")
+		self.currentSentence = []
+		self.end_of_file = False
 	#End __init__()
 
 	#Gives the next sentence in the file.
 	def getNextSentence(self):
 		return self.fileObject.readline()
 	#End getNextSentence()
+
+	#Returns the next word in the file, and updates the variable currentSentence.
+	def getNextWord(self): 
+		if len(self.currentSentence) == 0:
+			self.currentSentence = convertSentenceToList(removeSignFromString(self.getNextSentence()))
+			if len(self.currentSentence) == 0:
+				self.end_of_file = True
+				return ""
+		return self.currentSentence.pop(0)
+	#End getNextWord()
 
 	#Closes the current file so that it can no longer be used.
 	def closeFile(self):
