@@ -1,6 +1,6 @@
 #For reading a text
 
-#A class for reprecenting and handling a text file.
+#A class for reprecenting and handling the reading of a text file.
 class fileReader:
 	def __init__(self, fileName):
 		self.fileName = fileName
@@ -28,6 +28,31 @@ class fileReader:
 	def closeFile(self):
 		self.fileObject.close()
 	#End closeFile()
+#End class fileReader
+
+#A class for reprecenting and handling the writing to a text file.
+class fileWriter:
+	def __init__(self, fileName):
+		self.fileName = fileName
+		self.fileObject = open(fileName, "w+")
+	#End __init__()
+
+	#Writes the specified input to the file as a new line.
+	def writeLineToFile(self, sentence):
+		self.fileObject.write(sentence+"\n")
+	#End writeLineToFile()
+
+	#
+	def writeLinesToFile(self, lines):
+		for line in lines:
+			self.writeLineToFile(line)
+	#End writeLinesToFile()
+
+	#Closes the current file so that it can no longer be used.
+	def closeFile(self):
+		self.fileObject.close()
+	#End closeFile()
+
 #End class fileReader
 
 #Given a sentence, splits it on white spaces to make a list of the words.
