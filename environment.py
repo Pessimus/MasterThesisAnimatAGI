@@ -1,5 +1,9 @@
 import copy
 
+
+# A class representing the environment that the Animat can perceive. 
+# Contains a set of values and a list of temporal orderd values, that the Animat can perceive.
+# Can also be given values to be in the next set and list, after the method update() has been called.
 class Environment:
 	def __init__(self, temporalState = [], state = set()):
 		self.state = state
@@ -38,3 +42,23 @@ class Environment:
 		self.temporalState = self.nextTemporalState
 		self.nextTemporalState = []
 	#End update()
+
+	#Method allowing the environment to give its next state as output.
+	def getNextEnvironmentalState(self):
+		return copy.copy(self.nextState)
+	#End getNextEnvironmentalState()
+
+	#Method allowing the environment to give the temporal part of its next state as output.
+	def getNextEnvironmentalTemporalState(self):
+		return copy.copy(self.nextTemporalState)
+	#End getNextEnvironmentalTemporalState()
+
+	#Clears the state (both temporal and non-temporal), and also the data for next state.
+	def clear(self):
+		self.state = set()
+		self.temporalState = []
+		self.nextState = set()
+		self.nextTemporalState = []
+	#End clear()
+
+#End Environment

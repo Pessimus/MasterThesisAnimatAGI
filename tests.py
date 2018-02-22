@@ -344,6 +344,17 @@ def test_if_filereader_works():
 
 	file.closeFile()
 
+def test_if_filewriter_works():
+	print ("------------------test_if_filewriter_works------------------")
+	print("Writing to the file 'outputText.txt'.")
+	file = fileWriter("outputText.txt")
+
+	file.writeLineToFile("Psst...")
+
+	arr = ["Dogs","are","better","than","humans."]
+	file.writeLinesToFile(arr)
+
+	file.closeFile()
 
 def run_tests():
 	print ("------------------------------------Starting Tests------------------------------------")
@@ -354,3 +365,4 @@ def run_tests():
 	test_if_motors_produce_things()
 	test_if_animat_can_hear_it_self()
 	test_if_filereader_works()
+	test_if_filewriter_works()
