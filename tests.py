@@ -356,6 +356,65 @@ def test_if_filewriter_works():
 
 	file.closeFile()
 
+def test_if_new_seq_nodes_work_as_intended():
+	print ("------------------test_if_new_seq_nodes_work_as_intended------------------")
+	testEnvironment = Environment()
+	
+	sensor_node_d = SensorNode(name = "d-sensor",sensor = "d", environment =  testEnvironment)
+	sensor_node_o = SensorNode(name = "o-sensor",sensor = "o", environment =  testEnvironment)
+	sensor_node_g = SensorNode(name = "g-sensor",sensor = "g", environment =  testEnvironment)
+
+	sensor_node_c = SensorNode(name = "c-sensor",sensor = "c", environment =  testEnvironment)
+	sensor_node_a = SensorNode(name = "a-sensor",sensor = "a", environment =  testEnvironment)
+	sensor_node_t = SensorNode(name = "t-sensor",sensor = "t", environment =  testEnvironment)
+
+	t_seq_do = TemporalSEQNode(inputs = [sensor_node_d, sensor_node_o])
+	t_seq_dog = TemporalSEQNode(inputs = [t_seq_do, sensor_node_g])
+
+	t_seq_go = TemporalSEQNode(inputs = [sensor_node_g, sensor_node_o])
+	t_seq_doggo = TemporalSEQNode(inputs = [t_seq_dog, t_seq_go])
+
+	t_seq_at = TemporalSEQNode(inputs = [sensor_node_a, sensor_node_t])
+	t_seq_cat = TemporalSEQNode(inputs = [sensor_node_c,t_seq_at])
+	
+	all_nodes = {sensor_node_d,sensor_node_o,sensor_node_g,t_seq_do,t_seq_dog,sensor_node_c,sensor_node_a,sensor_node_t,t_seq_at,t_seq_cat, t_seq_go, t_seq_doggo}
+
+	word_that_should_be_active = "";
+	r = random.randint(0, 3)
+	if  r == 0:
+		testEnvironment.temporalState = ["d","o","g"]
+		word_that_should_be_active = "dog";
+	elif r == 1:
+		testEnvironment.temporalState = ["c","a","t"]
+		word_that_should_be_active = "cat";
+	elif r == 2:
+		testEnvironment.temporalState = ["d","o","g","g","o"]
+		word_that_should_be_active = "doggo";
+	else: 
+		testEnvironment.temporalState = ["d","o","g","o"]
+		word_that_should_be_active = "dogo (that is not recognised)";
+
+	nbrTicks = len(testEnvironment.temporalState)
+
+	for i in range(nbrTicks):
+		print(testEnvironment.temporalState[i])
+		for n in all_nodes:
+			n.tick(1,i+1,True)
+
+
+	print("The '" + word_that_should_be_active + "' should be active....")
+
+	if(t_seq_dog.isActive()):
+		print("THE DOG IS ACTIVE!!!!!!!!!!!!! OMG OMG")
+	elif(t_seq_cat.isActive()):
+		print("THE CAT IS ACTIVE!!!!!!!!!!!!! OMG OMG")
+	elif(t_seq_doggo.isActive()):
+		print("THE DOGGO IS ACTIVE!!!!!!!!!!!!! OMG OMG")
+
+	#print(t_seq_cat.name)
+	#print(t_seq_cat.getWord())
+	#print(t_seq_dog.getWord())
+
 def run_tests():
 	print ("------------------------------------Starting Tests------------------------------------")
 	test_if_nodes_update_when_they_should()
@@ -366,3 +425,4 @@ def run_tests():
 	test_if_animat_can_hear_it_self()
 	test_if_filereader_works()
 	test_if_filewriter_works()
+	test_if_new_seq_nodes_work_as_intended()

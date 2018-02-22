@@ -55,6 +55,18 @@ class Node:
 		return True
 	#End tick()
 
+	#SHOULD BE OVERWRITTEN BY SUBCLASSES
+	#Returning the number of ticks required for this node to become active.
+	def activationTime(self):
+		return 1
+	#End activationTime()
+
+	#SHOULD BE OVERWRITTEN BY SUBCLASSES
+	#Returns true if this node has just gotten the first input it needs to become active.
+	def startingActive(self):
+		return self.isActive()
+	#End startingActive()
+
 	# Sets the node as Active, and increases the count of how many tinmes the node has been active.
 	def activate(self, time):
 		self.active = True
