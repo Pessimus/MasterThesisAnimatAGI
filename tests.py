@@ -5,6 +5,7 @@ from environment import *
 from actionNodes import *
 from temporalActionNodes import *
 from textHandler import *
+from controller import *
 import random
 
 
@@ -356,6 +357,12 @@ def test_if_filewriter_works():
 
 	file.closeFile()
 
+def test_if_controller_works():
+	print("------------------test_if_controller_works------------------")
+	test_environment = Environment()
+	test_controller = Controller(test_environment, "inputText", "outputText") 
+	test_controller.run()
+
 def run_tests():
 	print ("------------------------------------Starting Tests------------------------------------")
 	test_if_nodes_update_when_they_should()
@@ -366,3 +373,4 @@ def run_tests():
 	test_if_animat_can_hear_it_self()
 	test_if_filereader_works()
 	test_if_filewriter_works()
+	test_if_controller_works()
