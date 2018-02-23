@@ -377,8 +377,7 @@ def test_if_motors_produce_things(verbose = True):
 		pasing_tests = pasing_tests and (len(testEnvironment.nextTemporalState) == 0 and ("d" in testEnvironment.nextState and "o" in testEnvironment.nextState) and len(testEnvironment.nextState) == 2)
 
 	testEnvironment.nextTemporalState = []
-	#testEnvironment.state = set()#TODO: Is this a bug?
-	testEnvironment.nextState = set()#TODO: was prev line a bug?
+	testEnvironment.nextState = set()
 	motor_node_d.active = False
 	motor_node_o.active = False
 
@@ -386,14 +385,13 @@ def test_if_motors_produce_things(verbose = True):
 	testTemporalAction_do.activate(4, True)
 	if verbose:
 		print("Testing the motor node 'do'. Environment (second print) should contain 'd' & 'o'. And contains:")
-		print(testEnvironment.state)
+		print(testEnvironment.nextState)
 		print(testEnvironment.nextTemporalState)
 	else:
 		pasing_tests = pasing_tests and (len(testEnvironment.nextState) == 0 and len(testEnvironment.nextTemporalState) == 2 and testEnvironment.nextTemporalState[0] == "d" and testEnvironment.nextTemporalState[1] == "o")
 
 	testEnvironment.nextTemporalState = []
-	#testEnvironment.state = set()#TODO: Is this a bug?
-	testEnvironment.nextState = set()#TODO: was prev line a bug?
+	testEnvironment.nextState = set()
 	motor_node_d.active = False
 	motor_node_o.active = False
 	testTemporalAction_do.active = False
@@ -402,7 +400,7 @@ def test_if_motors_produce_things(verbose = True):
 	testTemporalAction_dog.activate(5, True)
 	if verbose:
 		print("Testing the motor node 'dog'. Environment (second print) should contain 'd' & 'o' & 'g'. And contains:")
-		print(testEnvironment.state)
+		print(testEnvironment.nextState)
 		print(testEnvironment.nextTemporalState)
 	else:
 		pasing_tests = pasing_tests and len(testEnvironment.nextState) == 0 and len(testEnvironment.nextTemporalState) == 3 and testEnvironment.nextTemporalState[0] == "d" and testEnvironment.nextTemporalState[1] == "o" and testEnvironment.nextTemporalState[2] == "g"
