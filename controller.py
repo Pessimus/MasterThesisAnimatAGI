@@ -15,7 +15,7 @@ class Controller():
 	def run(self):
 		while not self.file_reader.end_of_file:
 			self.update_environment()
-			self.update_animat()
+			#self.update_animat()
 
 		self.file_reader.closeFile()
 		self.file_writer.closeFile()
@@ -23,7 +23,7 @@ class Controller():
 
 	#TODO: should this be tick? like an environment tick()?
 	def update_environment(self):
-		print("Debug: Updating environment")
+		#print("Debug: Updating environment")
 		#add the next word of the file to the environment's next temporal state
 		self.environment.addEnvironmentalTemporalInput(self.file_reader.getNextWord())
 
@@ -40,8 +40,8 @@ class Controller():
 		self.environment.update()
 	#End update_environment
 
-	def update_animat(self):
+	#def update_animat(self):
 		#TODO: tick the animat
-		print("Debug: Placeholder - time to tick animat")
+		#print("Debug: Placeholder - time to tick animat")
 	#End update_animat
 # #End class controller
