@@ -44,6 +44,10 @@ class Node:
 	def tick(self, time, temporalTime = 0, temporal = False):
 		if (self.time > time or (self.time==time and (not self.temporal or (self.temporalTime >= temporalTime)))):
 			return False
+
+#		if self.time < time:
+#			self.previousActive = self.active
+
 		self.time = time
 		self.temporalTime = temporalTime
 
@@ -91,7 +95,7 @@ class Node:
 	# Returns if the node was active the last temporal step within the current time-step.
 	def wasTemporalActive(self):
 		return self.previousTemporalActive
-	#End wasActive()
+	#End wasTemporalActive()
 
 	# Returns the name of this node.
 	def getName(self):

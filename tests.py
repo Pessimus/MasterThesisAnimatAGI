@@ -6,6 +6,7 @@ from actionNodes import *
 from temporalActionNodes import *
 from textHandler import *
 from controller import *
+from animat import *
 import random
 
 
@@ -567,6 +568,7 @@ def test_if_filewriter_works(verbose = True):
 			nextWord = file2.getNextWord()
 			l.append(nextWord)
 		pasing_tests = pasing_tests and len(l) == 7 and l[0] == "Psst" and l[1] == "Dogs" and l[2] == "are" and l[3] == "better" and l[4] == "than" and l[5] == "humans" and l[6] == ""
+		file2.closeFile()
 		if pasing_tests:
 			print("All tests pased.")
 		else:
@@ -657,7 +659,8 @@ def test_if_controller_works():
 	test_controller = Controller(test_environment, "inputText", "outputText") 
 	test_controller.run()
 
-
+def test_if_animat_does_not_crash():
+	test_animat = Animat()
 
 def run_tests(verbose = False):
 	print ("------------------------------------Starting Tests------------------------------------")
@@ -671,4 +674,5 @@ def run_tests(verbose = False):
 	test_if_filewriter_works(verbose)
 	test_if_new_seq_nodes_work_as_intended(verbose)
 	test_if_controller_works()
+	test_if_animat_does_not_crash()
 
