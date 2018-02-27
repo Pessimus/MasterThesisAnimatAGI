@@ -41,7 +41,7 @@ class MotorNode(ActionNode):
 
 	# Method for debugging, returns the 'word' reprecented by this node.
 	def getWord(self):
-		return self.sensor
+		return self.motor
 	#End getWord
 
 #End SensorNode

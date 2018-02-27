@@ -22,7 +22,7 @@ def makeName(kind, nodes, sort=True):
 
 # A class reprecenting a action node. Including functionallity common for all action node-types.
 class ActionNode:
-	def __init__(self, name=None, outputs=[], temporal = False, permanent = False):
+	def __init__(self, name=None, outputs=[], temporal = False, permanent = False, index=0):
 		self.name = name
 		self.temporal = temporal
 		self.active = False
@@ -33,6 +33,7 @@ class ActionNode:
 		self.activations = 0
 		self.createdAt = 0
 		self.permanent = permanent
+		self.index = index
 	#End __init__
 
 	# Method for updating the node each time-step.
@@ -94,6 +95,13 @@ class ActionNode:
 	def getName(self):
 		return self.name
 	#End getName()
+
+
+	# Returns the index of this node.
+	def get_index(self):
+		return self.index
+	#End get_index()
+
 
 	# Method for debugging, returns the 'word' reprecented by this node.
 	def getWord(self):

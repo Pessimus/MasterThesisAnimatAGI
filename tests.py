@@ -677,6 +677,10 @@ def test_if_network_works(verbose = True):
 	sensor_node_a = SensorNode(name = "a-sensor",sensor = "a", environment =  testEnvironment)
 	sensor_node_t = SensorNode(name = "t-sensor",sensor = "t", environment =  testEnvironment)
 
+	motor_node_d = MotorNode(name = "d-motor",motor = "d", environment =  testEnvironment)
+	motor_node_o = MotorNode(name = "o-motor",motor = "o", environment =  testEnvironment)
+	motor_node_g = MotorNode(name = "g-motor",motor = "g", environment =  testEnvironment)
+
 	t_seq_do = TemporalSEQNode(inputs = [sensor_node_d, sensor_node_o])
 	t_seq_dog = TemporalSEQNode(inputs = [t_seq_do, sensor_node_g])
 
@@ -688,8 +692,9 @@ def test_if_network_works(verbose = True):
 
 	sensors = [sensor_node_d, sensor_node_o, sensor_node_g, sensor_node_c, sensor_node_a, sensor_node_t]
 	perception_nodes = [t_seq_do, t_seq_dog, t_seq_at, t_seq_cat]
+	motors = [motor_node_d, motor_node_o, motor_node_g]
 
-	test_network = Network(sensors = sensors, perception_nodes = perception_nodes)
+	test_network = Network(sensors = sensors, perception_nodes = perception_nodes, motors = motors)
 
 	t = 0
 
@@ -826,20 +831,50 @@ def test_if_network_works(verbose = True):
 		pasing_tests = pasing_tests and t_seq_dog in t_a and len(t_a) == 1
 	
 
+	if verbose:
+		print("Testing the update_previous_active method")
+	test_network.deactivate_all_nodes()
+	t_seq_doggo.active = True #since this is not in the network, it should NOT be updated by update_previous_active()
+	t_seq_cat.active = True
+	t_seq_go.active = True
+	sensor_node_o.active = True
+	sensor_node_a.active = True
+	test_network.update_previous_active()
+	if verbose:
+		test_network.print_network()
+	else:
+		pasing_tests = pasing_tests and not t_seq_doggo.wasActive() and t_seq_cat.wasActive() and t_seq_go.wasActive() and sensor_node_o.wasActive() and sensor_node_a.wasActive()
+		pasing_tests = pasing_tests and not t_seq_do.wasActive() and not t_seq_dog.wasActive() and not t_seq_at.wasActive() and not sensor_node_d.wasActive() and not sensor_node_g.wasActive() and not sensor_node_c.wasActive() and not sensor_node_t.wasActive()
+
+	if verbose:
+		print("Testing the add_action_node method")
+	test_action_do = TemporalASEQNode(outputs=[motor_node_d,motor_node_o])
+	test_network.add_action_node(test_action_do)
+	if verbose:
+		print("Action node 'do' should be in network")
+		test_network.print_network()
+	else:
+		pasing_tests = pasing_tests and test_action_do in test_network.action_nodes
 
 
+	if verbose:
+		print("Testing the removal of action nodes")
+	test_action_dog = TemporalASEQNode(outputs=[test_action_do,motor_node_g])
+	test_network.add_action_node(test_action_dog)
 
-#	if verbose:
-#		if t_seq_doggo.active:
-#			print("The doggo is active! :)")
-#		else:
-#			print("No doggo? :'(")
-#	else:
-#		pasing_tests = pasing_tests and t_seq_doggo.active
+	test_network.remove_action_node(test_action_do)
+	if verbose:
+		print("Attempting to remove 'do' node. Should still be in network.")
+		test_network.print_network()
+	else:
+		pasing_tests = pasing_tests and test_action_do in test_network.action_nodes
 
-
-
-
+	test_network.remove_action_node(test_action_dog)
+	if verbose:
+		print("Attempting to remove 'dog' node. Should be removed from network.")
+		test_network.print_network()
+	else:
+		pasing_tests = pasing_tests and not test_action_dog in test_network.action_nodes
 
 
 

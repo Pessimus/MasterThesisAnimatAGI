@@ -91,6 +91,7 @@ class Network():
 
 		#update temporal_transition_matrix
 		new_layer = np.zeros((self.total_number_of_input_nodes, 1, self.total_number_of_input_nodes))
+
 		self.temporal_transition_matrix = np.append(self.temporal_transition_matrix, new_layer, 1)
 	#End add_action_node
 
@@ -118,6 +119,10 @@ class Network():
 			self.time_extended_conditional_matrix = np.delete(self.time_extended_conditional_matrix, index, 0)
 			self.time_extended_conditional_matrix = np.delete(self.time_extended_conditional_matrix, index, 1)
 
+			self.number_of_perception_nodes=self.number_of_perception_nodes-1
+			self.total_number_of_input_nodes=self.total_number_of_input_nodes-1
+			self.total_number_of_nodes=self.total_number_of_nodes-1
+
 			return True
 		else:
 			return False
@@ -144,6 +149,10 @@ class Network():
 			del self.action_nodes[list_position]
 
 			self.temporal_transition_matrix = np.delete(self.temporal_transition_matrix, index, 1)
+
+			self.number_of_action_nodes = self.number_of_action_nodes - 1
+			self.total_number_of_output_nodes = self.total_number_of_output_nodes - 1
+			self.total_number_of_nodes = self.total_number_of_nodes - 1
 
 			return True
 		else:
@@ -229,6 +238,14 @@ class Network():
 			print("\t" + "Active:" + str(node.isActive()))
 			print("\t" + "Was Active:" + str(node.wasActive()))
 			print("\t" + "Was temporal Active:" + str(node.wasTemporalActive()))
+			print("")
+		print("Printing motor nodes:")
+		for node in self.motors:
+			print("\t" + "Word:" + str(node.getWord()))
+			print("")
+		print("Printing action nodes:")
+		for node in self.action_nodes:
+			print("\t" + "Word:" + str(node.getWord()))
 			print("")
 
 
