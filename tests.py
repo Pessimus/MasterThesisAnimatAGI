@@ -890,10 +890,6 @@ def test_if_network_works(verbose = True):
 		else:
 			print("Tests failed")
 
-
-def test_if_animat_does_not_crash():
-	test_animat = Animat()
-
 def run_tests(verbose = False):
 	print ("------------------------------------Starting Tests------------------------------------")
 	test_if_nodes_update_when_they_should(verbose)
@@ -906,4 +902,4 @@ def run_tests(verbose = False):
 	test_if_filewriter_works(verbose)
 	test_if_new_seq_nodes_work_as_intended(verbose)
 	test_if_controller_works()
-	test_if_network_works()
+	test_if_network_works(verbose)

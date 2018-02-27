@@ -42,7 +42,7 @@ class fileWriter:
 		self.fileObject.write(sentence+"\n")
 	#End writeLineToFile()
 
-	#
+	#Writes a list of lines to the file.
 	def writeLinesToFile(self, lines):
 		for line in lines:
 			self.writeLineToFile(line)

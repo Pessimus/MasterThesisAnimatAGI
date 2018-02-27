@@ -46,8 +46,8 @@ class Node:
 		if (self.time > time or (self.time==time and (not self.temporal or (self.temporalTime >= temporalTime)))):
 			return False
 
-#		if self.time < time:
-#			self.previousActive = self.active
+		#if self.time < time:
+		#	self.previousActive = self.active
 
 		self.time = time
 		self.temporalTime = temporalTime
@@ -108,6 +108,7 @@ class Node:
 		return self.index
 	#End get_index()
 
+	#Updates this node to check if it should be topactive. Might be called again from nodes that have it as input.
 	def update_topactive(self, can_still_be_topactive = True):
 		if not can_still_be_topactive:
 			self.topactive = False
@@ -118,6 +119,7 @@ class Node:
 		elif self.topactive:
 			for i in self.inputs:
 				i.update_topactive(False)
+	#End update_topactive()
 
 	# Method for debugging, returns the 'word' reprecented by this node.
 	def getWord(self):

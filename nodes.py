@@ -92,6 +92,7 @@ class SEQNode(Node):
 		if not name: name = makeName("SEQ", inputs, sort=False)
 		Node.__init__(self, name, inputs)
 		self.possibleActivations = []
+	#End __init__()
 
 #	def tick(self, time, temporalTime = 0, temporal = False):
 #		if temporal:
@@ -158,7 +159,7 @@ class SensorNode(Node):
 		self.environment = environment
 	#End __init__()
 
-
+	# Overrides the 'tick' function. Ticks this node, looking att different parts of the environment depending on if the tick is temporal or not.
 	def tick(self, time, temporalTime=0, temporal=False):
 		if Node.tick(self,time,temporalTime, temporal):
 			if self.readSensor(temporalTime,temporal):
@@ -180,6 +181,7 @@ class SensorNode(Node):
 		return self.isActive()
 	#End startingActive()
 
+	#Returns true iff the input that this sensor reacts to is present in the input in the environment. 
 	def readSensor(self, temporalTime=0, temporal=False):
 		if self.sensor == "true":
 			return 1

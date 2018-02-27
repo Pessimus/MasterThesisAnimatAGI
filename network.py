@@ -1,5 +1,6 @@
 import numpy as np
 
+#Class reprecenting the network used by a Animat. Containing all nodes and the matrices for them.
 class Network():
 	def __init__(self, sensors = [], motors = [], perception_nodes = [], action_nodes = [], memory_capacity = 0, temporal_memory_capacity = 0):
 		#create network
@@ -77,7 +78,6 @@ class Network():
 		#update time_extended_conditional_matrix
 		self.time_extended_conditional_matrix = np.append(self.time_extended_conditional_matrix, np.zeros((1,self.total_number_of_input_nodes-1)), 0)
 		self.time_extended_conditional_matrix = np.append(self.time_extended_conditional_matrix, np.zeros((self.total_number_of_input_nodes, 1)), 1)
-
 	#End add_perception_node()
 
 	#Adds a new action node to the list of action nodes. And increases the size of matrices to accomodate for the new node. 
@@ -134,7 +134,7 @@ class Network():
 			if node in n.inputs:
 				return False
 		return True
-	#End is_top_node()
+	#End is_top_perception_node()
 
 	#Removes a action node from the graph and all matrices, iff the node is a top node.
 	def remove_action_node(self,node):
@@ -165,7 +165,7 @@ class Network():
 			if node in n.outputs:
 				return False
 		return True
-	#End is_top_node()
+	#End is_top_action_node()
 
 	#For all nodes, set previous active to the current value of active. 
 	def update_previous_active(self):
@@ -209,20 +209,23 @@ class Network():
 		return result
 	#End get_topactive_nodes()
 
+	#Ticks all the sensor and perseption nodes in the network.  
 	def tick(self, time):
 		for node in self.sensors:
 			node.tick(time)
 		for node in self.perception_nodes:
 			node.tick(time)
+	#End tick()
 
+	#Ticks all the sensor and perseption nodes in the network with a temporal tick.  
 	def temporal_tick(self, time, temporal_time):
 		for node in self.sensors:
 			node.tick(time, temporal_time, True)
 		for node in self.perception_nodes:
 			node.tick(time, temporal_time, True)
+	#End temporal_tick()
 
-
-	# Method for debugging, returns all the 'words' reprecented by the nodes in the network.
+	#Method for debugging, returns all the 'words' reprecented by the nodes in the network.
 	def print_network(self):
 		print("----Printing Network----")
 		print("Printing sensors:")
@@ -247,7 +250,7 @@ class Network():
 		for node in self.action_nodes:
 			print("\t" + "Word:" + str(node.getWord()))
 			print("")
-
+	#End print_network()
 
 	#End print_network()
 #End class
