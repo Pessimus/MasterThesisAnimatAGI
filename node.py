@@ -22,17 +22,18 @@ def makeName(kind, nodes, sort=True):
 
 # A class reprecenting a node. Including functionallity common for all node-types.
 class Node:
-	def __init__(self, name=None, inputs=None, temporal = False, permanent = False):
+	def __init__(self, name=None, inputs=[], temporal = False, permanent = False, index = 0):
 		self.name = name
 		self.temporal = temporal
 		self.active = False
 		self.previousActive = False
 		self.previousTemporalActive = False
-		self.inputs = inputs or []
+		self.inputs = inputs
 		self.time = 0
 		self.activations = 0
 		self.createdAt = 0
 		self.permanent = permanent
+		self.index = index
 	#End __init__
 
 	# Method for updating the node each time-step.
@@ -101,6 +102,22 @@ class Node:
 	def getName(self):
 		return self.name
 	#End getName()
+
+	# Returns the index of this node.
+	def get_index(self):
+		return self.index
+	#End get_index()
+
+	def update_topactive(self, can_still_be_topactive = True):
+		if not can_still_be_topactive:
+			self.topactive = False
+			for i in self.inputs:
+				i.update_topactive(False)
+		elif not self.active:# or not self.topactive:
+			self.topactive = False
+		elif self.topactive:
+			for i in self.inputs:
+				i.update_topactive(False)
 
 	# Method for debugging, returns the 'word' reprecented by this node.
 	def getWord(self):

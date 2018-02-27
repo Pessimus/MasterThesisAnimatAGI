@@ -6,6 +6,7 @@ from actionNodes import *
 from temporalActionNodes import *
 from textHandler import *
 from controller import *
+from network import *
 from animat import *
 import random
 
@@ -659,6 +660,202 @@ def test_if_controller_works():
 	test_controller = Controller(test_environment, "inputText", "outputText") 
 	test_controller.run()
 
+def test_if_network_works(verbose = True):
+	print("------------------test_if_network_works------------------")
+	pasing_tests = True
+	
+	if verbose:
+		print("Creating the network.")
+
+	testEnvironment = Environment()
+		
+	sensor_node_d = SensorNode(name = "d-sensor",sensor = "d", environment =  testEnvironment)
+	sensor_node_o = SensorNode(name = "o-sensor",sensor = "o", environment =  testEnvironment)
+	sensor_node_g = SensorNode(name = "g-sensor",sensor = "g", environment =  testEnvironment)
+
+	sensor_node_c = SensorNode(name = "c-sensor",sensor = "c", environment =  testEnvironment)
+	sensor_node_a = SensorNode(name = "a-sensor",sensor = "a", environment =  testEnvironment)
+	sensor_node_t = SensorNode(name = "t-sensor",sensor = "t", environment =  testEnvironment)
+
+	t_seq_do = TemporalSEQNode(inputs = [sensor_node_d, sensor_node_o])
+	t_seq_dog = TemporalSEQNode(inputs = [t_seq_do, sensor_node_g])
+
+	t_seq_go = TemporalSEQNode(inputs = [sensor_node_g, sensor_node_o])
+	t_seq_doggo = TemporalSEQNode(inputs = [t_seq_dog, t_seq_go])
+
+	t_seq_at = TemporalSEQNode(inputs = [sensor_node_a, sensor_node_t])
+	t_seq_cat = TemporalSEQNode(inputs = [sensor_node_c,t_seq_at])
+
+	sensors = [sensor_node_d, sensor_node_o, sensor_node_g, sensor_node_c, sensor_node_a, sensor_node_t]
+	perception_nodes = [t_seq_do, t_seq_dog, t_seq_at, t_seq_cat]
+
+	test_network = Network(sensors = sensors, perception_nodes = perception_nodes)
+
+	t = 0
+
+	if verbose:
+		print("Testing if it can recognise dog.")
+
+	testEnvironment.temporalState = ["d","o","g"]
+
+	nbrTicks = len(testEnvironment.temporalState)
+	t = t+1
+	for i in range(nbrTicks):
+		test_network.temporal_tick(t,i+1)
+
+	if verbose:
+		if t_seq_dog.active:
+			print("The dog is active! :)")
+		else:
+			print("No dog? :'(")
+	else:
+		pasing_tests = pasing_tests and t_seq_dog.active
+
+
+	if verbose:
+		print("Testing if it can recognise cat.")
+
+	testEnvironment.temporalState = ["c","a","t"]
+
+	nbrTicks = len(testEnvironment.temporalState)
+	t = t+1
+	for i in range(nbrTicks):
+		test_network.temporal_tick(t,i+1)
+
+	if verbose:
+		if t_seq_cat.active:
+			print("The cat is active! :)")
+		else:
+			print("No cat? :'(")
+	else:
+		pasing_tests = pasing_tests and t_seq_cat.active
+
+
+	if verbose:
+		print("Testing if a 'go' node can be added.")
+	test_network.add_perception_node(t_seq_go)
+	if verbose:
+		test_network.print_network()
+	else:
+		pasing_tests = pasing_tests and (t_seq_go in test_network.perception_nodes)
+
+	test_network.add_perception_node(t_seq_doggo)
+
+	if verbose:
+		print("Testing if it can recognise doggo.")
+	testEnvironment.temporalState = ["d","o","g","g","o"]
+	nbrTicks = len(testEnvironment.temporalState)
+	t = t+1
+	for i in range(nbrTicks):
+		test_network.temporal_tick(t,i+1)
+	if verbose:
+		if t_seq_doggo.active:
+			print("The doggo is active! :)")
+		else:
+			print("No doggo? :'(")
+	else:
+		pasing_tests = pasing_tests and t_seq_doggo.active
+
+	if verbose:
+		print("Testing removal of nodes. The 'do' node should not be possible to remove.")
+	v = test_network.remove_perception_node(t_seq_do)
+	if verbose:
+		test_network.print_network()
+	else:
+		pasing_tests = pasing_tests and (t_seq_do in test_network.perception_nodes) and not v
+
+	if verbose:
+		print("Testing removal of nodes. The 'doggo' node should be removed.")
+	v = test_network.remove_perception_node(t_seq_doggo)
+	if verbose:
+		test_network.print_network()
+	else:
+		pasing_tests = pasing_tests and not (t_seq_doggo in test_network.perception_nodes) and v
+
+	if verbose:
+		print("Testing if it can no longer recognise doggo.")
+	t_seq_doggo.active = False
+	testEnvironment.temporalState = ["d","o","g","g","o"]
+	nbrTicks = len(testEnvironment.temporalState)
+	t = t+1
+	for i in range(nbrTicks):
+		test_network.temporal_tick(t,i+1)
+	if verbose:
+		if t_seq_doggo.active:
+			print("The doggo is active!? .....")
+		else:
+			print("No doggo. ok.")
+	else:
+		pasing_tests = pasing_tests and not t_seq_doggo.active
+
+
+	if verbose:
+		print("Testing the identification of topactive nodes while recognising 'dog'.")
+
+	testEnvironment.temporalState = ["d","o","g"]
+	nbrTicks = len(testEnvironment.temporalState)
+	t = t+1
+	i = 1
+	test_network.temporal_tick(t,i)
+	t_a = test_network.get_topactive_nodes()
+	if verbose:
+		print("---")
+		for n in t_a:
+			print(n.getWord())
+	else:
+		pasing_tests = pasing_tests and sensor_node_d in t_a and len(t_a) == 1
+	t = t+1
+	i = i+1
+	test_network.temporal_tick(t,i)
+	t_a = test_network.get_topactive_nodes()
+	if verbose:
+		print("---")
+		for n in t_a:
+			print(n.getWord())
+	else:
+		pasing_tests = pasing_tests and t_seq_do in t_a and len(t_a) == 1
+	t = t+1
+	i = i+1
+	test_network.temporal_tick(t,i)
+	t_a = test_network.get_topactive_nodes()
+	if verbose:
+		print("---")
+		for n in t_a:
+			print(n.getWord())
+	else:
+		pasing_tests = pasing_tests and t_seq_dog in t_a and len(t_a) == 1
+	
+
+
+
+
+#	if verbose:
+#		if t_seq_doggo.active:
+#			print("The doggo is active! :)")
+#		else:
+#			print("No doggo? :'(")
+#	else:
+#		pasing_tests = pasing_tests and t_seq_doggo.active
+
+
+
+
+
+
+
+
+
+
+
+
+
+	if not verbose:
+		if pasing_tests:
+			print("All tests pased.")
+		else:
+			print("Tests failed")
+
+
 def test_if_animat_does_not_crash():
 	test_animat = Animat()
 
@@ -674,5 +871,4 @@ def run_tests(verbose = False):
 	test_if_filewriter_works(verbose)
 	test_if_new_seq_nodes_work_as_intended(verbose)
 	test_if_controller_works()
-	test_if_animat_does_not_crash()
-
+	test_if_network_works()

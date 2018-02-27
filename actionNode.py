@@ -22,13 +22,13 @@ def makeName(kind, nodes, sort=True):
 
 # A class reprecenting a action node. Including functionallity common for all action node-types.
 class ActionNode:
-	def __init__(self, name=None, outputs=None, temporal = False, permanent = False):
+	def __init__(self, name=None, outputs=[], temporal = False, permanent = False):
 		self.name = name
 		self.temporal = temporal
 		self.active = False
 #		self.previousActive = False
 #		self.previousTemporalActive = False
-		self.outputs = outputs or []
+		self.outputs = outputs
 		self.time = 0
 		self.activations = 0
 		self.createdAt = 0
