@@ -252,7 +252,44 @@ class Network():
 			print("")
 	#End print_network()
 
-	#End print_network()
+	#Returns the action node with the given index if such a node exists
+	def get_action_node(self, index):
+		if index < self.number_of_motors:
+			return self.motors[index]
+		elif index < self.number_of_action_nodes:
+			return self.action_nodes[index-number_of_motors]
+		else:
+			return None
+	#End get_action_node()
+
+
+	#Returns the perception node with the given index if such a node exists
+	def get_perception_node(self, index):
+		if index < self.number_of_sensors:
+			return self.sensors[index]
+		elif index < self.number_of_perception_nodes:
+			return self.perception_nodes[index-number_of_sensors]
+		else:
+			return None
+	#End get_action_node()
+
+	def activate_action_node(self, index, time):
+		if index < self.number_of_motors:
+			return self.motors[index].activate(time)
+		elif index < self.number_of_action_nodes:
+			return self.action_nodes[index-number_of_motors].activate(time)
+		else:
+			return False
+	#End activate_action_node()
+
+	def update_temporal_transition_matrix(self, last_action):
+		print("Not yet implemented")
+		
+	#End update_temporal_transition_matrix()
+
+	def update_generators(self):
+		print("Not yet implemented")
+	#End update_generators()
 #End class
 
 

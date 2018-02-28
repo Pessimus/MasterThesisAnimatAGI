@@ -34,6 +34,7 @@ class Node:
 		self.createdAt = 0
 		self.permanent = permanent
 		self.index = index
+		#self.generator = None #TODO?
 	#End __init__
 
 	# Method for updating the node each time-step.
