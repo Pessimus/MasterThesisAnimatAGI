@@ -30,6 +30,7 @@ class Node:
 		self.previousTemporalActive = False
 		self.inputs = inputs
 		self.time = 0
+		self.temporalTime = 0 #TODO: should this be here? Needed as the code is now....
 		self.activations = 0
 		self.createdAt = 0
 		self.permanent = permanent

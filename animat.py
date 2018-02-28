@@ -12,18 +12,20 @@ class Animat:
 
 	#
 	def update(self, time):
-		print("Not yet implemented")
+		#print("Not yet implemented")
+		print("Updating animat: "+self.name + ", at time: %d" % (time))
 		#handle temporal input somehow
 		#possibly learn from temporal input
 		
 		#tick network
+		self.network.update_previous_active()
 		self.network.tick(time)
 		self.learn()
 		#end learning (learn from consequences of previous action in previous time step)
 		#make decision
 		#self.make_decision()
 		#act
-		self.babble()
+		self.babble(time)
 		#begin learning
 		#done!
 	#End update()
@@ -40,18 +42,18 @@ class Animat:
 		print("Not yet implemented")
 	#End make_decision()
 
-	def babble(self):
+	def babble(self, time):
 		num_motors = self.network.number_of_motors
 		random_motor_index = random.randint(0,num_motors-1)
-		if self.network.activate_action_node(random_motor_index):
+		if self.network.activate_action_node(random_motor_index, time):
 			self.last_action = random_motor_index
 		else:
 			self.last_action = -1
 	#End babble()
 
 	def learn(self):
-		if not last_action == -1:
-			self.network.update_temporal_transition_matrix(last_action)
+		if not self.last_action == -1:
+			self.network.update_temporal_transition_matrix(self.last_action)
 			self.network.update_generators()
 
 

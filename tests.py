@@ -890,6 +890,44 @@ def test_if_network_works(verbose = True):
 		else:
 			print("Tests failed")
 
+def test_if_animat_can_run_first_step_code():
+	print("------------------test_if_animat_can_run_first_step_code------------------")
+
+	test_environment = Environment()
+		
+	sensor_node_d = SensorNode(name = "d-sensor",sensor = "d", environment =  test_environment)
+	sensor_node_o = SensorNode(name = "o-sensor",sensor = "o", environment =  test_environment)
+	sensor_node_g = SensorNode(name = "g-sensor",sensor = "g", environment =  test_environment)
+
+#	sensor_node_c = SensorNode(name = "c-sensor",sensor = "c", environment =  test_environment)
+#	sensor_node_a = SensorNode(name = "a-sensor",sensor = "a", environment =  test_environment)
+#	sensor_node_t = SensorNode(name = "t-sensor",sensor = "t", environment =  test_environment)
+
+	motor_node_d = MotorNode(name = "d-motor",motor = "d", environment =  test_environment)
+	motor_node_o = MotorNode(name = "o-motor",motor = "o", environment =  test_environment)
+	motor_node_g = MotorNode(name = "g-motor",motor = "g", environment =  test_environment)
+
+	#(self, name = None, sensors = [], motors = [], perception_nodes = [], action_nodes = [], memory_capacity = 0, temporal_memory_capacity = 0):
+	sensors = [sensor_node_d, sensor_node_o, sensor_node_g]
+	motors = [motor_node_d, motor_node_o, motor_node_g]
+
+	test_animat = Animat("TheDoggo", sensors, motors)
+
+	for x in range(1, 10): #If from 0, the change in node.py is needed to avoid error.
+		test_animat.update(x)
+		test_environment.update()
+
+	print("")
+	print("Printing all the sensor nodes in order:")
+	print("\t[true, 'd', 'o', 'g']")
+	print("Printing all the motor nodes in order:")
+	print("\t['d', 'o', 'g']")
+	print("Now printing the generator list in the Animat:")
+	print(test_animat.network.generator_list)
+
+
+
+
 def run_tests(verbose = False):
 	print ("------------------------------------Starting Tests------------------------------------")
 	test_if_nodes_update_when_they_should(verbose)
@@ -903,3 +941,4 @@ def run_tests(verbose = False):
 	test_if_new_seq_nodes_work_as_intended(verbose)
 	test_if_controller_works()
 	test_if_network_works(verbose)
+	test_if_animat_can_run_first_step_code()

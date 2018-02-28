@@ -27,7 +27,7 @@ class Network():
 			node.index = i
 			i = i + 1
 
-		self.number_of_sensors = len(sensors)
+		self.number_of_sensors = len(self.sensors)
 		self.number_of_motors = len(motors)
 		self.number_of_perception_nodes = len(perception_nodes)
 		self.number_of_action_nodes = len(action_nodes)
@@ -311,13 +311,14 @@ class Network():
 		output_nodes = self.motors + self.action_nodes
 		for node in input_nodes:
 			b = node.get_index()
+			self.generator_list[b] = -1
 			for action in output_nodes:
 				a = action.get_index()
 				dividend, divisor = self.temporal_transition_matrix[0][a][b]
 				if divisor == dividend and not divisor == 0: #If the probability is one (not true if divisor is 0)
 					self.generator_list[b] = a
-				else:
-					self.generator_list[b] = -1
+#				else:
+#					self.generator_list[b] = -1
 	#End update_generators()
 #End class
 
