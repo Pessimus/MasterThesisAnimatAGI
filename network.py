@@ -1,27 +1,29 @@
 import numpy as np
+import nodes as node_types
 
 #Class reprecenting the network used by a Animat. Containing all nodes and the matrices for them.
 class Network():
 	def __init__(self, sensors = [], motors = [], perception_nodes = [], action_nodes = [], memory_capacity = 0, temporal_memory_capacity = 0):
 		#create network
-		self.sensors = sensors
+		true_node = node_types.SensorNode("True Node", "true", None) #All networks should have a 'true' node, that has index 0.
+		self.sensors = [true_node] + sensors
 		self.motors = motors
 		self.perception_nodes = perception_nodes
 		self.action_nodes = action_nodes
 
 		i = 0
-		for node in sensors:
+		for node in self.sensors:
 			node.index = i
 			i = i + 1
-		for node in perception_nodes:
+		for node in self.perception_nodes:
 			node.index = i
 			i = i + 1
 		
 		i = 0
-		for node in motors:
+		for node in self.motors:
 			node.index = i
 			i = i + 1
-		for node in action_nodes:
+		for node in self.action_nodes:
 			node.index = i
 			i = i + 1
 

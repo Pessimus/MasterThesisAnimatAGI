@@ -808,7 +808,7 @@ def test_if_network_works(verbose = True):
 		for n in t_a:
 			print(n.getWord())
 	else:
-		pasing_tests = pasing_tests and sensor_node_d in t_a and len(t_a) == 1
+		pasing_tests = pasing_tests and sensor_node_d in t_a and len(t_a) == 2 #including true node
 	t = t+1
 	i = i+1
 	test_network.temporal_tick(t,i)
@@ -818,7 +818,7 @@ def test_if_network_works(verbose = True):
 		for n in t_a:
 			print(n.getWord())
 	else:
-		pasing_tests = pasing_tests and t_seq_do in t_a and len(t_a) == 1
+		pasing_tests = pasing_tests and t_seq_do in t_a and len(t_a) == 2 #including true node
 	t = t+1
 	i = i+1
 	test_network.temporal_tick(t,i)
@@ -828,7 +828,7 @@ def test_if_network_works(verbose = True):
 		for n in t_a:
 			print(n.getWord())
 	else:
-		pasing_tests = pasing_tests and t_seq_dog in t_a and len(t_a) == 1
+		pasing_tests = pasing_tests and t_seq_dog in t_a and len(t_a) == 2 #including true node
 	
 
 	if verbose:
