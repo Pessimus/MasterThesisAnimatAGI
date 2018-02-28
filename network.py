@@ -52,6 +52,9 @@ class Network():
 		self.temporal_sequence_matrix = np.zeros((self.total_number_of_input_nodes, self.total_number_of_input_nodes)) #Fraction over the last 100 ticks that 1 has been top active at t and 2 at (t-1)
 		self.conditional_matrix = np.zeros((self.total_number_of_input_nodes, self.total_number_of_input_nodes)) #Intuition: Probability that 1 is top active at t given that 2 is top active at t: Pr(1|2)
 		self.time_extended_conditional_matrix = np.zeros((self.total_number_of_input_nodes, self.total_number_of_input_nodes)) #Intuition: Probability that 1 is top active at ~t given that 2 is top active at t: Pr(1|2)
+
+		#TODO: this shold be updated to work in a more general way.
+		self.generator_list = np.ones((self.total_number_of_input_nodes))*(-1)
 	#End __init__()
 
 	#Adds a new perception node to the list of perseption nodes. And increases the size of all matrices to accomodate for the new node. 
@@ -302,8 +305,19 @@ class Network():
 					self.temporal_transition_matrix[i][last_action][j] = (dividend, divisor)
 	#End update_temporal_transition_matrix()
 
+	#Updates a list of generators for all perception nodes. TODO: should be more general.
 	def update_generators(self):
-		print("Not yet implemented")
+		input_nodes = self.sensors + self.perception_nodes
+		output_nodes = self.motors + self.action_nodes
+		for node in input_nodes:
+			b = node.get_index()
+			for action in output_nodes:
+				a = action.get_index()
+				dividend, divisor = self.temporal_transition_matrix[0][a][b]
+				if divisor == dividend and not divisor == 0: #If the probability is one (not true if divisor is 0)
+					self.generator_list[b] = a
+				else:
+					self.generator_list[b] = -1
 	#End update_generators()
 #End class
 
