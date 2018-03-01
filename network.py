@@ -54,7 +54,7 @@ class Network():
 		self.time_extended_conditional_matrix = np.zeros((self.total_number_of_input_nodes, self.total_number_of_input_nodes)) #Intuition: Probability that 1 is top active at ~t given that 2 is top active at t: Pr(1|2)
 
 		#TODO: this shold be updated to work in a more general way.
-		self.generator_list = np.ones((self.total_number_of_input_nodes))*(-1)
+		self.generator_list = np.ones((self.total_number_of_input_nodes), dtype=int)*(-1)
 	#End __init__()
 
 	#Adds a new perception node to the list of perseption nodes. And increases the size of all matrices to accomodate for the new node. 

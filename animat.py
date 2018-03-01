@@ -13,7 +13,7 @@ class Animat:
 	#
 	def update(self, time):
 		#print("Not yet implemented")
-		print("Updating animat: "+self.name + ", at time: %d" % (time))
+		#print("Updating animat: "+self.name + ", at time: %d" % (time))
 		#handle temporal input somehow
 		#possibly learn from temporal input
 		
