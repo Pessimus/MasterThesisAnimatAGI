@@ -6,8 +6,8 @@ class Controller():
 	def __init__(self, environment, input_file_name, output_file_name, animat=None):
 		self.animat = animat
 		self.environment = environment
-		self.file_reader = fileReader(input_file_name + ".txt")
-		self.file_writer = fileWriter("output/" + output_file_name + datetime.datetime.now().strftime("%y%m%d-%H%M%S") + ".txt")
+		self.file_reader = FileReader(input_file_name + ".txt")
+		self.file_writer = FileWriter("output/" + output_file_name + datetime.datetime.now().strftime("%y%m%d-%H%M%S") + ".txt")
 	#End __init__()
 
 	#Updates environment and animat until there is no more input.

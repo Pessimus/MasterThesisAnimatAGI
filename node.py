@@ -26,8 +26,11 @@ class Node:
 		self.name = name
 		self.temporal = temporal
 		self.active = False
+		self.topactive = False
 		self.previousActive = False
 		self.previousTemporalActive = False
+#		self.previous_top_active = False
+#		self.previous_temporal_top_active = False
 		self.inputs = inputs
 		self.time = 0
 		self.temporalTime = 0 #TODO: should this be here? Needed as the code is now....
@@ -56,8 +59,9 @@ class Node:
 
 		for node in self.inputs:
 			node.tick(time,temporalTime,temporal)
-
-		self.previousTemporalActive = self.active
+		
+		if temporal:
+			self.previousTemporalActive = self.active
 
 		return True
 	#End tick()

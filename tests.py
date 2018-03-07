@@ -1022,7 +1022,7 @@ def test_if_animat_can_learn_alphabet_in_step_one(verbose = True):
 	if passing_tests:
 		print("All tests pased.")
 	else:
-		print("Tests failed")
+		print("Tests failed (might be due to stochasticity)")
 
 def test_how_often_the_animat_learns_the_entire_alphabet():	
 	print("------------------test_how_often_the_animat_learns_the_entire_alphabet------------------")
@@ -1087,6 +1087,7 @@ def test_how_often_the_animat_learns_the_entire_alphabet():
 	print(results_avg_number_of_generators_found)
 
 	file = FileWriter("output/babbling_result.m")
+	file.writeLineToFile("clear all, clf, clc")
 	file.writeLineToFile("%The tests to run")
 	file.writeLineToFile("tests_to_run = "+str(tests_to_run))
 	file.writeLineToFile("%Percentage of times that all generators were found for the different tests:")
@@ -1095,9 +1096,16 @@ def test_how_often_the_animat_learns_the_entire_alphabet():
 	file.writeLineToFile("results_avg_number_of_generators_found = "+str(results_avg_number_of_generators_found))
 	file.writeLineToFile("plot(tests_to_run,results_all_generators_found)")
 	file.writeLineToFile("figure")
+	file.writeLineToFile("yyaxis left")
+	file.writeLineToFile("ylabel('Percentage of runs where all generators were found')")
+	file.writeLineToFile("plot(tests_to_run,results_all_generators_found)")
+	file.writeLineToFile("hold on")
+	file.writeLineToFile("yyaxis right")
+	file.writeLineToFile("ylabel('Average number of generators found');")
 	file.writeLineToFile("plot(tests_to_run,results_avg_number_of_generators_found)")
-
-
+	file.writeLineToFile("title('Statistics of how well the Animat finds generators');")
+	file.writeLineToFile("xlabel('Number of timesteps spent babbling');")
+	#file.writeLineToFile("legend('Runs where all generators were found','Average number of generators found','Location','east')")
 
 def create_nodes_for_alphabet(test_environment):
 	sensor_node_a = SensorNode(name = "a-sensor",sensor = "a", environment =  test_environment)
@@ -1157,22 +1165,40 @@ def create_nodes_for_alphabet(test_environment):
 	sensors = [sensor_node_a, sensor_node_b, sensor_node_c, sensor_node_d, sensor_node_e, sensor_node_f, sensor_node_g, sensor_node_h, sensor_node_i, sensor_node_j, sensor_node_k, sensor_node_l, sensor_node_m, sensor_node_n, sensor_node_o, sensor_node_p, sensor_node_q, sensor_node_r, sensor_node_s, sensor_node_t, sensor_node_u, sensor_node_v, sensor_node_w, sensor_node_x, sensor_node_y, sensor_node_z]
 	motors = [motor_node_a, motor_node_b, motor_node_c, motor_node_d, motor_node_e, motor_node_f, motor_node_g, motor_node_h, motor_node_i, motor_node_j, motor_node_k, motor_node_l, motor_node_m, motor_node_n, motor_node_o, motor_node_p, motor_node_q, motor_node_r, motor_node_s, motor_node_t, motor_node_u, motor_node_v, motor_node_w, motor_node_x, motor_node_y, motor_node_z]
 
+	from random import shuffle
+	shuffle(sensors)
+	shuffle(motors)
+
 	return sensors, motors
+
+def test_step_two_animat():
+	print("------------------test_step_two_animat------------------")
+	test_environment = Environment()	
+	sensors, motors = create_nodes_for_alphabet(test_environment)
+	totlal_number_of_sensors = len(sensors)
+	test_animat = Animat("TheCat", sensors, motors)
+
+	test_animat.update(1)
+
+	test_animat.update(2,9)
+
 
 
 def run_tests(verbose = False):
 	print ("------------------------------------Starting Tests------------------------------------")
-#	test_if_nodes_update_when_they_should(verbose)
-#	test_if_nodes_update_to_the_value_they_should(verbose)
-#	test_if_sensors_react_to_input(verbose)
-#	test_if_dog_can_be_found(verbose)
-#	test_if_motors_produce_things(verbose)
-#	test_if_animat_can_hear_it_self(verbose)
-#	test_if_filereader_works(verbose)
-#	test_if_filewriter_works(verbose)
-#	test_if_new_seq_nodes_work_as_intended(verbose)
-#	test_if_controller_works()
-#	test_if_network_works(verbose)
-#	test_if_animat_can_run_first_step_code()
-#	test_if_animat_can_learn_alphabet_in_step_one(verbose)
-	test_how_often_the_animat_learns_the_entire_alphabet() #Note, this is slow. Prints statistics of how often the Animat learns generators. 
+	if(True):
+		test_if_nodes_update_when_they_should(verbose)
+		test_if_nodes_update_to_the_value_they_should(verbose)
+		test_if_sensors_react_to_input(verbose)
+		test_if_dog_can_be_found(verbose)
+		test_if_motors_produce_things(verbose)
+		test_if_animat_can_hear_it_self(verbose)
+		test_if_filereader_works(verbose)
+		test_if_filewriter_works(verbose)
+		test_if_new_seq_nodes_work_as_intended(verbose)
+		test_if_controller_works()
+		test_if_network_works(verbose)
+		test_if_animat_can_run_first_step_code()
+		test_if_animat_can_learn_alphabet_in_step_one(verbose)
+#	test_how_often_the_animat_learns_the_entire_alphabet() #Note, this is slow. Prints statistics of how often the Animat learns generators.
+	test_step_two_animat() 

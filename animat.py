@@ -10,10 +10,30 @@ class Animat:
 
 	#End __init__()
 
+	def update(self, time, temporal_input_length = 0):
+
+		self.network.update_previous_active()
+
+		for tt in range(0,temporal_input_length):
+			self.temporal_update(time, tt)
+
+		self.network.tick(time)
+		self.learn()
+
+		self.act(time)
+	#End update()
+
+	def temporal_update(self, time, temporal_time):
+		print("Doing temporal stuff!")
+		self.network.temporal_tick(time, temporal_time)
+
+		#Learn
+		self.temporal_learn()
+
+	#End temporal_update()
+
 	#
-	def update(self, time):
-		#print("Not yet implemented")
-		#print("Updating animat: "+self.name + ", at time: %d" % (time))
+	def update_step_one_version(self, time):
 		#handle temporal input somehow
 		#possibly learn from temporal input
 		
@@ -21,14 +41,18 @@ class Animat:
 		self.network.update_previous_active()
 		self.network.tick(time)
 		self.learn()
+
 		#end learning (learn from consequences of previous action in previous time step)
 		#make decision
 		#self.make_decision()
 		#act
 		self.babble(time)
 		#begin learning
-		#done!
 	#End update()
+
+	def act(self, time):
+		self.babble(time)
+	#End act()
 
 	def begin_learning(self):
 		print("Not yet implemented")
@@ -53,12 +77,12 @@ class Animat:
 
 	def learn(self):
 		if not self.last_action == -1:
-			self.network.update_temporal_transition_matrix(self.last_action)
+			self.network.update_transition_matrix(self.last_action)
 			self.network.update_generators()
-
-
 	#End learn()
 
+	def temporal_learn(self):
+		self.network.update_temporal_sequence_matrix()
 
 
 
