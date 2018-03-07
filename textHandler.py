@@ -1,7 +1,7 @@
 #For reading a text
 
 #A class for reprecenting and handling the reading of a text file.
-class fileReader:
+class FileReader:
 	def __init__(self, fileName):
 		self.fileName = fileName
 		self.fileObject = open(fileName, "r")
@@ -31,7 +31,7 @@ class fileReader:
 #End class fileReader
 
 #A class for reprecenting and handling the writing to a text file.
-class fileWriter:
+class FileWriter:
 	def __init__(self, fileName):
 		self.fileName = fileName
 		self.fileObject = open(fileName, "w+")

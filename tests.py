@@ -485,8 +485,9 @@ def test_if_filereader_works(verbose = True):
 	print ("------------------test_if_filereader_works------------------")
 	pasing_tests = True
 
-	file = fileReader("inputText.txt")
-	testSentence = fileReader.getNextSentence(file)
+	file = FileReader("inputText.txt")
+	#testSentence = fileReader.getNextSentence(file)
+	testSentence = file.getNextSentence()
 	if verbose:
 		print("---Reading a sentence from a file:---")
 		print(testSentence)
@@ -552,7 +553,7 @@ def test_if_filewriter_works(verbose = True):
 	print ("------------------test_if_filewriter_works------------------")
 	if verbose:
 		print("Writing to the file 'outputText.txt'.")
-	file = fileWriter("outputText.txt")
+	file = FileWriter("outputText.txt")
 
 	file.writeLineToFile("Psst...")
 
@@ -563,7 +564,7 @@ def test_if_filewriter_works(verbose = True):
 
 	if not verbose:
 		pasing_tests = True
-		file2 = fileReader("outputText.txt")
+		file2 = FileReader("outputText.txt")
 		l = []
 		while not file2.end_of_file:
 			nextWord = file2.getNextWord()
@@ -1026,8 +1027,8 @@ def test_if_animat_can_learn_alphabet_in_step_one(verbose = True):
 def test_how_often_the_animat_learns_the_entire_alphabet():	
 	print("------------------test_how_often_the_animat_learns_the_entire_alphabet------------------")
 	import numpy as np
-	avg_nbr = 50
-	tests_to_run = [100,110,120,130,140,150,160,170,180,190,200]
+	avg_nbr = 100
+	tests_to_run = [10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,210,220,230,240,250,260,270,280,290,300]
 
 	print("Running tests with the nomber of iterations to babble set to:")
 	print(tests_to_run)
@@ -1084,6 +1085,19 @@ def test_how_often_the_animat_learns_the_entire_alphabet():
 	print(results_all_generators_found)
 	print("Average percentage of generators found for the different tests:")
 	print(results_avg_number_of_generators_found)
+
+	file = FileWriter("output/babbling_result.m")
+	file.writeLineToFile("%The tests to run")
+	file.writeLineToFile("tests_to_run = "+str(tests_to_run))
+	file.writeLineToFile("%Percentage of times that all generators were found for the different tests:")
+	file.writeLineToFile("results_all_generators_found = "+str(results_all_generators_found))
+	file.writeLineToFile("% Average percentage of generators found for the different tests:")
+	file.writeLineToFile("results_avg_number_of_generators_found = "+str(results_avg_number_of_generators_found))
+	file.writeLineToFile("plot(tests_to_run,results_all_generators_found)")
+	file.writeLineToFile("figure")
+	file.writeLineToFile("plot(tests_to_run,results_avg_number_of_generators_found)")
+
+
 
 def create_nodes_for_alphabet(test_environment):
 	sensor_node_a = SensorNode(name = "a-sensor",sensor = "a", environment =  test_environment)
@@ -1148,17 +1162,17 @@ def create_nodes_for_alphabet(test_environment):
 
 def run_tests(verbose = False):
 	print ("------------------------------------Starting Tests------------------------------------")
-	test_if_nodes_update_when_they_should(verbose)
-	test_if_nodes_update_to_the_value_they_should(verbose)
-	test_if_sensors_react_to_input(verbose)
-	test_if_dog_can_be_found(verbose)
-	test_if_motors_produce_things(verbose)
-	test_if_animat_can_hear_it_self(verbose)
-	test_if_filereader_works(verbose)
-	test_if_filewriter_works(verbose)
-	test_if_new_seq_nodes_work_as_intended(verbose)
-	test_if_controller_works()
-	test_if_network_works(verbose)
-	test_if_animat_can_run_first_step_code()
-	test_if_animat_can_learn_alphabet_in_step_one(verbose)
-#	test_how_often_the_animat_learns_the_entire_alphabet() #Note, this is slow. Prints statistics of how often the Animat learns generators. 
+#	test_if_nodes_update_when_they_should(verbose)
+#	test_if_nodes_update_to_the_value_they_should(verbose)
+#	test_if_sensors_react_to_input(verbose)
+#	test_if_dog_can_be_found(verbose)
+#	test_if_motors_produce_things(verbose)
+#	test_if_animat_can_hear_it_self(verbose)
+#	test_if_filereader_works(verbose)
+#	test_if_filewriter_works(verbose)
+#	test_if_new_seq_nodes_work_as_intended(verbose)
+#	test_if_controller_works()
+#	test_if_network_works(verbose)
+#	test_if_animat_can_run_first_step_code()
+#	test_if_animat_can_learn_alphabet_in_step_one(verbose)
+	test_how_often_the_animat_learns_the_entire_alphabet() #Note, this is slow. Prints statistics of how often the Animat learns generators. 
