@@ -1174,19 +1174,45 @@ def create_nodes_for_alphabet(test_environment):
 def test_step_two_animat():
 	print("------------------test_step_two_animat------------------")
 	test_environment = Environment()	
-	sensors, motors = create_nodes_for_alphabet(test_environment)
+	#sensors, motors = create_nodes_for_alphabet(test_environment)
+
+	sensor_node_c = SensorNode(name = "c-sensor",sensor = "c", environment =  test_environment)
+	sensor_node_a = SensorNode(name = "a-sensor",sensor = "a", environment =  test_environment)
+	sensor_node_t = SensorNode(name = "t-sensor",sensor = "t", environment =  test_environment)
+
+	motor_node_c = MotorNode(name = "c-motor",motor = "c", environment =  test_environment)
+	motor_node_a = MotorNode(name = "a-motor",motor = "a", environment =  test_environment)
+	motor_node_t = MotorNode(name = "t-motor",motor = "t", environment =  test_environment)
+
+	sensors = [sensor_node_c,sensor_node_a,sensor_node_t]
+	motors = [motor_node_c,motor_node_a,motor_node_t]
+
 	totlal_number_of_sensors = len(sensors)
-	test_animat = Animat("TheCat", sensors, motors)
+	test_animat = Animat("TheCat", sensors, motors, temporal_memory_capacity = 5)
 
-	test_animat.update(1)
+	test_environment.temporalState = ["c","a","t"]
 
-	test_animat.update(2,9)
+	for t in range(1,50):
+	#	print("------------------------")
+		test_animat.update(t,3)
+	#test_animat.update(1,3)
 
+	print("Done ish")
+	#print(test_animat.network.temporal_sequence_matrix)
+	#mat = copy(test_animat.network.temporal_sequence_matrix)
+	mat = np.zeros((4,4))
+	for i in range(0,4):
+		for j in range(0,4):
+			v = test_animat.network.temporal_sequence_matrix[i][j]
+			if not v == 0:
+				mat[i][j] = len(v)
+	#print("\nSimpler form:")
+	print(mat)
 
-
+	
 def run_tests(verbose = False):
 	print ("------------------------------------Starting Tests------------------------------------")
-	if(True):
+	if(False):
 		test_if_nodes_update_when_they_should(verbose)
 		test_if_nodes_update_to_the_value_they_should(verbose)
 		test_if_sensors_react_to_input(verbose)

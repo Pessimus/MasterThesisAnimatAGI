@@ -38,7 +38,7 @@ class Network():
 		#initialize short term memories
 		self.memory_capacity = memory_capacity
 		self.short_term_memory = []
-		self.temporal_memory_capacity = memory_capacity
+		self.temporal_memory_capacity = temporal_memory_capacity
 		self.temporal_short_term_memory = []
 
 
@@ -226,10 +226,16 @@ class Network():
 
 	#Ticks all the sensor and perseption nodes in the network with a temporal tick.  
 	def temporal_tick(self, time, temporal_time):
+		#tick all nodes in the network
 		for node in self.sensors:
 			node.tick(time, temporal_time, True)
 		for node in self.perception_nodes:
 			node.tick(time, temporal_time, True)
+		#update temporal short term memory
+		topactive_nodes = self.get_topactive_nodes()
+		self.temporal_short_term_memory.insert(0,topactive_nodes)
+		if(len(self.temporal_short_term_memory) > self.temporal_memory_capacity):
+			self.temporal_short_term_memory.pop()
 	#End temporal_tick()
 
 	#Method for debugging, returns all the 'words' reprecented by the nodes in the network.
@@ -290,21 +296,35 @@ class Network():
 	#End activate_action_node()
 
 	def update_temporal_sequence_matrix(self):
+		#Update all tick counters.
+		for i in range(0,self.temporal_sequence_matrix.shape[0]):
+			for j in range(0,self.temporal_sequence_matrix.shape[1]):
+				v = self.temporal_sequence_matrix[i][j]
+				if not v == 0:
+					v2 =  []
+					for e in v:
+						if e < 100:
+							v2.append(e+1)
+					self.temporal_sequence_matrix[i][j] = v2
+
+		#Add new tick counters.
 		topactive_nodes = self.get_topactive_nodes()
+		#print([[n.getWord() for n in l] for l in self.temporal_short_term_memory])
 		for node in topactive_nodes:
 			activation_time = node.activationTime()
 			if len(self.temporal_short_term_memory) > activation_time:
 				previous_top_actives = self.temporal_short_term_memory[activation_time]
 				for node_prime in previous_top_actives:
 					node_index = node.get_index()
-					node_prime_index = node.get_index()
-					v = self.sequence_matrix[node_index][node_prime_index]
+					node_prime_index = node_prime.get_index()
+					v = self.temporal_sequence_matrix[node_index][node_prime_index]
 					if v == 0:
-						self.sequence_matrix[node_index][node_prime_index] = [1]
+						self.temporal_sequence_matrix[node_index][node_prime_index] = [1]
 					else:
-						v = [e+1 for e in v if not e > 99]
-						v.append(1)
-						self.sequence_matrix[node_index][node_prime_index] = v
+						#v = [e+1 for e in v if not e > 99]
+						#v.append(1)
+						#self.temporal_sequence_matrix[node_index][node_prime_index] = v
+						(self.temporal_sequence_matrix[node_index][node_prime_index]).append(1)
 	#End update_temporal_sequence_matrix()
 
 	#Updates the values of the transition matrix, depending on what nodes were active, and what nodes are topactive.

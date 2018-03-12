@@ -12,23 +12,25 @@ class Animat:
 
 	def update(self, time, temporal_input_length = 0):
 
+		#self.learn()
+
 		self.network.update_previous_active()
 
 		for tt in range(0,temporal_input_length):
 			self.temporal_update(time, tt)
 
 		self.network.tick(time)
-		self.learn()
+		self.update_experiences()
 
-		self.act(time)
+		#self.act(time)
 	#End update()
 
 	def temporal_update(self, time, temporal_time):
-		print("Doing temporal stuff!")
+		#print("Doing temporal stuff!")
 		self.network.temporal_tick(time, temporal_time)
 
 		#Learn
-		self.temporal_learn()
+		self.update_temporal_experiences()
 
 	#End temporal_update()
 
@@ -40,7 +42,7 @@ class Animat:
 		#tick network
 		self.network.update_previous_active()
 		self.network.tick(time)
-		self.learn()
+		self.update_experiences()
 
 		#end learning (learn from consequences of previous action in previous time step)
 		#make decision
@@ -49,6 +51,13 @@ class Animat:
 		self.babble(time)
 		#begin learning
 	#End update()
+
+	#Should handle all the Animats learning, i.e. adding and removing nodes in the network.
+	def learn(self):
+		print("NYI")
+		#Probabilistic learning (temporal)
+
+	#End learn
 
 	def act(self, time):
 		self.babble(time)
@@ -75,13 +84,13 @@ class Animat:
 			self.last_action = -1
 	#End babble()
 
-	def learn(self):
+	def update_experiences(self):
 		if not self.last_action == -1:
 			self.network.update_transition_matrix(self.last_action)
 			self.network.update_generators()
-	#End learn()
+	#End update_experiences()
 
-	def temporal_learn(self):
+	def update_temporal_experiences(self):
 		self.network.update_temporal_sequence_matrix()
 
 

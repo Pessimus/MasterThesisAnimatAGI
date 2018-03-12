@@ -186,10 +186,10 @@ class SensorNode(Node):
 		if self.sensor == "true":
 			return 1
 		if temporal:
-			self.previousTemporalActive = self.active
+			#self.previousTemporalActive = self.active
 			currentInput = self.environment.getEnvironmentalTemporalState()
-			if(len(currentInput) > 0 and len(currentInput) >= temporalTime):
-				return currentInput[temporalTime-1] == self.sensor
+			if(len(currentInput) > 0 and len(currentInput) > temporalTime):
+				return currentInput[temporalTime] == self.sensor
 			else:
 				return False
 		else:
