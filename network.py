@@ -1,5 +1,6 @@
 import numpy as np
 import nodes as node_types
+import temporalNodes as temporal_node_types
 
 #Class reprecenting the network used by a Animat. Containing all nodes and the matrices for them.
 class Network():
@@ -57,10 +58,15 @@ class Network():
 
 		#TODO: this shold be updated to work in a more general way.
 		self.generator_list = np.ones((self.total_number_of_input_nodes), dtype=int)*(-1)
+
+		self.input_nodes_names = [n.name for n in self.sensors+self.perception_nodes]
 	#End __init__()
 
 	#Adds a new perception node to the list of perseption nodes. And increases the size of all matrices to accomodate for the new node. 
 	def add_perception_node(self, node):
+		if node.name in self.input_nodes_names:
+			return False
+
 		self.perception_nodes.append(node)
 		node.index = self.total_number_of_input_nodes
 
@@ -85,6 +91,10 @@ class Network():
 		#update time_extended_conditional_matrix
 		self.time_extended_conditional_matrix = np.append(self.time_extended_conditional_matrix, np.zeros((1,self.total_number_of_input_nodes-1)), 0)
 		self.time_extended_conditional_matrix = np.append(self.time_extended_conditional_matrix, np.zeros((self.total_number_of_input_nodes, 1)), 1)
+
+		self.input_nodes_names.append(node.name)
+
+		return True
 	#End add_perception_node()
 
 	#Adds a new action node to the list of action nodes. And increases the size of matrices to accomodate for the new node. 
@@ -360,6 +370,27 @@ class Network():
 #				else:
 #					self.generator_list[b] = -1
 	#End update_generators()
+
+	def get_cumulative_temporal_seq_matrix(self):
+		x,y = self.temporal_sequence_matrix.shape
+		temp_mat = np.zeros((x,y))
+
+		#loop from 1 to avoid True node which is at index 1
+		for i in range(1,x):
+			for j in range(1,y):
+				v = self.temporal_sequence_matrix[i][j]
+				if not v == 0:
+					temp_mat[i][j] = len(v)
+
+		return np.cumsum(temp_mat)
+	#End get_cumulative_temporal_seq_matrix()
+
+	def create_and_add_temporal_seq_node(self, input1, input2):
+		input_nodes = self.sensors + self.perception_nodes
+		node = temporal_node_types.TemporalSEQNode(inputs=[input_nodes[input1],input_nodes[input2]])
+		return self.add_perception_node(node)
+	#End create_and_add_temporal_seq_node()
+
 #End class
 
 

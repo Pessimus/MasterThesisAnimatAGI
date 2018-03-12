@@ -1,18 +1,21 @@
 import numpy as np
 import random
+import bisect
 from network import *
 
+
 class Animat:
-	def __init__(self, name = None, sensors = [], motors = [], perception_nodes = [], action_nodes = [], memory_capacity = 0, temporal_memory_capacity = 0):
+	def __init__(self, name = None, sensors = [], motors = [], perception_nodes = [], action_nodes = [], memory_capacity = 0, temporal_memory_capacity = 0, seq_formation_probability = 0):
 		self.name = name
 		self.network = Network(sensors, motors, perception_nodes, action_nodes, memory_capacity, temporal_memory_capacity)
 		self.last_action = -1
+		self.seq_formation_probability = seq_formation_probability
 
 	#End __init__()
 
 	def update(self, time, temporal_input_length = 0):
 
-		#self.learn()
+		self.learn()
 
 		self.network.update_previous_active()
 
@@ -54,8 +57,19 @@ class Animat:
 
 	#Should handle all the Animats learning, i.e. adding and removing nodes in the network.
 	def learn(self):
-		print("NYI")
+		print("Animat: learn")
 		#Probabilistic learning (temporal)
+		#if coin flip says learn, then add node to network
+		if np.random.rand() < self.seq_formation_probability:
+			probabilities = self.network.get_cumulative_temporal_seq_matrix()
+			print(probabilities)
+			success = False
+			while not success:
+				indices = bisect.bisect(probabilities, np.random.random() * probabilities[-1])
+				print(indices)
+				node2_index,node1_index = np.unravel_index(indices,self.network.temporal_sequence_matrix.shape)
+				success = self.network.create_and_add_temporal_seq_node(node1_index, node2_index)
+			print("added node")
 
 	#End learn
 

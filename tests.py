@@ -1188,7 +1188,7 @@ def test_step_two_animat():
 	motors = [motor_node_c,motor_node_a,motor_node_t]
 
 	totlal_number_of_sensors = len(sensors)
-	test_animat = Animat("TheCat", sensors, motors, temporal_memory_capacity = 5)
+	test_animat = Animat("TheCat", sensors, motors, temporal_memory_capacity = 5, seq_formation_probability = 1/25)
 
 	test_environment.temporalState = ["c","a","t"]
 
@@ -1200,14 +1200,17 @@ def test_step_two_animat():
 	print("Done ish")
 	#print(test_animat.network.temporal_sequence_matrix)
 	#mat = copy(test_animat.network.temporal_sequence_matrix)
-	mat = np.zeros((4,4))
-	for i in range(0,4):
-		for j in range(0,4):
+	mat = np.zeros(test_animat.network.temporal_sequence_matrix.shape)
+	for i in range(0,test_animat.network.temporal_sequence_matrix.shape[0]):
+		for j in range(0,test_animat.network.temporal_sequence_matrix.shape[1]):
 			v = test_animat.network.temporal_sequence_matrix[i][j]
 			if not v == 0:
 				mat[i][j] = len(v)
 	#print("\nSimpler form:")
 	print(mat)
+
+	print("perception nodes: ")
+	print([n.name for n in test_animat.network.perception_nodes])
 
 	
 def run_tests(verbose = False):
