@@ -25,7 +25,7 @@ class FileReader:
 	#End getNextWord()
 
 	#returns a array of all the words in the remaining fiel
-	def get_entire_file_as_array():
+	def get_entire_file_as_array(self):
 		result = []
 		while not self.end_of_file:
 			result.append(self.getNextWord())

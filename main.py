@@ -5,10 +5,12 @@ from environment import *
 from actionNodes import *
 from temporalActionNodes import *
 from tests import *
+from evaluation import *
 import random
 
 def init():
-	run_tests()
+	#run_tests()
+	evaluate_step_two()
 
 if __name__ == "__main__":
 	init()

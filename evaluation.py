@@ -8,6 +8,7 @@ from textHandler import *
 from controller import *
 from network import *
 from animat import *
+from random import shuffle
 import random
 
 
@@ -161,21 +162,23 @@ def evaluate_step_one():
 
 def evaluate_step_two():
 	#Define constatns
-	NUMBER_OF_OCCURENCES_OF_WORDS = 50
+	NUMBER_OF_OCCURENCES_OF_WORDS = 4*50
 	TEMPORAL_MEMORY_CAPACITY = 5
-	SEQ_FORMATION_PROBABILITY = 1/25
-	INPUT_FILE_NAME = "animal_words.txt"
+	SEQ_FORMATION_PROBABILITY = 1/float(25)
+	SEQ_FORMATION_MAX_ATTEMPTS = 10
+	INPUT_FILE_NAME = "evaluationIO/animal_words.txt"
 
 	#Create the Animat
 	test_environment = Environment()	
 	sensors, motors = create_nodes_for_alphabet(test_environment)
 
 	totlal_number_of_sensors = len(sensors)
-	test_animat = Animat("TheCat", sensors, motors, temporal_memory_capacity = TEMPORAL_MEMORY_CAPACITY, seq_formation_probability = SEQ_FORMATION_PROBABILITY)
+	test_animat = Animat("TheCat", sensors, motors, temporal_memory_capacity = TEMPORAL_MEMORY_CAPACITY, seq_formation_probability = SEQ_FORMATION_PROBABILITY, seq_formation_max_attempts = SEQ_FORMATION_MAX_ATTEMPTS)
 
 	#Create arrays for words to input to the animate
 	input_file = FileReader(INPUT_FILE_NAME)
 	all_words = input_file.get_entire_file_as_array()
+	all_words = all_words[0:10]
 	number_of_words = len(all_words)
 
 	word_indices = np.array([])
@@ -189,9 +192,11 @@ def evaluate_step_two():
 	t = 0
 	for index in word_indices:
 		t = t + 1
+		if t == 500 or t == 1000 or t == 1500 or t == 2000:
+			print("TIME IS NOW: %d"%(t))
 
 		#update environment
-		word = all_words[index]
+		word = all_words[int(index)]
 		test_environment.temporalState = word
 
 		#Update the Animat
@@ -219,12 +224,29 @@ def evaluate_step_two():
 	for w in all_words:
 		if w in animat_words:
 			c = c + 1
-	print("\nThe Animat has learnt %d of %d words." % (c,number_of_words))
+	print("\nThe Animat has learnt %d of %d words.\n" % (c,number_of_words))
+
+	print(all_words)
 
 
 
 
-
+	#mat = np.zeros(test_animat.network.temporal_sequence_matrix.shape)
+	lens = []
+	nbr_ok_values = 0
+	nbr_not_ok_values = 0
+	for i in range(0,test_animat.network.temporal_sequence_matrix.shape[0]):
+		for j in range(0,test_animat.network.temporal_sequence_matrix.shape[1]):
+			v = test_animat.network.temporal_sequence_matrix[i][j]
+			if not v == 0:
+				lens.append(len(v))
+				for e in v:
+					if e <= 100:
+						nbr_ok_values = nbr_ok_values + 1
+					else:
+						nbr_not_ok_values = nbr_not_ok_values + 1
+	print(lens)
+	print(nbr_ok_values)
 
 
 

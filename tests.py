@@ -1192,7 +1192,7 @@ def test_step_two_animat():
 
 	test_environment.temporalState = ["c","a","t"]
 
-	for t in range(1,50):
+	for t in range(1,501):
 	#	print("------------------------")
 		test_animat.update(t,3)
 	#test_animat.update(1,3)

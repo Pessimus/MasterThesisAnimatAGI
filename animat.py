@@ -5,11 +5,12 @@ from network import *
 
 
 class Animat:
-	def __init__(self, name = None, sensors = [], motors = [], perception_nodes = [], action_nodes = [], memory_capacity = 0, temporal_memory_capacity = 0, seq_formation_probability = 0):
+	def __init__(self, name = None, sensors = [], motors = [], perception_nodes = [], action_nodes = [], memory_capacity = 0, temporal_memory_capacity = 0, seq_formation_probability = 0, seq_formation_max_attempts = 0):
 		self.name = name
 		self.network = Network(sensors, motors, perception_nodes, action_nodes, memory_capacity, temporal_memory_capacity)
 		self.last_action = -1
 		self.seq_formation_probability = seq_formation_probability
+		self.seq_formation_max_attempts = seq_formation_max_attempts
 
 	#End __init__()
 
@@ -18,6 +19,8 @@ class Animat:
 		self.learn()
 
 		self.network.update_previous_active()
+
+		self.network.temporal_short_term_memory = [] #TODO: do we want to do this?
 
 		for tt in range(0,temporal_input_length):
 			self.temporal_update(time, tt)
@@ -57,19 +60,31 @@ class Animat:
 
 	#Should handle all the Animats learning, i.e. adding and removing nodes in the network.
 	def learn(self):
-		print("Animat: learn")
+	#	print("Animat: learn")
 		#Probabilistic learning (temporal)
 		#if coin flip says learn, then add node to network
-		if np.random.rand() < self.seq_formation_probability:
+		r = np.random.rand()
+	#	print(r)
+	#	print(self.seq_formation_probability) 
+		#if np.random.rand() < self.seq_formation_probability:
+		if r < self.seq_formation_probability:
 			probabilities = self.network.get_cumulative_temporal_seq_matrix()
-			print(probabilities)
+			#print(probabilities.shape)
+			#print(probabilities)
 			success = False
-			while not success:
-				indices = bisect.bisect(probabilities, np.random.random() * probabilities[-1])
-				print(indices)
-				node2_index,node1_index = np.unravel_index(indices,self.network.temporal_sequence_matrix.shape)
+			attempts = 0
+			while attempts <= self.seq_formation_max_attempts and not success:
+				attempts = attempts + 1
+				r = np.random.random() * probabilities[-1]
+				#print("random = %f"%(r))
+				indices = bisect.bisect(probabilities, r)
+				#print(indices)
+				#print(indices)
+				#print("sum is: %f"%(probabilities[-1]))
+				#print(probabilities)
+				node2_index,node1_index = np.unravel_index(indices, self.network.temporal_sequence_matrix.shape)
 				success = self.network.create_and_add_temporal_seq_node(node1_index, node2_index)
-			print("added node")
+			#print("added node")
 
 	#End learn
 

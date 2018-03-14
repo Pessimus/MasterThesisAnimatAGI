@@ -52,6 +52,10 @@ class Network():
 		#self.sequence_matrix = np.zeros((total_number_of_input_nodes,total_number_of_input_nodes)) #might be added later...
 		#self.temporal_sequence_matrix = np.zeros((self.total_number_of_input_nodes, self.total_number_of_input_nodes)) #Fraction over the last 100 ticks that 1 has been top active at t and 2 at (t-1)
 		self.temporal_sequence_matrix = np.zeros((self.total_number_of_input_nodes, self.total_number_of_input_nodes), dtype = object) #Fraction over the last 100 ticks that 1 has been top active at t and 2 at (t-1)
+		for i in range(0,self.temporal_sequence_matrix.shape[0]):
+			for j in range(0,self.temporal_sequence_matrix.shape[1]):
+				self.temporal_sequence_matrix[i][j] = []
+		#print(self.temporal_sequence_matrix)
 
 		self.conditional_matrix = np.zeros((self.total_number_of_input_nodes, self.total_number_of_input_nodes)) #Intuition: Probability that 1 is top active at t given that 2 is top active at t: Pr(1|2)
 		self.time_extended_conditional_matrix = np.zeros((self.total_number_of_input_nodes, self.total_number_of_input_nodes)) #Intuition: Probability that 1 is top active at ~t given that 2 is top active at t: Pr(1|2)
@@ -81,8 +85,14 @@ class Network():
 		self.transition_matrix = np.append(self.transition_matrix, new_column, 2)
 
 		#update temporal_sequence_matrix
-		self.temporal_sequence_matrix = np.append(self.temporal_sequence_matrix, np.zeros((1,self.total_number_of_input_nodes-1), dtype = object), 0)
-		self.temporal_sequence_matrix = np.append(self.temporal_sequence_matrix, np.zeros((self.total_number_of_input_nodes, 1), dtype = object), 1)
+		v1 = np.zeros((1,self.total_number_of_input_nodes-1), dtype = object)
+		for i in range(0, v1.shape[1]):
+			v1[0][i] = []
+		v2 = np.zeros((self.total_number_of_input_nodes, 1), dtype = object)
+		for i in range(0, v2.shape[0]):
+			v2[i][0] = []
+		self.temporal_sequence_matrix = np.append(self.temporal_sequence_matrix, v1, 0)
+		self.temporal_sequence_matrix = np.append(self.temporal_sequence_matrix, v2, 1)
 
 		#update conditional_matrix
 		self.conditional_matrix = np.append(self.conditional_matrix, np.zeros((1,self.total_number_of_input_nodes-1)), 0)
@@ -313,9 +323,25 @@ class Network():
 				if not v == 0:
 					v2 =  []
 					for e in v:
-						if e < 100:
+						#print(e)
+						if e < 100 or True:
+							#print("%d :"%(e))
 							v2.append(e+1)
 					self.temporal_sequence_matrix[i][j] = v2
+
+		
+#		for i in range(0,self.temporal_sequence_matrix.shape[0]):
+#			for j in range(0,self.temporal_sequence_matrix.shape[1]):
+#			#print("-|-")
+#			#if not (element == 0):
+#				#print(element)
+#				element = self.temporal_sequence_matrix[i][j]
+#				removal_list = []
+#				for value in element:
+#					if value > 100:
+#						removal_list.append(value)
+#				for x in removal_list:
+#					element.remove(x)
 
 		#Add new tick counters.
 		topactive_nodes = self.get_topactive_nodes()
@@ -375,12 +401,16 @@ class Network():
 		x,y = self.temporal_sequence_matrix.shape
 		temp_mat = np.zeros((x,y))
 
+		debug = True
 		#loop from 1 to avoid True node which is at index 1
 		for i in range(1,x):
 			for j in range(1,y):
 				v = self.temporal_sequence_matrix[i][j]
-				if not v == 0:
-					temp_mat[i][j] = len(v)
+				#if not v == 0:
+				debug = debug and len(v) == 0
+				temp_mat[i][j] = len(v)
+		if debug:
+			print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!____!_!_!_!_!_!_!_!_!_!_!_!_!_!!!___!_!!_")
 
 		return np.cumsum(temp_mat)
 	#End get_cumulative_temporal_seq_matrix()
