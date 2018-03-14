@@ -316,18 +316,22 @@ class Network():
 	#End activate_action_node()
 
 	def update_temporal_sequence_matrix(self):
+		#print(len(self.temporal_short_term_memory))
 		#Update all tick counters.
 		for i in range(0,self.temporal_sequence_matrix.shape[0]):
 			for j in range(0,self.temporal_sequence_matrix.shape[1]):
 				v = self.temporal_sequence_matrix[i][j]
-				if not v == 0:
-					v2 =  []
-					for e in v:
-						#print(e)
-						if e < 100 or True:
-							#print("%d :"%(e))
-							v2.append(e+1)
-					self.temporal_sequence_matrix[i][j] = v2
+				#if not v == 0:
+				v2 =  []
+				for e in v:
+					if e < 100:
+					#print(e)
+					#if e < 100 or True:
+						#print("%d :"%(e))
+						v2.append(e+1)
+					#end if
+				#end if
+				self.temporal_sequence_matrix[i][j] = v2
 
 		
 #		for i in range(0,self.temporal_sequence_matrix.shape[0]):
@@ -353,14 +357,15 @@ class Network():
 				for node_prime in previous_top_actives:
 					node_index = node.get_index()
 					node_prime_index = node_prime.get_index()
-					v = self.temporal_sequence_matrix[node_index][node_prime_index]
-					if v == 0:
-						self.temporal_sequence_matrix[node_index][node_prime_index] = [1]
-					else:
+					#v = self.temporal_sequence_matrix[node_index][node_prime_index]
+					#if v == 0:
+					#	self.temporal_sequence_matrix[node_index][node_prime_index] = [1]
+					#else:
 						#v = [e+1 for e in v if not e > 99]
 						#v.append(1)
 						#self.temporal_sequence_matrix[node_index][node_prime_index] = v
-						(self.temporal_sequence_matrix[node_index][node_prime_index]).append(1)
+					(self.temporal_sequence_matrix[node_index][node_prime_index]).append(1)
+					#end else
 	#End update_temporal_sequence_matrix()
 
 	#Updates the values of the transition matrix, depending on what nodes were active, and what nodes are topactive.
@@ -410,7 +415,7 @@ class Network():
 				debug = debug and len(v) == 0
 				temp_mat[i][j] = len(v)
 		if debug:
-			print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!____!_!_!_!_!_!_!_!_!_!_!_!_!_!!!___!_!!_")
+			print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!____!_!_!_!_!_!_!_!_!_!_!_!_!_!!!___!_!!_") #If this happens the code will crash. TODO: finish debuging this.
 
 		return np.cumsum(temp_mat)
 	#End get_cumulative_temporal_seq_matrix()

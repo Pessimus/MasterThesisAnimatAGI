@@ -245,8 +245,12 @@ def evaluate_step_two():
 						nbr_ok_values = nbr_ok_values + 1
 					else:
 						nbr_not_ok_values = nbr_not_ok_values + 1
-	print(lens)
-	print(nbr_ok_values)
+	#print(lens)
+	sum = 0
+	for s in lens:
+		sum = sum + s
+	print("Sum of lenghts is %d"%(sum))
+	print("Number of ok values in matrix is %d"%(nbr_ok_values))
 
 
 

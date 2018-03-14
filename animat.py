@@ -16,11 +16,12 @@ class Animat:
 
 	def update(self, time, temporal_input_length = 0):
 
-		self.learn()
+		if time > 1:
+			self.learn()
 
 		self.network.update_previous_active()
 
-		self.network.temporal_short_term_memory = [] #TODO: do we want to do this?
+		#self.network.temporal_short_term_memory = [] #TODO: do we want to do this? #TODO: WHY DOES THIS MAKE THE CODE CRASH?! Should not do that, but does, also does not seem to do waht is intended....
 
 		for tt in range(0,temporal_input_length):
 			self.temporal_update(time, tt)
