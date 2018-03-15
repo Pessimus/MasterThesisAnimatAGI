@@ -9,8 +9,8 @@ from evaluation import *
 import random
 
 def init():
-	#run_tests()
-	evaluate_step_two()
+	run_tests()
+	#evaluate_step_two()
 
 if __name__ == "__main__":
 	init()

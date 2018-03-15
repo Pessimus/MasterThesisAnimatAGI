@@ -264,15 +264,15 @@ class Network():
 		for node in self.sensors:
 			print("\t" + "Word:" + str(node.get_word()))
 			print("\t" + "Active:" + str(node.is_active()))
-			print("\t" + "Was Active:" + str(node.wasActive()))
-			print("\t" + "Was temporal Active:" + str(node.wasTemporalActive()))
+			print("\t" + "Was Active:" + str(node.was_active()))
+			print("\t" + "Was temporal Active:" + str(node.was_temporal_active()))
 			print("")
 		print("Printing perception nodes:")
 		for node in self.perception_nodes:
 			print("\t" + "Word:" + str(node.get_word()))
 			print("\t" + "Active:" + str(node.is_active()))
-			print("\t" + "Was Active:" + str(node.wasActive()))
-			print("\t" + "Was temporal Active:" + str(node.wasTemporalActive()))
+			print("\t" + "Was Active:" + str(node.was_active()))
+			print("\t" + "Was temporal Active:" + str(node.was_temporal_active()))
 			print("")
 		print("Printing motor nodes:")
 		for node in self.motors:
@@ -331,7 +331,7 @@ class Network():
 		#Add new tick counters.
 		topactive_nodes = self.get_topactive_nodes()
 		for node in topactive_nodes:
-			activation_time = node.activationTime()
+			activation_time = node.activation_time()
 			if len(self.temporal_short_term_memory) > activation_time:
 				previous_top_actives = self.temporal_short_term_memory[activation_time]
 				for node_prime in previous_top_actives:
@@ -348,7 +348,7 @@ class Network():
 		topactive_nodes = self.get_topactive_nodes()
 		input_nodes = self.sensors + self.perception_nodes
 		for last_state_node in input_nodes:
-			if last_state_node.wasActive():
+			if last_state_node.was_active():
 				i = last_state_node.get_index()
 				for current_state_node in input_nodes:
 					j = current_state_node.get_index()

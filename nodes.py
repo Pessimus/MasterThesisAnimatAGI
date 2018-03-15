@@ -11,7 +11,7 @@ class AndNode(Node):
 
 	# Override of super method, makes call to parent and then updates if not yet updated this tick.
 	# Is set to active if all the input nodes are active (and the number of input nodes is larger than 0). 
-	def tick(self, time, temporalTime = 0, temporal = False):
+	def tick(self, time, temporal_time = 0, temporal = False):
 		if temporal:
 			return False
 		if Node.tick(self, time):
@@ -28,20 +28,20 @@ class AndNode(Node):
 
 	#Returning the number of ticks required for this node to become active.
 	#TODO: this method does not check that the node has input....
-	def activationTime(self):
-		return max(self.inputs[0].activationTime(), self.inputs[1].activationTime())
-	#End activationTime()
+	def activation_time(self):
+		return max(self.inputs[0].activation_time(), self.inputs[1].activation_time())
+	#End activation_time()
 
 	#Returns true if this node has just gotten the first input it needs to become active.
 	#TODO: this method does not check that the node has input....
-	def startingActive(self):
-		at1 = self.inputs[0].activationTime()
-		at2 = self.inputs[1].activationTime()
+	def starting_active(self):
+		at1 = self.inputs[0].activation_time()
+		at2 = self.inputs[1].activation_time()
 		if(at1 > at2):
-			return self.inputs[0].startingActive()
+			return self.inputs[0].starting_active()
 		else:
-			return self.inputs[1].startingActive()
-	#End startingActive()
+			return self.inputs[1].starting_active()
+	#End starting_active()
 # -END of class AndNode
 
 
@@ -56,7 +56,7 @@ class NAndNode(Node):
 
 	# Override of super method, makes call to parent and then updates if not yet updated this tick.
 	# Is set to inactive if all the input nodes are active (and the number of input nodes is larger than 0). 
-	def tick(self, time, temporalTime = 0, temporal = False):
+	def tick(self, time, temporal_time = 0, temporal = False):
 		if temporal:
 			return False
 		if Node.tick(self, time):
@@ -73,15 +73,15 @@ class NAndNode(Node):
 
 	#Returning the number of ticks required for this node to become active.
 	#TODO: this method does not check that the node has input....
-	def activationTime(self):
+	def activation_time(self):
 		return 1 #As all nodes can become inactive in one time step.
-	#End activationTime()
+	#End activation_time()
 
 	#Returns true if this node has just gotten the first input it needs to become active.
 	#TODO: this method does not check that the node has input....
-	def startingActive(self):
+	def starting_active(self):
 		return not self.is_active();
-	#End startingActive()
+	#End starting_active()
 # -END of class NAndNode
 
 
@@ -91,15 +91,15 @@ class SEQNode(Node):
 	def __init__(self, name=None, inputs=[]):
 		if not name: name = makeName("SEQ", inputs, sort=False)
 		Node.__init__(self, name, inputs)
-		self.possibleActivations = []
+		self.possible_activations = []
 	#End __init__()
 
-#	def tick(self, time, temporalTime = 0, temporal = False):
+#	def tick(self, time, temporal_time = 0, temporal = False):
 #		if temporal:
 #			return False
 #		if Node.tick(self, time):
 #			if len(self.inputs) > 1:
-#				if self.inputs[0].wasActive() and self.inputs[1].is_active():
+#				if self.inputs[0].was_active() and self.inputs[1].is_active():
 #					self.activate(time)
 #				else:
 #					self.deactivate(time)
@@ -109,26 +109,26 @@ class SEQNode(Node):
 #	#End tick()
 	# Overrides the 'tick' function. Does not update if the tick is temporal. 
 	# Else, ticks all input nodes, and then activates if the first input was temporal active in the past, and the second is active as soon after as possible.
-	def tick(self, time, temporalTime = 0, temporal = False):
+	def tick(self, time, temporal_time = 0, temporal = False):
 		if temporal:
 			return False
 		if Node.tick(self, time):
 			if len(self.inputs) > 1:
-				if(self.inputs[0].wasActive() and self.inputs[1].startingActive()): #Migth become active.
-					waitTime = self.inputs[1].activationTime()
-					self.possibleActivations.append(waitTime) #add a possible activation to check when relevant.
+				if(self.inputs[0].was_active() and self.inputs[1].starting_active()): #Migth become active.
+					waitTime = self.inputs[1].activation_time()
+					self.possible_activations.append(waitTime) #add a possible activation to check when relevant.
 				#end if
 				self.deactivate(time)#TODO: should this be done here?
-				tmpPossibleActivations = []
-				for waitTime in self.possibleActivations:
+				tmppossible_activations = []
+				for waitTime in self.possible_activations:
 					waitTime = waitTime-1;
 					if (waitTime) == 0:
 						if self.inputs[1].is_active() and not self.is_active():#no need to activate if already active.
 							self.activate(time)
 					else:
-						tmpPossibleActivations.append(waitTime)
+						tmppossible_activations.append(waitTime)
 				#end loop
-				self.possibleActivations = tmpPossibleActivations
+				self.possible_activations = tmppossible_activations
 			#end if
 			return True
 		else:
@@ -136,19 +136,19 @@ class SEQNode(Node):
 	#End tick()
 
 	#Returning the number of ticks required for this node to become active.
-	def activationTime(self):
-		activationTime = 0;
+	def activation_time(self):
+		activation_time = 0;
 		for input in self.inputs:
-			activationTime = activationTime + input.activationTime()
-		return activationTime
-	#End activationTime()
+			activation_time = activation_time + input.activation_time()
+		return activation_time
+	#End activation_time()
 
 	#Returns true if this node has just gotten the first input it needs to become active.
-	def startingActive(self):
+	def starting_active(self):
 		if len(self.inputs) > 0:
-			return self.inputs[0].startingActive()
+			return self.inputs[0].starting_active()
 		return False #Does not have input, is allways false.
-	#End startingActive()
+	#End starting_active()
 #End SEQNode
 
 #Node representing one of the Animats sensors 
@@ -160,9 +160,9 @@ class SensorNode(Node):
 	#End __init__()
 
 	# Overrides the 'tick' function. Ticks this node, looking att different parts of the environment depending on if the tick is temporal or not.
-	def tick(self, time, temporalTime=0, temporal=False):
-		if Node.tick(self,time,temporalTime, temporal):
-			if self.readSensor(temporalTime,temporal):
+	def tick(self, time, temporal_time=0, temporal=False):
+		if Node.tick(self,time,temporal_time, temporal):
+			if self.read_sensor(temporal_time,temporal):
 				self.activate(time)
 			else:
 				self.deactivate(time)
@@ -172,24 +172,24 @@ class SensorNode(Node):
 	#End tick()
 
 	#Returning the number of ticks required for this node to become active.
-	def activationTime(self):
+	def activation_time(self):
 		return 1
-	#End activationTime()
+	#End activation_time()
 
 	#Returns true if this node has just gotten the first input it needs to become active.
-	def startingActive(self):
+	def starting_active(self):
 		return self.is_active()
-	#End startingActive()
+	#End starting_active()
 
 	#Returns true iff the input that this sensor reacts to is present in the input in the environment. 
-	def readSensor(self, temporalTime=0, temporal=False):
+	def read_sensor(self, temporal_time=0, temporal=False):
 		if self.sensor == "true":
 			return 1
 		if temporal:
 			#self.previous_temporal_active = self.active
 			currentInput = self.environment.get_environmental_temporal_state()
-			if(len(currentInput) > 0 and len(currentInput) > temporalTime):
-				return currentInput[temporalTime] == self.sensor
+			if(len(currentInput) > 0 and len(currentInput) > temporal_time):
+				return currentInput[temporal_time] == self.sensor
 			else:
 				return False
 		else:
@@ -198,7 +198,7 @@ class SensorNode(Node):
 				if element == self.sensor:
 					return True
 			return False
-	#End readSensor()
+	#End read_sensor()
 
 	# Method for debugging, returns the 'word' reprecented by this node.
 	def get_word(self):

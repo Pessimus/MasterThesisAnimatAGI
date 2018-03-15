@@ -486,43 +486,43 @@ def test_if_filereader_works(verbose = True):
 	pasing_tests = True
 
 	file = FileReader("inputText.txt")
-	#testSentence = fileReader.getNextSentence(file)
-	testSentence = file.getNextSentence()
+	#testSentence = fileReader.get_next_sentence(file)
+	testSentence = file.get_next_sentence()
 	if verbose:
 		print("---Reading a sentence from a file:---")
 		print(testSentence)
 	else:
 		pasing_tests = pasing_tests and testSentence == "Hello World! this is dog, the doggo master of !!!!universe??\n"
 
-	testSentence = removeSignFromString(testSentence)
+	testSentence = remove_sign_from_string(testSentence)
 	if verbose:
 		print("---Removing all special signs from the sentence:---")
 		print(testSentence)
 	else:
 		pasing_tests = pasing_tests and testSentence == "Hello World this is dog the doggo master of universe"
 
-	testList = convertSentenceToList(testSentence)
+	testList = convert_sentence_to_list(testSentence)
 	if verbose:
 		print("---Converting the sentence to a list of words:---")
 		print(testList)
 	else:
 		pasing_tests = pasing_tests and len(testList) == 10 and testList[0] == "Hello" and testList[1] == "World" and testList[2] == "this" and testList[3] == "is" and testList[4] == "dog" and testList[5] == "the" and testList[6] == "doggo" and testList[7] == "master" and testList[8] == "of" and testList[9] == "universe"
 
-	testSentence2 = convertListToSentence(testList)
+	testSentence2 = convert_list_to_sentence(testList)
 	if verbose:
 		print("---Converting the list back into a sentence:---")
 		print(testSentence2)
 	else:
 		pasing_tests = pasing_tests and testSentence == "Hello World this is dog the doggo master of universe"
 
-	wordList = convertWordToList("doggo")
+	wordList = convert_word_to_list("doggo")
 	if verbose:
 		print("---Converting the word 'doggo' into a list of chars:---")
 		print(wordList)
 	else:
 		pasing_tests = pasing_tests and len(wordList) == 5 and wordList[0] == "d" and wordList[1] == "o" and wordList[2] == "g" and wordList[3] == "g" and wordList[4] == "o"
 
-	word = convertListToWord(wordList)
+	word = convert_list_to_word(wordList)
 	if verbose:
 		print("---And converting it back into a word:---")
 		print(word)
@@ -532,16 +532,16 @@ def test_if_filereader_works(verbose = True):
 	if verbose:
 		print("---Printing the rest of the file word by word:---")
 		while not file.end_of_file:
-			nextWord = file.getNextWord()
+			nextWord = file.get_next_word()
 			print(nextWord)
 	else:
 		l = []
 		while not file.end_of_file:
-			nextWord = file.getNextWord()
+			nextWord = file.get_next_word()
 			l.append(nextWord)
 		pasing_tests = pasing_tests and len(l) == 14 and l[0] == "I" and l[1] == "am" and l[2] == "the" and l[3] == "super" and l[4] == "cat" and l[5] == "The" and l[6] == "dogs" and l[7] == "won" and l[8] == "I" and l[9] == "won" and l[10] == "People" and l[11] == "won't" and l[12] == "win" and l[13] == ""
 
-	file.closeFile()
+	file.close_file()
 
 	if not verbose:
 		if pasing_tests:
@@ -555,22 +555,22 @@ def test_if_filewriter_works(verbose = True):
 		print("Writing to the file 'outputText.txt'.")
 	file = FileWriter("outputText.txt")
 
-	file.writeLineToFile("Psst...")
+	file.write_line_to_file("Psst...")
 
 	arr = ["Dogs","are","better","than","humans."]
-	file.writeLinesToFile(arr)
+	file.write_lines_to_file(arr)
 
-	file.closeFile()
+	file.close_file()
 
 	if not verbose:
 		pasing_tests = True
 		file2 = FileReader("outputText.txt")
 		l = []
 		while not file2.end_of_file:
-			nextWord = file2.getNextWord()
+			nextWord = file2.get_next_word()
 			l.append(nextWord)
 		pasing_tests = pasing_tests and len(l) == 7 and l[0] == "Psst" and l[1] == "Dogs" and l[2] == "are" and l[3] == "better" and l[4] == "than" and l[5] == "humans" and l[6] == ""
-		file2.closeFile()
+		file2.close_file()
 		if pasing_tests:
 			print("All tests pased.")
 		else:
@@ -844,8 +844,8 @@ def test_if_network_works(verbose = True):
 	if verbose:
 		test_network.print_network()
 	else:
-		pasing_tests = pasing_tests and not t_seq_doggo.wasActive() and t_seq_cat.wasActive() and t_seq_go.wasActive() and sensor_node_o.wasActive() and sensor_node_a.wasActive()
-		pasing_tests = pasing_tests and not t_seq_do.wasActive() and not t_seq_dog.wasActive() and not t_seq_at.wasActive() and not sensor_node_d.wasActive() and not sensor_node_g.wasActive() and not sensor_node_c.wasActive() and not sensor_node_t.wasActive()
+		pasing_tests = pasing_tests and not t_seq_doggo.was_active() and t_seq_cat.was_active() and t_seq_go.was_active() and sensor_node_o.was_active() and sensor_node_a.was_active()
+		pasing_tests = pasing_tests and not t_seq_do.was_active() and not t_seq_dog.was_active() and not t_seq_at.was_active() and not sensor_node_d.was_active() and not sensor_node_g.was_active() and not sensor_node_c.was_active() and not sensor_node_t.was_active()
 
 	if verbose:
 		print("Testing the add_action_node method")
@@ -1087,25 +1087,25 @@ def test_how_often_the_animat_learns_the_entire_alphabet():
 	print(results_avg_number_of_generators_found)
 
 	file = FileWriter("output/babbling_result.m")
-	file.writeLineToFile("clear all, clf, clc")
-	file.writeLineToFile("%The tests to run")
-	file.writeLineToFile("tests_to_run = "+str(tests_to_run))
-	file.writeLineToFile("%Percentage of times that all generators were found for the different tests:")
-	file.writeLineToFile("results_all_generators_found = "+str(results_all_generators_found))
-	file.writeLineToFile("% Average percentage of generators found for the different tests:")
-	file.writeLineToFile("results_avg_number_of_generators_found = "+str(results_avg_number_of_generators_found))
-	file.writeLineToFile("plot(tests_to_run,results_all_generators_found)")
-	file.writeLineToFile("figure")
-	file.writeLineToFile("yyaxis left")
-	file.writeLineToFile("ylabel('Percentage of runs where all generators were found')")
-	file.writeLineToFile("plot(tests_to_run,results_all_generators_found)")
-	file.writeLineToFile("hold on")
-	file.writeLineToFile("yyaxis right")
-	file.writeLineToFile("ylabel('Average number of generators found');")
-	file.writeLineToFile("plot(tests_to_run,results_avg_number_of_generators_found)")
-	file.writeLineToFile("title('Statistics of how well the Animat finds generators');")
-	file.writeLineToFile("xlabel('Number of timesteps spent babbling');")
-	#file.writeLineToFile("legend('Runs where all generators were found','Average number of generators found','Location','east')")
+	file.write_line_to_file("clear all, clf, clc")
+	file.write_line_to_file("%The tests to run")
+	file.write_line_to_file("tests_to_run = "+str(tests_to_run))
+	file.write_line_to_file("%Percentage of times that all generators were found for the different tests:")
+	file.write_line_to_file("results_all_generators_found = "+str(results_all_generators_found))
+	file.write_line_to_file("% Average percentage of generators found for the different tests:")
+	file.write_line_to_file("results_avg_number_of_generators_found = "+str(results_avg_number_of_generators_found))
+	file.write_line_to_file("plot(tests_to_run,results_all_generators_found)")
+	file.write_line_to_file("figure")
+	file.write_line_to_file("yyaxis left")
+	file.write_line_to_file("ylabel('Percentage of runs where all generators were found')")
+	file.write_line_to_file("plot(tests_to_run,results_all_generators_found)")
+	file.write_line_to_file("hold on")
+	file.write_line_to_file("yyaxis right")
+	file.write_line_to_file("ylabel('Average number of generators found');")
+	file.write_line_to_file("plot(tests_to_run,results_avg_number_of_generators_found)")
+	file.write_line_to_file("title('Statistics of how well the Animat finds generators');")
+	file.write_line_to_file("xlabel('Number of timesteps spent babbling');")
+	#file.write_line_to_file("legend('Runs where all generators were found','Average number of generators found','Location','east')")
 
 def create_nodes_for_alphabet(test_environment):
 	sensor_node_a = SensorNode(name = "a-sensor",sensor = "a", environment =  test_environment)

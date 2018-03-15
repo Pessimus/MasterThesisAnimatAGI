@@ -17,22 +17,22 @@ class Controller():
 			self.update_environment()
 			#self.update_animat()
 
-		self.file_reader.closeFile()
-		self.file_writer.closeFile()
+		self.file_reader.close_file()
+		self.file_writer.close_file()
 	#End updater()
 
 	#TODO: should this be tick? like an environment tick()?
 	def update_environment(self):
 		#print("Debug: Updating environment")
 		#add the next word of the file to the environment's next temporal state
-		self.environment.add_environmental_temporal_input(self.file_reader.getNextWord())
+		self.environment.add_environmental_temporal_input(self.file_reader.get_next_word())
 
 		#TODO: add the next non-word input which should also come from somewhere...
 		#environment.addEnvironmentalInput()
 
 		#save the environment's current temporal state (word)
 		current_temporal_state = self.environment.get_environmental_temporal_state() #list of all letters active in a time step
-		self.file_writer.writeLineToFile(convertListToWord(current_temporal_state))
+		self.file_writer.write_line_to_file(convert_list_to_word(current_temporal_state))
 
 		#TODO: save the environments non-word state somewhere...
 		#currentState = environment.get_environmental_state()

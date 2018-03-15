@@ -33,7 +33,7 @@ class Node:
 #		self.previous_temporal_top_active = False
 		self.inputs = inputs
 		self.time = 0
-		self.temporalTime = 0 #TODO: should this be here? Needed as the code is now....
+		self.temporal_time = 0 #TODO: should this be here? Needed as the code is now....
 		self.activations = 0
 		self.created_at = 0
 		self.permanent = permanent
@@ -44,21 +44,21 @@ class Node:
 	# Method for updating the node each time-step.
 	# Takes as input:
 	#	- the current time 
-	#	- the in-time-step update step number (temporalTime)
+	#	- the in-time-step update step number (temporal_time)
 	#	- if the update is temporal inside the time-step or not
 	# Returns if the node updates or not.
-	def tick(self, time, temporalTime = 0, temporal = False):
-		if (self.time > time or (self.time==time and (not self.temporal or (self.temporalTime >= temporalTime)))):
+	def tick(self, time, temporal_time = 0, temporal = False):
+		if (self.time > time or (self.time==time and (not self.temporal or (self.temporal_time >= temporal_time)))):
 			return False
 
 		#if self.time < time:
 		#	self.previous_active = self.active
 
 		self.time = time
-		self.temporalTime = temporalTime
+		self.temporal_time = temporal_time
 
 		for node in self.inputs:
-			node.tick(time,temporalTime,temporal)
+			node.tick(time,temporal_time,temporal)
 		
 		if temporal:
 			self.previous_temporal_active = self.active
@@ -68,15 +68,15 @@ class Node:
 
 	#SHOULD BE OVERWRITTEN BY SUBCLASSES
 	#Returning the number of ticks required for this node to become active.
-	def activationTime(self):
+	def activation_time(self):
 		return 1
-	#End activationTime()
+	#End activation_time()
 
 	#SHOULD BE OVERWRITTEN BY SUBCLASSES
 	#Returns true if this node has just gotten the first input it needs to become active.
-	def startingActive(self):
+	def starting_active(self):
 		return self.is_active()
-	#End startingActive()
+	#End starting_active()
 
 	# Sets the node as Active, and increases the count of how many tinmes the node has been active.
 	def activate(self, time):
@@ -95,14 +95,14 @@ class Node:
 	#End is_active()
 
 	# Returns if the node was active the last time step.
-	def wasActive(self):
+	def was_active(self):
 		return self.previous_active
- 	#End wasActive()
+ 	#End was_active()
 
 	# Returns if the node was active the last temporal step within the current time-step.
-	def wasTemporalActive(self):
+	def was_temporal_active(self):
 		return self.previous_temporal_active
-	#End wasTemporalActive()
+	#End was_temporal_active()
 
 	# Returns the name of this node.
 	def get_name(self):
