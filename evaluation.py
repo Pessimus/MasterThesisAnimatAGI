@@ -233,23 +233,25 @@ def evaluate_step_two():
 	RESULT_learnt_words = [w for w in words_to_use if w in RESULT_animat_words]
 
 	#Save results:
-	file FileWriter("evaluationIO/" + "STEP:2 Results" + datetime.datetime.now().strftime("%y%m%d-%H%M%S") + ".m")
-	file.writeLineToFile()
+	file = FileWriter("evaluationIO/" + "STEP:2 Results" + datetime.datetime.now().strftime("%y%m%d-%H%M%S") + ".m")
+	#self.file_writer = FileWriter("output/" + output_file_name + datetime.datetime.now().strftime("%y%m%d-%H%M%S") + ".txt")
+	file.writeLineToFile("")
 
 	file.writeLineToFile("% Results to save:")
-	file.writeLineToFile("RESULT_number_of_words_learnt = " + RESULT_number_of_words_learnt)
-	file.writeLineToFile("RESULT_number_of_perception_nodes = " + RESULT_number_of_perception_nodes)
-	file.writeLineToFile("RESULT_word_occurenses = " + RESULT_word_occurenses)
-	file.writeLineToFile("RESULT_word_lengths = " + RESULT_word_lengths)
-	file.writeLineToFile("RESULT_animat_words = " + RESULT_animat_words)
-	file.writeLineToFile("RESULT_learnt_words = " + RESULT_learnt_words)
+	file.writeLineToFile("RESULT_number_of_words_learnt = " + str(RESULT_number_of_words_learnt))
+	file.writeLineToFile("RESULT_number_of_perception_nodes = " + str(RESULT_number_of_perception_nodes))
+	file.writeLineToFile("RESULT_word_occurenses = " + str(RESULT_word_occurenses))
+	file.writeLineToFile("RESULT_word_lengths = " + str(RESULT_word_lengths))
+	file.writeLineToFile("RESULT_animat_words = " + str(RESULT_animat_words))
+	file.writeLineToFile("RESULT_learnt_words = " + str(RESULT_learnt_words))
 	file.writeLineToFile("% Input to save:")
-	file.writeLineToFile("TOTAL_NUMBER_OF_WORDS = " + TOTAL_NUMBER_OF_WORDS)
-	file.writeLineToFile("AVERAGE_NUMBER_OF_OCCURENCES_OF_EACH_WORD = " + AVERAGE_NUMBER_OF_OCCURENCES_OF_EACH_WORD)
-	file.writeLineToFile("SEQ_FORMATION_PROBABILITY = " + SEQ_FORMATION_PROBABILITY)
+	file.writeLineToFile("TOTAL_NUMBER_OF_WORDS = " + str(TOTAL_NUMBER_OF_WORDS))
+	file.writeLineToFile("AVERAGE_NUMBER_OF_OCCURENCES_OF_EACH_WORD = " + str(AVERAGE_NUMBER_OF_OCCURENCES_OF_EACH_WORD))
+	file.writeLineToFile("SEQ_FORMATION_PROBABILITY = " + str(SEQ_FORMATION_PROBABILITY))
+	file.writeLineToFile("words_to_use = " + str(words_to_use))
 	file.writeLineToFile("% Absolute constatns to save:")
-	file.writeLineToFile("TEMPORAL_MEMORY_CAPACITY = " + TEMPORAL_MEMORY_CAPACITY)
-	file.writeLineToFile("SEQ_FORMATION_MAX_ATTEMPTS = " + SEQ_FORMATION_MAX_ATTEMPTS)
+	file.writeLineToFile("TEMPORAL_MEMORY_CAPACITY = " + str(TEMPORAL_MEMORY_CAPACITY))
+	file.writeLineToFile("SEQ_FORMATION_MAX_ATTEMPTS = " + str(SEQ_FORMATION_MAX_ATTEMPTS))
 
 
 
