@@ -10,7 +10,7 @@ from network import *
 from animat import *
 from random import shuffle
 import random
-
+import datetime
 
 def create_nodes_for_alphabet(test_environment):
 	sensor_node_a = SensorNode(name = "a-sensor",sensor = "a", environment =  test_environment)
@@ -161,11 +161,15 @@ def evaluate_step_one():
 	#file.writeLineToFile("legend('Runs where all generators were found','Average number of generators found','Location','east')")
 
 def evaluate_step_two():
-	#Define constatns
-	NUMBER_OF_OCCURENCES_OF_WORDS = 4*50
-	TEMPORAL_MEMORY_CAPACITY = 5
+	#Define constatns (for this run)
+	TOTAL_NUMBER_OF_WORDS = 10
+	AVERAGE_NUMBER_OF_OCCURENCES_OF_EACH_WORD = 100
 	SEQ_FORMATION_PROBABILITY = 1/float(25)
+
+	#Define constatns (for all runs)
+	TEMPORAL_MEMORY_CAPACITY = 5
 	SEQ_FORMATION_MAX_ATTEMPTS = 10
+	MAX_TIME = AVERAGE_NUMBER_OF_OCCURENCES_OF_EACH_WORD * TOTAL_NUMBER_OF_WORDS *2 #*2 to allow for spaces between words.
 	INPUT_FILE_NAME = "evaluationIO/animal_words.txt"
 
 	#Create the Animat
@@ -178,85 +182,74 @@ def evaluate_step_two():
 	#Create arrays for words to input to the animate
 	input_file = FileReader(INPUT_FILE_NAME)
 	all_words = input_file.get_entire_file_as_array()
-	all_words = all_words[0:10]
-	number_of_words = len(all_words)
+	words_to_use = all_words[0:TOTAL_NUMBER_OF_WORDS]
 
-	word_indices = np.array([])
-	for i in range(0, number_of_words):
-		tmp_array = np.ones((NUMBER_OF_OCCURENCES_OF_WORDS))*i
-		word_indices = np.concatenate((word_indices, tmp_array))
-
-	shuffle(word_indices)
+	#Arrays to store results.
+	RESULT_number_of_words_learnt = []
+	RESULT_number_of_perception_nodes = []
+	RESULT_word_occurenses = [0] * TOTAL_NUMBER_OF_WORDS
 
 	#Train the Animat
 	t = 0
-	for index in word_indices:
+	while t < MAX_TIME:
 		t = t + 1
-		if t == 500 or t == 1000 or t == 1500 or t == 2000:
-			print("TIME IS NOW: %d"%(t))
-
 		#update environment
-		word = all_words[int(index)]
+		index = np.random.randint(0, TOTAL_NUMBER_OF_WORDS)
+		word = words_to_use[index]
 		test_environment.temporalState = word
 
 		#Update the Animat
 		test_animat.update(t,len(word))
+
+		#update results
+		tmp_animat_words = [n.getWord() for n in test_animat.network.perception_nodes]
+		c = 0
+		for w in words_to_use:
+			if w in tmp_animat_words:
+				c = c + 1
+		RESULT_number_of_words_learnt.append(c)
+		RESULT_number_of_perception_nodes.append(len(tmp_animat_words))
+		RESULT_word_occurenses[index] = RESULT_word_occurenses[index] + 1
+
+		#Give the Animat a space between words
+		t = t + 1
+		test_environment.temporalState = " "
+		test_animat.update(t,1)
+
+		#update results
+		tmp_animat_words = [n.getWord() for n in test_animat.network.perception_nodes]
+		c = 0
+		for w in words_to_use:
+			if w in tmp_animat_words:
+				c = c + 1
+		RESULT_number_of_words_learnt.append(c)
+		RESULT_number_of_perception_nodes.append(len(tmp_animat_words))
+		RESULT_word_occurenses[index] = RESULT_word_occurenses[index] + 1
 	#End for loop
 
-	#Get results
+	#Calculate final results
+	RESULT_word_lengths = [len(s) for s in words_to_use]
+	RESULT_animat_words = [n.getWord() for n in test_animat.network.perception_nodes] # All 'words' that the Animat has learnt.
+	RESULT_learnt_words = [w for w in words_to_use if w in RESULT_animat_words]
 
+	#Save results:
+	file FileWriter("evaluationIO/" + "STEP:2 Results" + datetime.datetime.now().strftime("%y%m%d-%H%M%S") + ".m")
+	file.writeLineToFile()
 
-	#mat = np.zeros(test_animat.network.temporal_sequence_matrix.shape)
-	#for i in range(0,test_animat.network.temporal_sequence_matrix.shape[0]):
-	#	for j in range(0,test_animat.network.temporal_sequence_matrix.shape[1]):
-	#		v = test_animat.network.temporal_sequence_matrix[i][j]
-	#		if not v == 0:
-	#			mat[i][j] = len(v)
-	#print("\nSimpler form:")
-	#print(mat)
-
-	#print("perception nodes: ")
-	print("Printing ALL perception nodes in the Animat (not sensors)")
-	animat_words = [n.getWord() for n in test_animat.network.perception_nodes]
-	print(animat_words)
-
-	c = 0
-	for w in all_words:
-		if w in animat_words:
-			c = c + 1
-	print("\nThe Animat has learnt %d of %d words.\n" % (c,number_of_words))
-
-	print(all_words)
-
-
-
-
-	#mat = np.zeros(test_animat.network.temporal_sequence_matrix.shape)
-	lens = []
-	nbr_ok_values = 0
-	nbr_not_ok_values = 0
-	for i in range(0,test_animat.network.temporal_sequence_matrix.shape[0]):
-		for j in range(0,test_animat.network.temporal_sequence_matrix.shape[1]):
-			v = test_animat.network.temporal_sequence_matrix[i][j]
-			if not v == 0:
-				lens.append(len(v))
-				for e in v:
-					if e <= 100:
-						nbr_ok_values = nbr_ok_values + 1
-					else:
-						nbr_not_ok_values = nbr_not_ok_values + 1
-	#print(lens)
-	sum = 0
-	for s in lens:
-		sum = sum + s
-	print("Sum of lenghts is %d"%(sum))
-	print("Number of ok values in matrix is %d"%(nbr_ok_values))
-
-
-
-
-
-
+	file.writeLineToFile("% Results to save:")
+	file.writeLineToFile("RESULT_number_of_words_learnt = " + RESULT_number_of_words_learnt)
+	file.writeLineToFile("RESULT_number_of_perception_nodes = " + RESULT_number_of_perception_nodes)
+	file.writeLineToFile("RESULT_word_occurenses = " + RESULT_word_occurenses)
+	file.writeLineToFile("RESULT_word_lengths = " + RESULT_word_lengths)
+	file.writeLineToFile("RESULT_animat_words = " + RESULT_animat_words)
+	file.writeLineToFile("RESULT_learnt_words = " + RESULT_learnt_words)
+	file.writeLineToFile("% Input to save:")
+	file.writeLineToFile("TOTAL_NUMBER_OF_WORDS = " + TOTAL_NUMBER_OF_WORDS)
+	file.writeLineToFile("AVERAGE_NUMBER_OF_OCCURENCES_OF_EACH_WORD = " + AVERAGE_NUMBER_OF_OCCURENCES_OF_EACH_WORD)
+	file.writeLineToFile("SEQ_FORMATION_PROBABILITY = " + SEQ_FORMATION_PROBABILITY)
+	file.writeLineToFile("% Absolute constatns to save:")
+	file.writeLineToFile("TEMPORAL_MEMORY_CAPACITY = " + TEMPORAL_MEMORY_CAPACITY)
+	file.writeLineToFile("SEQ_FORMATION_MAX_ATTEMPTS = " + SEQ_FORMATION_MAX_ATTEMPTS)
 
 
 

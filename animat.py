@@ -21,8 +21,6 @@ class Animat:
 
 		self.network.update_previous_active()
 
-		#self.network.temporal_short_term_memory = [] #TODO: do we want to do this? #TODO: WHY DOES THIS MAKE THE CODE CRASH?! Should not do that, but does, also does not seem to do waht is intended....
-
 		for tt in range(0,temporal_input_length):
 			self.temporal_update(time, tt)
 
@@ -70,6 +68,8 @@ class Animat:
 		#if np.random.rand() < self.seq_formation_probability:
 		if r < self.seq_formation_probability:
 			probabilities = self.network.get_cumulative_temporal_seq_matrix()
+			if(probabilities[-1] == 0): #Animat has not any sequenses for the last 100 temporal time steps. 
+				return
 			#print(probabilities.shape)
 			#print(probabilities)
 			success = False

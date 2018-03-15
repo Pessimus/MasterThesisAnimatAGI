@@ -55,7 +55,6 @@ class Network():
 		for i in range(0,self.temporal_sequence_matrix.shape[0]):
 			for j in range(0,self.temporal_sequence_matrix.shape[1]):
 				self.temporal_sequence_matrix[i][j] = []
-		#print(self.temporal_sequence_matrix)
 
 		self.conditional_matrix = np.zeros((self.total_number_of_input_nodes, self.total_number_of_input_nodes)) #Intuition: Probability that 1 is top active at t given that 2 is top active at t: Pr(1|2)
 		self.time_extended_conditional_matrix = np.zeros((self.total_number_of_input_nodes, self.total_number_of_input_nodes)) #Intuition: Probability that 1 is top active at ~t given that 2 is top active at t: Pr(1|2)
@@ -316,7 +315,6 @@ class Network():
 	#End activate_action_node()
 
 	def update_temporal_sequence_matrix(self):
-		#print(len(self.temporal_short_term_memory))
 		#Update all tick counters.
 		for i in range(0,self.temporal_sequence_matrix.shape[0]):
 			for j in range(0,self.temporal_sequence_matrix.shape[1]):
@@ -325,31 +323,13 @@ class Network():
 				v2 =  []
 				for e in v:
 					if e < 100:
-					#print(e)
-					#if e < 100 or True:
-						#print("%d :"%(e))
 						v2.append(e+1)
 					#end if
 				#end if
 				self.temporal_sequence_matrix[i][j] = v2
 
-		
-#		for i in range(0,self.temporal_sequence_matrix.shape[0]):
-#			for j in range(0,self.temporal_sequence_matrix.shape[1]):
-#			#print("-|-")
-#			#if not (element == 0):
-#				#print(element)
-#				element = self.temporal_sequence_matrix[i][j]
-#				removal_list = []
-#				for value in element:
-#					if value > 100:
-#						removal_list.append(value)
-#				for x in removal_list:
-#					element.remove(x)
-
 		#Add new tick counters.
 		topactive_nodes = self.get_topactive_nodes()
-		#print([[n.getWord() for n in l] for l in self.temporal_short_term_memory])
 		for node in topactive_nodes:
 			activation_time = node.activationTime()
 			if len(self.temporal_short_term_memory) > activation_time:
@@ -357,13 +337,6 @@ class Network():
 				for node_prime in previous_top_actives:
 					node_index = node.get_index()
 					node_prime_index = node_prime.get_index()
-					#v = self.temporal_sequence_matrix[node_index][node_prime_index]
-					#if v == 0:
-					#	self.temporal_sequence_matrix[node_index][node_prime_index] = [1]
-					#else:
-						#v = [e+1 for e in v if not e > 99]
-						#v.append(1)
-						#self.temporal_sequence_matrix[node_index][node_prime_index] = v
 					(self.temporal_sequence_matrix[node_index][node_prime_index]).append(1)
 					#end else
 	#End update_temporal_sequence_matrix()
@@ -398,24 +371,17 @@ class Network():
 				dividend, divisor = self.transition_matrix[0][a][b]
 				if divisor == dividend and not divisor == 0: #If the probability is one (not true if divisor is 0)
 					self.generator_list[b] = a
-#				else:
-#					self.generator_list[b] = -1
 	#End update_generators()
 
 	def get_cumulative_temporal_seq_matrix(self):
 		x,y = self.temporal_sequence_matrix.shape
 		temp_mat = np.zeros((x,y))
 
-		debug = True
 		#loop from 1 to avoid True node which is at index 1
 		for i in range(1,x):
 			for j in range(1,y):
 				v = self.temporal_sequence_matrix[i][j]
-				#if not v == 0:
-				debug = debug and len(v) == 0
 				temp_mat[i][j] = len(v)
-		if debug:
-			print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!____!_!_!_!_!_!_!_!_!_!_!_!_!_!!!___!_!!_") #If this happens the code will crash. TODO: finish debuging this.
 
 		return np.cumsum(temp_mat)
 	#End get_cumulative_temporal_seq_matrix()
