@@ -24,6 +24,15 @@ class FileReader:
 		return self.currentSentence.pop(0)
 	#End getNextWord()
 
+	#returns a array of all the words in the remaining fiel
+	def get_entire_file_as_array(self):
+		result = []
+		while not self.end_of_file:
+			result.append(self.getNextWord())
+		result.pop() #remove the dummy value that is returned at when all words are found.
+		return result
+	#End get_entire_file_as_array()
+
 	#Closes the current file so that it can no longer be used.
 	def closeFile(self):
 		self.fileObject.close()
