@@ -97,39 +97,39 @@ def test_if_nodes_update_to_the_value_they_should(verbose = True):
 	v = seqNodeTestNode.tick(i)
 	i = i +1;
 	if verbose:
-		print("\t should be False,\n\t -------is %s" % (seqNodeTestNode.isActive()))
+		print("\t should be False,\n\t -------is %s" % (seqNodeTestNode.is_active()))
 	else:
-		pasing_tests = pasing_tests and (not seqNodeTestNode.isActive())
+		pasing_tests = pasing_tests and (not seqNodeTestNode.is_active())
 	dummy1.active = True
 	v = seqNodeTestNode.tick(i)
 	i = i +1;
 	if verbose:
-		print("\t should be False,\n\t -------is %s" % (seqNodeTestNode.isActive()))
+		print("\t should be False,\n\t -------is %s" % (seqNodeTestNode.is_active()))
 	else:
-		pasing_tests = pasing_tests and (not seqNodeTestNode.isActive())
+		pasing_tests = pasing_tests and (not seqNodeTestNode.is_active())
 	dummy1.active = False
 	dummy2.active = True
 	v = seqNodeTestNode.tick(i)
 	i = i +1;
 	if verbose:
-		print("\t should be False,\n\t -------is %s" % (seqNodeTestNode.isActive()))
+		print("\t should be False,\n\t -------is %s" % (seqNodeTestNode.is_active()))
 	else:
-		pasing_tests = pasing_tests and (not seqNodeTestNode.isActive())
+		pasing_tests = pasing_tests and (not seqNodeTestNode.is_active())
 	dummy1.active = True
 	dummy2.active = True
 	v = seqNodeTestNode.tick(i)
 	i = i +1;
 	if verbose:
-		print("\t should be False,\n\t -------is %s" % (seqNodeTestNode.isActive()))
+		print("\t should be False,\n\t -------is %s" % (seqNodeTestNode.is_active()))
 	else:
-		pasing_tests = pasing_tests and (not seqNodeTestNode.isActive())
-	dummy1.previousActive = True
+		pasing_tests = pasing_tests and (not seqNodeTestNode.is_active())
+	dummy1.previous_active = True
 	v = seqNodeTestNode.tick(i)
 	i = i +1;
 	if verbose:
-		print("\t should be True,\n\t -------is %s" % (seqNodeTestNode.isActive()))
+		print("\t should be True,\n\t -------is %s" % (seqNodeTestNode.is_active()))
 	else:
-		pasing_tests = pasing_tests and (seqNodeTestNode.isActive())
+		pasing_tests = pasing_tests and (seqNodeTestNode.is_active())
 
 	if verbose:
 		print("--------Testing Temporal SEQ Node--------")
@@ -144,46 +144,46 @@ def test_if_nodes_update_to_the_value_they_should(verbose = True):
 	v = temporalSeqNodeTestNode.tick(1,i,True)
 	i = i +1;
 	if verbose:
-		print("\t should be False,\n\t -------is %s" % (temporalSeqNodeTestNode.isActive()))
+		print("\t should be False,\n\t -------is %s" % (temporalSeqNodeTestNode.is_active()))
 	else:
-		pasing_tests = pasing_tests and (not temporalSeqNodeTestNode.isActive())
+		pasing_tests = pasing_tests and (not temporalSeqNodeTestNode.is_active())
 	dummy1.active = True
 	v = temporalSeqNodeTestNode.tick(1,i,True)
 	i = i +1;
 	if verbose:
-		print("\t should be False,\n\t -------is %s" % (temporalSeqNodeTestNode.isActive()))
+		print("\t should be False,\n\t -------is %s" % (temporalSeqNodeTestNode.is_active()))
 	else:
-		pasing_tests = pasing_tests and (not temporalSeqNodeTestNode.isActive())
+		pasing_tests = pasing_tests and (not temporalSeqNodeTestNode.is_active())
 	dummy1.active = False
 	dummy2.active = True
 	v = temporalSeqNodeTestNode.tick(1,i,True)
 	i = i +1;
 	if verbose:
-		print("\t should be False,\n\t -------is %s" % (temporalSeqNodeTestNode.isActive()))
+		print("\t should be False,\n\t -------is %s" % (temporalSeqNodeTestNode.is_active()))
 	else:
-		pasing_tests = pasing_tests and (not temporalSeqNodeTestNode.isActive())
+		pasing_tests = pasing_tests and (not temporalSeqNodeTestNode.is_active())
 	dummy1.active = True
 	dummy2.active = True
 	v = temporalSeqNodeTestNode.tick(1,i,True)
 	i = i +1;
 	if verbose:
-		print("\t should be False,\n\t -------is %s" % (temporalSeqNodeTestNode.isActive()))
+		print("\t should be False,\n\t -------is %s" % (temporalSeqNodeTestNode.is_active()))
 	else:
-		pasing_tests = pasing_tests and (not temporalSeqNodeTestNode.isActive())
-	dummy1.previousActive = True
+		pasing_tests = pasing_tests and (not temporalSeqNodeTestNode.is_active())
+	dummy1.previous_active = True
 	v = temporalSeqNodeTestNode.tick(1,i,True)
 	i = i +1;
 	if verbose:
-		print("\t should be False,\n\t -------is %s" % (temporalSeqNodeTestNode.isActive()))
+		print("\t should be False,\n\t -------is %s" % (temporalSeqNodeTestNode.is_active()))
 	else:
-		pasing_tests = pasing_tests and (not temporalSeqNodeTestNode.isActive())
-	dummy1.previousTemporalActive = True
+		pasing_tests = pasing_tests and (not temporalSeqNodeTestNode.is_active())
+	dummy1.previous_temporal_active = True
 	v = temporalSeqNodeTestNode.tick(1,i,True)
 	i = i +1;
 	if verbose:
-		print("\t should be True,\n\t -------is %s" % (temporalSeqNodeTestNode.isActive()))
+		print("\t should be True,\n\t -------is %s" % (temporalSeqNodeTestNode.is_active()))
 	else:
-		pasing_tests = pasing_tests and (temporalSeqNodeTestNode.isActive())
+		pasing_tests = pasing_tests and (temporalSeqNodeTestNode.is_active())
 
 	if not verbose:
 		if pasing_tests:
@@ -202,52 +202,52 @@ def test_if_sensors_react_to_input(verbose = True):
 	i = 1
 	testSensor.tick(i)
 	if verbose:
-		print("\t should be False,\n\t -------is %s" % (testSensor.isActive()))
+		print("\t should be False,\n\t -------is %s" % (testSensor.is_active()))
 	else:
-		pasing_tests = pasing_tests and (not testSensor.isActive())
+		pasing_tests = pasing_tests and (not testSensor.is_active())
 
-	testSensor.tick(i, 1, True)
+	testSensor.tick(i, 0, True)
 	if verbose:
-		print("\t should be False,\n\t -------is %s" % (testSensor.isActive()))
+		print("\t should be False,\n\t -------is %s" % (testSensor.is_active()))
 	else:
-		pasing_tests = pasing_tests and (not testSensor.isActive())
+		pasing_tests = pasing_tests and (not testSensor.is_active())
 
 	testEnvironment.state = {"d", "o", "g"}
 	i=i+1
 	testSensor.tick(i)
 	if verbose:
-		print("\t should be True,\n\t -------is %s" % (testSensor.isActive()))
+		print("\t should be True,\n\t -------is %s" % (testSensor.is_active()))
 	else:
-		pasing_tests = pasing_tests and (testSensor.isActive())
+		pasing_tests = pasing_tests and (testSensor.is_active())
 
 	testEnvironment.state = {"g", "o", "g"}
 	i=i+1
 	testSensor.tick(i)
 	if verbose:
-		print("\t should be False,\n\t -------is %s" % (testSensor.isActive()))
+		print("\t should be False,\n\t -------is %s" % (testSensor.is_active()))
 	else:
-		pasing_tests = pasing_tests and (not testSensor.isActive())
+		pasing_tests = pasing_tests and (not testSensor.is_active())
 
-	testEnvironment.temporalState = ["d", "o", "g"]
+	testEnvironment.temporal_state = ["d", "o", "g"]
 	i=i+1
+	testSensor.tick(i, 0, True)
+	if verbose:
+		print("\t should be True,\n\t -------is %s" % (testSensor.is_active()))
+	else:
+		pasing_tests = pasing_tests and (testSensor.is_active())
+
 	testSensor.tick(i, 1, True)
 	if verbose:
-		print("\t should be True,\n\t -------is %s" % (testSensor.isActive()))
+		print("\t should be False,\n\t -------is %s" % (testSensor.is_active()))
 	else:
-		pasing_tests = pasing_tests and (testSensor.isActive())
-
-	testSensor.tick(i, 2, True)
-	if verbose:
-		print("\t should be False,\n\t -------is %s" % (testSensor.isActive()))
-	else:
-		pasing_tests = pasing_tests and (not testSensor.isActive())
+		pasing_tests = pasing_tests and (not testSensor.is_active())
 
 	testEnvironment.state = {"d", "o", "g"}
-	testSensor.tick(i, 3, True)
+	testSensor.tick(i, 2, True)
 	if verbose:
-		print("\t should be False,\n\t -------is %s" % (testSensor.isActive()))
+		print("\t should be False,\n\t -------is %s" % (testSensor.is_active()))
 	else:
-		pasing_tests = pasing_tests and (not testSensor.isActive())
+		pasing_tests = pasing_tests and (not testSensor.is_active())
 
 	if not verbose:
 		if pasing_tests:
@@ -280,45 +280,45 @@ def test_if_dog_can_be_found(verbose = True):
 
 	#	if random.randint(0, 1) == 1:
 		if r == 1:
-			testEnvironment.temporalState = ["d","o","g"]
+			testEnvironment.temporal_state = ["d","o","g"]
 		else:
-			testEnvironment.temporalState = ["c","a","t"]
+			testEnvironment.temporal_state = ["c","a","t"]
+
+		for n in all_nodes:
+			n.tick(1,0,True)
+
+		#print(sensor_node_d.is_active())
+		#print("--1--")
 
 		for n in all_nodes:
 			n.tick(1,1,True)
 
-		#print(sensor_node_d.isActive())
-		#print("--1--")
+		#print(sensor_node_o.is_active())
+		#print(t_seq_do.is_active())
+		#print("--2--")
 
 		for n in all_nodes:
 			n.tick(1,2,True)
 
-		#print(sensor_node_o.isActive())
-		#print(t_seq_do.isActive())
-		#print("--2--")
-
-		for n in all_nodes:
-			n.tick(1,3,True)
-
-		#print(sensor_node_g.isActive())
-		#print(t_seq_ca.isActive())
-		#print(t_seq_cat.isActive())
+		#print(sensor_node_g.is_active())
+		#print(t_seq_ca.is_active())
+		#print(t_seq_cat.is_active())
 		#print("--3--")
 		if verbose:
-			if(t_seq_dog.isActive()):
+			if(t_seq_dog.is_active()):
 				print("THE DOG IS ACTIVE!!!!!!!!!!!!! OMG OMG")
 
-			if(t_seq_cat.isActive()):
+			if(t_seq_cat.is_active()):
 				print("THE CAT IS ACTIVE!!!!!!!!!!!!! OMG OMG")
 
 			print(t_seq_cat.name)
-			print(t_seq_cat.getWord())
-			print(t_seq_dog.getWord())
+			print(t_seq_cat.get_word())
+			print(t_seq_dog.get_word())
 		else:
 			if(r == 1):
-				pasing_tests = pasing_tests and t_seq_dog.isActive()
+				pasing_tests = pasing_tests and t_seq_dog.is_active()
 			else:
-				pasing_tests = pasing_tests and t_seq_cat.isActive()
+				pasing_tests = pasing_tests and t_seq_cat.is_active()
 
 	if not verbose:
 		if pasing_tests:
@@ -340,46 +340,46 @@ def test_if_motors_produce_things(verbose = True):
 	motor_node_d.activate(1)
 	if verbose:
 		print("Testing the motor node 'd'. Environment (first print) should contain 'd'. And contains:")
-		print(testEnvironment.nextState)
-		print(testEnvironment.nextTemporalState)
+		print(testEnvironment.next_state)
+		print(testEnvironment.next_temporal_state)
 	else:
-		pasing_tests = pasing_tests and (len(testEnvironment.nextTemporalState) == 0 and ("d" in testEnvironment.nextState) and len(testEnvironment.nextState) == 1)
+		pasing_tests = pasing_tests and (len(testEnvironment.next_temporal_state) == 0 and ("d" in testEnvironment.next_state) and len(testEnvironment.next_state) == 1)
 
-	testEnvironment.nextState = set()
+	testEnvironment.next_state = set()
 	motor_node_d.activate(2)
 	motor_node_o.activate(2)
 	if verbose:
 		print("Testing the motor node 'd' & 'o'. Environment (first print) should contain 'd' & 'o'. And contains:")
-		print(testEnvironment.nextState)
-		print(testEnvironment.nextTemporalState)
+		print(testEnvironment.next_state)
+		print(testEnvironment.next_temporal_state)
 	else:
-		pasing_tests = pasing_tests and (len(testEnvironment.nextTemporalState) == 0 and ("d" in testEnvironment.nextState and "o" in testEnvironment.nextState) and len(testEnvironment.nextState) == 2)
+		pasing_tests = pasing_tests and (len(testEnvironment.next_temporal_state) == 0 and ("d" in testEnvironment.next_state and "o" in testEnvironment.next_state) and len(testEnvironment.next_state) == 2)
 
-	testEnvironment.nextState = set()
+	testEnvironment.next_state = set()
 	motor_node_d.activate(2,True)
 	motor_node_o.activate(2,True)
 	if verbose:
 		print("Testing the motor node 'd' & 'o'. Environment (second print) should contain 'd' & 'o'. And contains:")
-		print(testEnvironment.nextState)
-		print(testEnvironment.nextTemporalState)
+		print(testEnvironment.next_state)
+		print(testEnvironment.next_temporal_state)
 	else:
-		pasing_tests = pasing_tests and (len(testEnvironment.nextState) == 0 and len(testEnvironment.nextTemporalState) == 2 and testEnvironment.nextTemporalState[0] == "d" and testEnvironment.nextTemporalState[1] == "o")
+		pasing_tests = pasing_tests and (len(testEnvironment.next_state) == 0 and len(testEnvironment.next_temporal_state) == 2 and testEnvironment.next_temporal_state[0] == "d" and testEnvironment.next_temporal_state[1] == "o")
 
 
-	testEnvironment.nextTemporalState = []
+	testEnvironment.next_temporal_state = []
 	motor_node_d.active = False
 	motor_node_o.active = False
 	testAction_do = ActionAndNode(outputs=[motor_node_d,motor_node_o])
 	testAction_do.activate(3)
 	if verbose:
 		print("Testing the motor node 'd&o'. Environment (first print) should contain 'd' & 'o'. And contains:")
-		print(testEnvironment.nextState)
-		print(testEnvironment.nextTemporalState)
+		print(testEnvironment.next_state)
+		print(testEnvironment.next_temporal_state)
 	else:
-		pasing_tests = pasing_tests and (len(testEnvironment.nextTemporalState) == 0 and ("d" in testEnvironment.nextState and "o" in testEnvironment.nextState) and len(testEnvironment.nextState) == 2)
+		pasing_tests = pasing_tests and (len(testEnvironment.next_temporal_state) == 0 and ("d" in testEnvironment.next_state and "o" in testEnvironment.next_state) and len(testEnvironment.next_state) == 2)
 
-	testEnvironment.nextTemporalState = []
-	testEnvironment.nextState = set()
+	testEnvironment.next_temporal_state = []
+	testEnvironment.next_state = set()
 	motor_node_d.active = False
 	motor_node_o.active = False
 
@@ -387,13 +387,13 @@ def test_if_motors_produce_things(verbose = True):
 	testTemporalAction_do.activate(4, True)
 	if verbose:
 		print("Testing the motor node 'do'. Environment (second print) should contain 'd' & 'o'. And contains:")
-		print(testEnvironment.nextState)
-		print(testEnvironment.nextTemporalState)
+		print(testEnvironment.next_state)
+		print(testEnvironment.next_temporal_state)
 	else:
-		pasing_tests = pasing_tests and (len(testEnvironment.nextState) == 0 and len(testEnvironment.nextTemporalState) == 2 and testEnvironment.nextTemporalState[0] == "d" and testEnvironment.nextTemporalState[1] == "o")
+		pasing_tests = pasing_tests and (len(testEnvironment.next_state) == 0 and len(testEnvironment.next_temporal_state) == 2 and testEnvironment.next_temporal_state[0] == "d" and testEnvironment.next_temporal_state[1] == "o")
 
-	testEnvironment.nextTemporalState = []
-	testEnvironment.nextState = set()
+	testEnvironment.next_temporal_state = []
+	testEnvironment.next_state = set()
 	motor_node_d.active = False
 	motor_node_o.active = False
 	testTemporalAction_do.active = False
@@ -402,10 +402,10 @@ def test_if_motors_produce_things(verbose = True):
 	testTemporalAction_dog.activate(5, True)
 	if verbose:
 		print("Testing the motor node 'dog'. Environment (second print) should contain 'd' & 'o' & 'g'. And contains:")
-		print(testEnvironment.nextState)
-		print(testEnvironment.nextTemporalState)
+		print(testEnvironment.next_state)
+		print(testEnvironment.next_temporal_state)
 	else:
-		pasing_tests = pasing_tests and len(testEnvironment.nextState) == 0 and len(testEnvironment.nextTemporalState) == 3 and testEnvironment.nextTemporalState[0] == "d" and testEnvironment.nextTemporalState[1] == "o" and testEnvironment.nextTemporalState[2] == "g"
+		pasing_tests = pasing_tests and len(testEnvironment.next_state) == 0 and len(testEnvironment.next_temporal_state) == 3 and testEnvironment.next_temporal_state[0] == "d" and testEnvironment.next_temporal_state[1] == "o" and testEnvironment.next_temporal_state[2] == "g"
 
 	if not verbose:
 		if pasing_tests:
@@ -439,41 +439,41 @@ def test_if_animat_can_hear_it_self(verbose = True):
 
 	if verbose:
 		print("Animat says 'dog', thus environment should have 'dog'.")
-		print(testEnvironment.nextTemporalState)
+		print(testEnvironment.next_temporal_state)
 	else:
-		pasing_tests = pasing_tests and len(testEnvironment.nextState) == 0 and len(testEnvironment.nextTemporalState) == 3 and testEnvironment.nextTemporalState[0] == "d" and testEnvironment.nextTemporalState[1] == "o" and testEnvironment.nextTemporalState[2] == "g"
+		pasing_tests = pasing_tests and len(testEnvironment.next_state) == 0 and len(testEnvironment.next_temporal_state) == 3 and testEnvironment.next_temporal_state[0] == "d" and testEnvironment.next_temporal_state[1] == "o" and testEnvironment.next_temporal_state[2] == "g"
 
 	if verbose:
 		print("---Updating Environment---")
 	testEnvironment.state = testEnvironment.state
-	testEnvironment.temporalState = testEnvironment.nextTemporalState
-	testEnvironment.state.add(testEnvironment.nextTemporalState[len(testEnvironment.nextTemporalState)-1])
-	testEnvironment.nextState = set()
-	testEnvironment.nextTemporalState = [];
+	testEnvironment.temporal_state = testEnvironment.next_temporal_state
+	testEnvironment.state.add(testEnvironment.next_temporal_state[len(testEnvironment.next_temporal_state)-1])
+	testEnvironment.next_state = set()
+	testEnvironment.next_temporal_state = [];
 	#Possibly add more input if wanted. 
 	
 	if verbose:
 		print("environment should now have [dog] and {g}")
-		print(testEnvironment.temporalState)
+		print(testEnvironment.temporal_state)
 		print(testEnvironment.state)
 	else:
-		pasing_tests = pasing_tests and len(testEnvironment.state) == 1 and ("g" in testEnvironment.state) and len(testEnvironment.temporalState) == 3 and testEnvironment.temporalState[0] == "d" and testEnvironment.temporalState[1] == "o" and testEnvironment.temporalState[2] == "g"
+		pasing_tests = pasing_tests and len(testEnvironment.state) == 1 and ("g" in testEnvironment.state) and len(testEnvironment.temporal_state) == 3 and testEnvironment.temporal_state[0] == "d" and testEnvironment.temporal_state[1] == "o" and testEnvironment.temporal_state[2] == "g"
 
+	for n in all_sensor_nodes:
+		n.tick(1,0,True)
 	for n in all_sensor_nodes:
 		n.tick(1,1,True)
 	for n in all_sensor_nodes:
 		n.tick(1,2,True)
-	for n in all_sensor_nodes:
-		n.tick(1,3,True)
 
 	if verbose:
 		print("Animat has processed input, should now have heard 'dog'.")
-		if(t_seq_dog.isActive()):
+		if(t_seq_dog.is_active()):
 			print("THE DOG IS ACTIVE!!!!!!!!!!!!! OMG OMG")
 		else:
 			print("Where is the dog? :'(")
 	else:
-		pasing_tests = pasing_tests and t_seq_dog.isActive()
+		pasing_tests = pasing_tests and t_seq_dog.is_active()
 
 	if not verbose:
 		if pasing_tests:
@@ -607,42 +607,42 @@ def test_if_new_seq_nodes_work_as_intended(verbose = True):
 		node_that_should_be_active = None
 		#r = random.randint(0, 3)
 		if  r == 0:
-			testEnvironment.temporalState = ["d","o","g"]
+			testEnvironment.temporal_state = ["d","o","g"]
 			word_that_should_be_active = "dog"
 			node_that_should_be_active = t_seq_dog
 		elif r == 1:
-			testEnvironment.temporalState = ["c","a","t"]
+			testEnvironment.temporal_state = ["c","a","t"]
 			word_that_should_be_active = "cat"
 			node_that_should_be_active = t_seq_cat
 		elif r == 2:
-			testEnvironment.temporalState = ["d","o","g","g","o"]
+			testEnvironment.temporal_state = ["d","o","g","g","o"]
 			word_that_should_be_active = "doggo"
 			node_that_should_be_active = t_seq_doggo
 		else: 
-			testEnvironment.temporalState = ["d","o","g","o"]
+			testEnvironment.temporal_state = ["d","o","g","o"]
 			word_that_should_be_active = "dogo (that is not recognised)"
 			node_that_should_be_active = None
 
-		nbrTicks = len(testEnvironment.temporalState)
+		nbrTicks = len(testEnvironment.temporal_state)
 
 		for i in range(nbrTicks):
-			#print(testEnvironment.temporalState[i])
+			#print(testEnvironment.temporal_state[i])
 			for n in all_nodes:
-				n.tick(1,i+1,True)
+				n.tick(1,i,True)
 
 		if verbose:
 			print("The '" + word_that_should_be_active + "' should be active....")
-			if(t_seq_dog.isActive()):
+			if(t_seq_dog.is_active()):
 				print("THE DOG IS ACTIVE!!!!!!!!!!!!! OMG OMG")
-			elif(t_seq_cat.isActive()):
+			elif(t_seq_cat.is_active()):
 				print("THE CAT IS ACTIVE!!!!!!!!!!!!! OMG OMG")
-			elif(t_seq_doggo.isActive()):
+			elif(t_seq_doggo.is_active()):
 				print("THE DOGGO IS ACTIVE!!!!!!!!!!!!! OMG OMG")
 		else:
 			if(not node_that_should_be_active == None):
-				pasing_tests = pasing_tests and node_that_should_be_active.isActive()
+				pasing_tests = pasing_tests and node_that_should_be_active.is_active()
 			else:
-				pasing_tests = pasing_tests and (not t_seq_dog.isActive()) and (not t_seq_cat.isActive()) and (not t_seq_doggo.isActive())
+				pasing_tests = pasing_tests and (not t_seq_dog.is_active()) and (not t_seq_cat.is_active()) and (not t_seq_doggo.is_active())
 
 	if not verbose:
 		if pasing_tests:
@@ -652,8 +652,8 @@ def test_if_new_seq_nodes_work_as_intended(verbose = True):
 
 
 	#print(t_seq_cat.name)
-	#print(t_seq_cat.getWord())
-	#print(t_seq_dog.getWord())
+	#print(t_seq_cat.get_word())
+	#print(t_seq_dog.get_word())
 
 def test_if_controller_works():
 	print("------------------test_if_controller_works------------------")
@@ -702,12 +702,12 @@ def test_if_network_works(verbose = True):
 	if verbose:
 		print("Testing if it can recognise dog.")
 
-	testEnvironment.temporalState = ["d","o","g"]
+	testEnvironment.temporal_state = ["d","o","g"]
 
-	nbrTicks = len(testEnvironment.temporalState)
+	nbrTicks = len(testEnvironment.temporal_state)
 	t = t+1
 	for i in range(nbrTicks):
-		test_network.temporal_tick(t,i+1)
+		test_network.temporal_tick(t,i)
 
 	if verbose:
 		if t_seq_dog.active:
@@ -721,12 +721,12 @@ def test_if_network_works(verbose = True):
 	if verbose:
 		print("Testing if it can recognise cat.")
 
-	testEnvironment.temporalState = ["c","a","t"]
+	testEnvironment.temporal_state = ["c","a","t"]
 
-	nbrTicks = len(testEnvironment.temporalState)
+	nbrTicks = len(testEnvironment.temporal_state)
 	t = t+1
 	for i in range(nbrTicks):
-		test_network.temporal_tick(t,i+1)
+		test_network.temporal_tick(t,i)
 
 	if verbose:
 		if t_seq_cat.active:
@@ -749,11 +749,11 @@ def test_if_network_works(verbose = True):
 
 	if verbose:
 		print("Testing if it can recognise doggo.")
-	testEnvironment.temporalState = ["d","o","g","g","o"]
-	nbrTicks = len(testEnvironment.temporalState)
+	testEnvironment.temporal_state = ["d","o","g","g","o"]
+	nbrTicks = len(testEnvironment.temporal_state)
 	t = t+1
 	for i in range(nbrTicks):
-		test_network.temporal_tick(t,i+1)
+		test_network.temporal_tick(t,i)
 	if verbose:
 		if t_seq_doggo.active:
 			print("The doggo is active! :)")
@@ -781,11 +781,11 @@ def test_if_network_works(verbose = True):
 	if verbose:
 		print("Testing if it can no longer recognise doggo.")
 	t_seq_doggo.active = False
-	testEnvironment.temporalState = ["d","o","g","g","o"]
-	nbrTicks = len(testEnvironment.temporalState)
+	testEnvironment.temporal_state = ["d","o","g","g","o"]
+	nbrTicks = len(testEnvironment.temporal_state)
 	t = t+1
 	for i in range(nbrTicks):
-		test_network.temporal_tick(t,i+1)
+		test_network.temporal_tick(t,i)
 	if verbose:
 		if t_seq_doggo.active:
 			print("The doggo is active!? .....")
@@ -798,16 +798,16 @@ def test_if_network_works(verbose = True):
 	if verbose:
 		print("Testing the identification of topactive nodes while recognising 'dog'.")
 
-	testEnvironment.temporalState = ["d","o","g"]
-	nbrTicks = len(testEnvironment.temporalState)
+	testEnvironment.temporal_state = ["d","o","g"]
+	nbrTicks = len(testEnvironment.temporal_state)
 	t = t+1
-	i = 1
+	i = 0
 	test_network.temporal_tick(t,i)
 	t_a = test_network.get_topactive_nodes()
 	if verbose:
 		print("---")
 		for n in t_a:
-			print(n.getWord())
+			print(n.get_word())
 	else:
 		pasing_tests = pasing_tests and sensor_node_d in t_a and len(t_a) == 2 #including true node
 	t = t+1
@@ -817,7 +817,7 @@ def test_if_network_works(verbose = True):
 	if verbose:
 		print("---")
 		for n in t_a:
-			print(n.getWord())
+			print(n.get_word())
 	else:
 		pasing_tests = pasing_tests and t_seq_do in t_a and len(t_a) == 2 #including true node
 	t = t+1
@@ -827,7 +827,7 @@ def test_if_network_works(verbose = True):
 	if verbose:
 		print("---")
 		for n in t_a:
-			print(n.getWord())
+			print(n.get_word())
 	else:
 		pasing_tests = pasing_tests and t_seq_dog in t_a and len(t_a) == 2 #including true node
 	
@@ -915,7 +915,7 @@ def test_if_animat_can_run_first_step_code():
 	test_animat = Animat("TheDoggo", sensors, motors)
 
 	for x in range(1, 10): #If from 0, the change in node.py is needed to avoid error.
-		test_animat.update(x)
+		test_animat.update_step_one_version(x)
 		test_environment.update()
 
 	print("")
@@ -1000,7 +1000,7 @@ def test_if_animat_can_learn_alphabet_in_step_one(verbose = True):
 	test_animat = Animat("TheDoggo", sensors, motors)
 
 	for x in range(1, 100): #If from 0, the change in node.py is needed to avoid error.
-		test_animat.update(x)
+		test_animat.update_step_one_version(x)
 		test_environment.update()
 
 	generators = test_animat.network.generator_list
@@ -1012,12 +1012,12 @@ def test_if_animat_can_learn_alphabet_in_step_one(verbose = True):
 		generator_index = generators[index]
 		if generator_index == -1:
 			if verbose:
-				print("Sensor for %s, does not have a generator." % (node.getWord()))
+				print("Sensor for %s, does not have a generator." % (node.get_word()))
 			passing_tests = False
 		else:
 			if verbose:
-				print("Sensor for %s, having generator number %d, that produces %s." % (node.getWord(), generator_index, motors[generator_index].getWord()))
-			passing_tests = passing_tests and (node.getWord() == motors[generator_index].getWord())
+				print("Sensor for %s, having generator number %d, that produces %s." % (node.get_word(), generator_index, motors[generator_index].get_word()))
+			passing_tests = passing_tests and (node.get_word() == motors[generator_index].get_word())
 	
 	if passing_tests:
 		print("All tests pased.")
@@ -1066,7 +1066,7 @@ def test_how_often_the_animat_learns_the_entire_alphabet():
 				index = node.get_index()
 				generator_index = generators[index]
 				if not generator_index == -1: #does have a generator.
-					if node.getWord() == motors[generator_index].getWord(): #is the right sensor.
+					if node.get_word() == motors[generator_index].get_word(): #is the right sensor.
 						number_of_correct_generators = number_of_correct_generators + 1
 
 			stats[test_number-1] = number_of_correct_generators
@@ -1190,7 +1190,7 @@ def test_step_two_animat():
 	totlal_number_of_sensors = len(sensors)
 	test_animat = Animat("TheCat", sensors, motors, temporal_memory_capacity = 5, seq_formation_probability = 1/25)
 
-	test_environment.temporalState = ["c","a","t"]
+	test_environment.temporal_state = ["c","a","t"]
 
 	for t in range(1,501):
 	#	print("------------------------")
@@ -1215,7 +1215,7 @@ def test_step_two_animat():
 	
 def run_tests(verbose = False):
 	print ("------------------------------------Starting Tests------------------------------------")
-	if(False):
+	if(True):
 		test_if_nodes_update_when_they_should(verbose)
 		test_if_nodes_update_to_the_value_they_should(verbose)
 		test_if_sensors_react_to_input(verbose)
@@ -1231,3 +1231,5 @@ def run_tests(verbose = False):
 		test_if_animat_can_learn_alphabet_in_step_one(verbose)
 #	test_how_often_the_animat_learns_the_entire_alphabet() #Note, this is slow. Prints statistics of how often the Animat learns generators.
 	test_step_two_animat() 
+
+

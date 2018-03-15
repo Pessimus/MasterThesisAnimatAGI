@@ -119,7 +119,7 @@ def evaluate_step_one():
 				index = node.get_index()
 				generator_index = generators[index]
 				if not generator_index == -1: #does have a generator.
-					if node.getWord() == motors[generator_index].getWord(): #is the right sensor.
+					if node.get_word() == motors[generator_index].get_word(): #is the right sensor.
 						number_of_correct_generators = number_of_correct_generators + 1
 
 			stats[test_number-1] = number_of_correct_generators
@@ -196,13 +196,13 @@ def evaluate_step_two():
 		#update environment
 		index = np.random.randint(0, TOTAL_NUMBER_OF_WORDS)
 		word = words_to_use[index]
-		test_environment.temporalState = word
+		test_environment.temporal_state = word
 
 		#Update the Animat
 		test_animat.update(t,len(word))
 
 		#update results
-		tmp_animat_words = [n.getWord() for n in test_animat.network.perception_nodes]
+		tmp_animat_words = [n.get_word() for n in test_animat.network.perception_nodes]
 		c = 0
 		for w in words_to_use:
 			if w in tmp_animat_words:
@@ -213,11 +213,11 @@ def evaluate_step_two():
 
 		#Give the Animat a space between words
 		t = t + 1
-		test_environment.temporalState = " "
+		test_environment.temporal_state = " "
 		test_animat.update(t,1)
 
 		#update results
-		tmp_animat_words = [n.getWord() for n in test_animat.network.perception_nodes]
+		tmp_animat_words = [n.get_word() for n in test_animat.network.perception_nodes]
 		c = 0
 		for w in words_to_use:
 			if w in tmp_animat_words:
@@ -229,8 +229,9 @@ def evaluate_step_two():
 
 	#Calculate final results
 	RESULT_word_lengths = [len(s) for s in words_to_use]
-	RESULT_animat_words = [n.getWord() for n in test_animat.network.perception_nodes] # All 'words' that the Animat has learnt.
+	RESULT_animat_words = [n.get_word() for n in test_animat.network.perception_nodes] # All 'words' that the Animat has learnt.
 	RESULT_learnt_words = [w for w in words_to_use if w in RESULT_animat_words]
+	RESULT_not_learnt_words = [w for w in words_to_use if not (w in RESULT_animat_words)] #Words that the animat failed to learn
 
 	#Save results:
 	file = FileWriter("evaluationIO/" + "STEP2_Results" + datetime.datetime.now().strftime("%y%m%d_%H%M%S") + ".m")
@@ -244,6 +245,7 @@ def evaluate_step_two():
 	file.writeLineToFile("RESULT_word_lengths = " + str(RESULT_word_lengths) +";")
 	file.writeLineToFile("RESULT_animat_words = " + str(RESULT_animat_words) +";")
 	file.writeLineToFile("RESULT_learnt_words = " + str(RESULT_learnt_words) +";")
+	file.writeLineToFile("RESULT_not_learnt_words = " + str(RESULT_not_learnt_words) +";")
 	file.writeLineToFile("% Input to save:")
 	file.writeLineToFile("TOTAL_NUMBER_OF_WORDS = " + str(TOTAL_NUMBER_OF_WORDS) +";")
 	file.writeLineToFile("AVERAGE_NUMBER_OF_OCCURENCES_OF_EACH_WORD = " + str(AVERAGE_NUMBER_OF_OCCURENCES_OF_EACH_WORD) +";")

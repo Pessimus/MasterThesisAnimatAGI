@@ -196,9 +196,9 @@ class Network():
 	#For all nodes, set previous active to the current value of active. 
 	def update_previous_active(self):
 		for node in self.sensors:
-			node.previousActive = node.active
+			node.previous_active = node.active
 		for node in self.perception_nodes:
-			node.previousActive = node.active
+			node.previous_active = node.active
 	#Endupdate_previous_active()
 
 	#For all nodes, sets the value of active to false.
@@ -262,25 +262,25 @@ class Network():
 		print("----Printing Network----")
 		print("Printing sensors:")
 		for node in self.sensors:
-			print("\t" + "Word:" + str(node.getWord()))
-			print("\t" + "Active:" + str(node.isActive()))
+			print("\t" + "Word:" + str(node.get_word()))
+			print("\t" + "Active:" + str(node.is_active()))
 			print("\t" + "Was Active:" + str(node.wasActive()))
 			print("\t" + "Was temporal Active:" + str(node.wasTemporalActive()))
 			print("")
 		print("Printing perception nodes:")
 		for node in self.perception_nodes:
-			print("\t" + "Word:" + str(node.getWord()))
-			print("\t" + "Active:" + str(node.isActive()))
+			print("\t" + "Word:" + str(node.get_word()))
+			print("\t" + "Active:" + str(node.is_active()))
 			print("\t" + "Was Active:" + str(node.wasActive()))
 			print("\t" + "Was temporal Active:" + str(node.wasTemporalActive()))
 			print("")
 		print("Printing motor nodes:")
 		for node in self.motors:
-			print("\t" + "Word:" + str(node.getWord()))
+			print("\t" + "Word:" + str(node.get_word()))
 			print("")
 		print("Printing action nodes:")
 		for node in self.action_nodes:
-			print("\t" + "Word:" + str(node.getWord()))
+			print("\t" + "Word:" + str(node.get_word()))
 			print("")
 	#End print_network()
 

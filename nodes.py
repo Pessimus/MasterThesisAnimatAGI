@@ -80,7 +80,7 @@ class NAndNode(Node):
 	#Returns true if this node has just gotten the first input it needs to become active.
 	#TODO: this method does not check that the node has input....
 	def startingActive(self):
-		return not self.isActive();
+		return not self.is_active();
 	#End startingActive()
 # -END of class NAndNode
 
@@ -99,7 +99,7 @@ class SEQNode(Node):
 #			return False
 #		if Node.tick(self, time):
 #			if len(self.inputs) > 1:
-#				if self.inputs[0].wasActive() and self.inputs[1].isActive():
+#				if self.inputs[0].wasActive() and self.inputs[1].is_active():
 #					self.activate(time)
 #				else:
 #					self.deactivate(time)
@@ -123,7 +123,7 @@ class SEQNode(Node):
 				for waitTime in self.possibleActivations:
 					waitTime = waitTime-1;
 					if (waitTime) == 0:
-						if self.inputs[1].isActive() and not self.isActive():#no need to activate if already active.
+						if self.inputs[1].is_active() and not self.is_active():#no need to activate if already active.
 							self.activate(time)
 					else:
 						tmpPossibleActivations.append(waitTime)
@@ -178,7 +178,7 @@ class SensorNode(Node):
 
 	#Returns true if this node has just gotten the first input it needs to become active.
 	def startingActive(self):
-		return self.isActive()
+		return self.is_active()
 	#End startingActive()
 
 	#Returns true iff the input that this sensor reacts to is present in the input in the environment. 
@@ -186,14 +186,14 @@ class SensorNode(Node):
 		if self.sensor == "true":
 			return 1
 		if temporal:
-			#self.previousTemporalActive = self.active
-			currentInput = self.environment.getEnvironmentalTemporalState()
+			#self.previous_temporal_active = self.active
+			currentInput = self.environment.get_environmental_temporal_state()
 			if(len(currentInput) > 0 and len(currentInput) > temporalTime):
 				return currentInput[temporalTime] == self.sensor
 			else:
 				return False
 		else:
-			currentInput = self.environment.getEnvironmentalState()
+			currentInput = self.environment.get_environmental_state()
 			for element in currentInput:
 				if element == self.sensor:
 					return True
@@ -201,9 +201,9 @@ class SensorNode(Node):
 	#End readSensor()
 
 	# Method for debugging, returns the 'word' reprecented by this node.
-	def getWord(self):
+	def get_word(self):
 		return self.sensor
-	#End getWord
+	#End get_word
 
 #End SensorNode
 

@@ -25,17 +25,17 @@ class Controller():
 	def update_environment(self):
 		#print("Debug: Updating environment")
 		#add the next word of the file to the environment's next temporal state
-		self.environment.addEnvironmentalTemporalInput(self.file_reader.getNextWord())
+		self.environment.add_environmental_temporal_input(self.file_reader.getNextWord())
 
 		#TODO: add the next non-word input which should also come from somewhere...
 		#environment.addEnvironmentalInput()
 
 		#save the environment's current temporal state (word)
-		currentTemporalState = self.environment.getEnvironmentalTemporalState() #list of all letters active in a time step
-		self.file_writer.writeLineToFile(convertListToWord(currentTemporalState))
+		current_temporal_state = self.environment.get_environmental_temporal_state() #list of all letters active in a time step
+		self.file_writer.writeLineToFile(convertListToWord(current_temporal_state))
 
 		#TODO: save the environments non-word state somewhere...
-		#currentState = environment.getEnvironmentalState()
+		#currentState = environment.get_environmental_state()
 
 		self.environment.update()
 	#End update_environment

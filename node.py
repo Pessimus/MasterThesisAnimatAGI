@@ -15,9 +15,9 @@ def truth(v):
 # Method for creating a string to use as the name of a node. Called from subclasses in "nodes" and "temporalNodes".
 def makeName(kind, nodes, sort=True):
 	if sort:
-		return "%s(%s)" % (kind, ", ".join(sorted([x.getName() for x in nodes])))
+		return "%s(%s)" % (kind, ", ".join(sorted([x.get_name() for x in nodes])))
 	else:
-		return "%s(%s)" % (kind, ", ".join([x.getName() for x in nodes]))
+		return "%s(%s)" % (kind, ", ".join([x.get_name() for x in nodes]))
 #End makeName()
 
 # A class reprecenting a node. Including functionallity common for all node-types.
@@ -27,15 +27,15 @@ class Node:
 		self.temporal = temporal
 		self.active = False
 		self.topactive = False
-		self.previousActive = False
-		self.previousTemporalActive = False
+		self.previous_active = False
+		self.previous_temporal_active = False
 #		self.previous_top_active = False
 #		self.previous_temporal_top_active = False
 		self.inputs = inputs
 		self.time = 0
 		self.temporalTime = 0 #TODO: should this be here? Needed as the code is now....
 		self.activations = 0
-		self.createdAt = 0
+		self.created_at = 0
 		self.permanent = permanent
 		self.index = index
 		#self.generator = None #TODO?
@@ -52,7 +52,7 @@ class Node:
 			return False
 
 		#if self.time < time:
-		#	self.previousActive = self.active
+		#	self.previous_active = self.active
 
 		self.time = time
 		self.temporalTime = temporalTime
@@ -61,7 +61,7 @@ class Node:
 			node.tick(time,temporalTime,temporal)
 		
 		if temporal:
-			self.previousTemporalActive = self.active
+			self.previous_temporal_active = self.active
 
 		return True
 	#End tick()
@@ -75,7 +75,7 @@ class Node:
 	#SHOULD BE OVERWRITTEN BY SUBCLASSES
 	#Returns true if this node has just gotten the first input it needs to become active.
 	def startingActive(self):
-		return self.isActive()
+		return self.is_active()
 	#End startingActive()
 
 	# Sets the node as Active, and increases the count of how many tinmes the node has been active.
@@ -90,24 +90,24 @@ class Node:
 	#End deactivate()
 
 	# Returns if the node is active.
-	def isActive(self):
+	def is_active(self):
 		return self.active
-	#End isActive()
+	#End is_active()
 
 	# Returns if the node was active the last time step.
 	def wasActive(self):
-		return self.previousActive
+		return self.previous_active
  	#End wasActive()
 
 	# Returns if the node was active the last temporal step within the current time-step.
 	def wasTemporalActive(self):
-		return self.previousTemporalActive
+		return self.previous_temporal_active
 	#End wasTemporalActive()
 
 	# Returns the name of this node.
-	def getName(self):
+	def get_name(self):
 		return self.name
-	#End getName()
+	#End get_name()
 
 	# Returns the index of this node.
 	def get_index(self):
@@ -128,13 +128,13 @@ class Node:
 	#End update_topactive()
 
 	# Method for debugging, returns the 'word' reprecented by this node.
-	def getWord(self):
+	def get_word(self):
 		if len(self.inputs) > 1:
-			return self.inputs[0].getWord() + self.inputs[1].getWord()
+			return self.inputs[0].get_word() + self.inputs[1].get_word()
 		if len(self.inputs) == 1:
-			return self.inputs[0].getWord()
+			return self.inputs[0].get_word()
 		return ""
-	#End getWord
+	#End get_word
 
 #End Class
 

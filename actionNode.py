@@ -2,9 +2,9 @@
 # Method for creating a string to use as the name of a node. Called from subclasses in "nodes" and "temporalNodes".
 def makeName(kind, nodes, sort=True):
 	if sort:
-		return "%s(%s)" % (kind, ", ".join(sorted([x.getName() for x in nodes])))
+		return "%s(%s)" % (kind, ", ".join(sorted([x.get_name() for x in nodes])))
 	else:
-		return "%s(%s)" % (kind, ", ".join([x.getName() for x in nodes]))
+		return "%s(%s)" % (kind, ", ".join([x.get_name() for x in nodes]))
 #End makeName()
 
 # A class reprecenting a action node. Including functionallity common for all action node-types.
@@ -13,12 +13,12 @@ class ActionNode:
 		self.name = name
 		self.temporal = temporal
 		self.active = False
-		#self.previousActive = False
-		#self.previousTemporalActive = False
+		#self.previous_active = False
+		#self.previous_temporal_active = False
 		self.outputs = outputs
 		self.time = 0
 		self.activations = 0
-		self.createdAt = 0
+		self.created_at = 0
 		self.permanent = permanent
 		self.index = index
 	#End __init__()
@@ -42,14 +42,14 @@ class ActionNode:
 	#End deactivate()
 
 	# Returns if the node is active.
-	def isActive(self):
+	def is_active(self):
 		return self.active
-	#End isActive()
+	#End is_active()
 
 	# Returns the name of this node.
-	def getName(self):
+	def get_name(self):
 		return self.name
-	#End getName()
+	#End get_name()
 
 
 	# Returns the index of this node.
@@ -59,11 +59,11 @@ class ActionNode:
 
 
 	# Method for debugging, returns the 'word' reprecented by this node.
-	def getWord(self):
+	def get_word(self):
 		if len(self.outputs) > 1:
-			return self.outputs[0].getWord() + self.outputs[1].getWord()
+			return self.outputs[0].get_word() + self.outputs[1].get_word()
 		if len(self.outputs) == 1:
-			return self.outputs[0].getWord()
+			return self.outputs[0].get_word()
 		return ""
 	#End getWord
 

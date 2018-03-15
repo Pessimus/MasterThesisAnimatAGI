@@ -28,21 +28,21 @@ class MotorNode(ActionNode):
 	def activate(self, time, temporal = False):
 		self.active = True
 		self.activations = self.activations + 1
-		self.activateMotor(temporal)
+		self.activate_motor(temporal)
 		return True
 	#End activate
 
-	def activateMotor(self, temporal=False):
+	def activate_motor(self, temporal=False):
 		if temporal:
-			self.environment.addEnvironmentalTemporalInput(self.motor)
+			self.environment.add_environmental_temporal_input(self.motor)
 		else:
-			self.environment.addEnvironmentalInput(self.motor)
+			self.environment.add_environmental_input(self.motor)
 	#End readSensor()
 
 	# Method for debugging, returns the 'word' reprecented by this node.
-	def getWord(self):
+	def get_word(self):
 		return self.motor
-	#End getWord
+	#End get_word
 
 #End SensorNode
 
