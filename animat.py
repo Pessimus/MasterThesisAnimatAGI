@@ -63,26 +63,16 @@ class Animat:
 		#Probabilistic learning (temporal)
 		#if coin flip says learn, then add node to network
 		r = np.random.rand()
-	#	print(r)
-	#	print(self.seq_formation_probability) 
-		#if np.random.rand() < self.seq_formation_probability:
 		if r < self.seq_formation_probability:
 			probabilities = self.network.get_cumulative_temporal_seq_matrix()
 			if(probabilities[-1] == 0): #Animat has not any sequenses for the last 100 temporal time steps. 
 				return
-			#print(probabilities.shape)
-			#print(probabilities)
 			success = False
 			attempts = 0
 			while attempts <= self.seq_formation_max_attempts and not success:
 				attempts = attempts + 1
 				r = np.random.random() * probabilities[-1]
-				#print("random = %f"%(r))
 				indices = bisect.bisect(probabilities, r)
-				#print(indices)
-				#print(indices)
-				#print("sum is: %f"%(probabilities[-1]))
-				#print(probabilities)
 				node2_index,node1_index = np.unravel_index(indices, self.network.temporal_sequence_matrix.shape)
 				success = self.network.create_and_add_temporal_seq_node(node1_index, node2_index)
 			#print("added node")
