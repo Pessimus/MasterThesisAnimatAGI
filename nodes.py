@@ -205,5 +205,11 @@ class SensorNode(Node):
 		return self.sensor
 	#End get_word
 
+	#TODOD: THIS IS DEBUG.
+	#Updates this node to check if it should be topactive. Might be called again from nodes that have it as input.
+	#def update_topactive(self, can_still_be_topactive = True):
+	#	self.topactive = self.active
+	#End update_topactive()
+
 #End SensorNode
 

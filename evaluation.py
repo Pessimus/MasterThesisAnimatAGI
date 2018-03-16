@@ -162,9 +162,9 @@ def evaluate_step_one():
 
 def evaluate_step_two():
 	#Define constatns (for this run)
-	TOTAL_NUMBER_OF_WORDS = 10
-	AVERAGE_NUMBER_OF_OCCURENCES_OF_EACH_WORD = 100
-	SEQ_FORMATION_PROBABILITY = 1/float(25)
+	TOTAL_NUMBER_OF_WORDS = 20
+	AVERAGE_NUMBER_OF_OCCURENCES_OF_EACH_WORD = 10
+	SEQ_FORMATION_PROBABILITY = 1
 
 	#Define constatns (for all runs)
 	TEMPORAL_MEMORY_CAPACITY = 5
@@ -183,6 +183,11 @@ def evaluate_step_two():
 	input_file = FileReader(INPUT_FILE_NAME)
 	all_words = input_file.get_entire_file_as_array()
 	words_to_use = all_words[0:TOTAL_NUMBER_OF_WORDS]
+
+	#DEBUG
+	#words_to_use = ['elephant', 'donkey', 'dolphin', 'guineapig', 'sealion']
+	#TOTAL_NUMBER_OF_WORDS = 5
+	#DEBUG
 
 	#Arrays to store results.
 	RESULT_number_of_words_learnt = []

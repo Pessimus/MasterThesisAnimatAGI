@@ -330,6 +330,17 @@ class Network():
 
 		#Add new tick counters.
 		topactive_nodes = self.get_topactive_nodes()
+
+		#TODO: TESTING NEW FIX
+		#activation_times = [n.activation_time() for n in topactive_nodes]
+		#min_at = min(activation_times)
+		#if min_at >= len(self.temporal_short_term_memory):
+		#	nodes_to_use = self.sensors
+		#	print("this")
+		#else:
+		#	nodes_to_use = topactive_nodes
+		#for node in nodes_to_use:
+		
 		for node in topactive_nodes:
 			activation_time = node.activation_time()
 			if len(self.temporal_short_term_memory) > activation_time:
