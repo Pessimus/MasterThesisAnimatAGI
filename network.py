@@ -1,6 +1,7 @@
 import numpy as np
 import nodes as node_types
 import temporalNodes as temporal_node_types
+import temporalActionNodes as temporal_action_node_types
 
 #Class reprecenting the network used by a Animat. Containing all nodes and the matrices for them.
 class Network():
@@ -102,6 +103,8 @@ class Network():
 		self.time_extended_conditional_matrix = np.append(self.time_extended_conditional_matrix, np.zeros((self.total_number_of_input_nodes, 1)), 1)
 
 		self.input_nodes_names.append(node.name)
+
+		self.generator_list = np.append(self.generator_list, -1)
 
 		return True
 	#End add_perception_node()
@@ -397,10 +400,19 @@ class Network():
 		return np.cumsum(temp_mat)
 	#End get_cumulative_temporal_seq_matrix()
 
-	def create_and_add_temporal_seq_node(self, input1, input2):
+	def create_and_add_temporal_seq_node(self, input1, input2, should_add_action_node = False):
 		input_nodes = self.sensors + self.perception_nodes
 		node = temporal_node_types.TemporalSEQNode(inputs=[input_nodes[input1],input_nodes[input2]])
-		return self.add_perception_node(node)
+		success_perception = self.add_perception_node(node)
+
+		if success_perception and should_add_action_node:
+				output_nodes = self.motors + self.perception_nodes
+				a_input_1 = self.generator_list[input1]
+				a_input_2 = self.generator_list[input2]
+				action_node = temporal_action_node_types.TemporalASEQNode(outputs = [output_nodes[a_input_1], output_nodes[a_input_2]])
+				self.add_action_node(action_node)
+				self.generator_list[node.index] = action_node.index
+		return success_perception
 	#End create_and_add_temporal_seq_node()
 
 #End class

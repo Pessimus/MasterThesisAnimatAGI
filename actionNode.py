@@ -26,7 +26,7 @@ class ActionNode:
 	# Sets the node to active and increases the count of how many tinmes the node has been activeated. 
 	# Also activates all its output nodes.
 	def activate(self, time, temporal = False):
-		if (self.time >=time):
+		if (self.time > time or (self.time == time and not temporal)):
 			return False
 		self.time = time
 		self.active = True

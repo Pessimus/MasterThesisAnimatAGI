@@ -15,6 +15,31 @@ class Animat:
 	#End __init__()
 
 	def update(self, time, temporal_input_length = 0):
+		print("not yet implemented")
+	#End update()
+
+	def update_step_three_version(self, time, temporal_input_length = 0, babble = False):
+		if not babble and time > 1:
+			self.learn(True)
+
+		self.network.update_previous_active()
+
+		if not babble:
+			for tt in range(0,temporal_input_length):
+				self.temporal_update(time, tt)
+
+		self.network.tick(time)
+		self.update_experiences()
+
+		self.last_action = -1
+		if babble:
+			#print("babbles")
+			self.babble(time)
+
+
+	#End update_step_three_version()
+
+	def update_step_two_version(self, time, temporal_input_length = 0):
 
 		if time > 1:
 			self.learn()
@@ -28,7 +53,7 @@ class Animat:
 		self.update_experiences()
 
 		#self.act(time)
-	#End update()
+	#End update_step_two_version()
 
 	def temporal_update(self, time, temporal_time):
 		#print("Doing temporal stuff!")
@@ -58,7 +83,7 @@ class Animat:
 	#End update()
 
 	#Should handle all the Animats learning, i.e. adding and removing nodes in the network.
-	def learn(self):
+	def learn(self, probabilistic_add_action = False):
 	#	print("Animat: learn")
 		#Probabilistic learning (temporal)
 		#if coin flip says learn, then add node to network
@@ -74,7 +99,8 @@ class Animat:
 				r = np.random.random() * probabilities[-1]
 				indices = bisect.bisect(probabilities, r)
 				node2_index,node1_index = np.unravel_index(indices, self.network.temporal_sequence_matrix.shape)
-				success = self.network.create_and_add_temporal_seq_node(node1_index, node2_index)
+				#success = self.network.create_and_add_temporal_seq_node(node1_index, node2_index)
+				success = self.network.create_and_add_temporal_seq_node(node1_index, node2_index, probabilistic_add_action)
 			#print("added node")
 
 	#End learn

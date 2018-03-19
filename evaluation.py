@@ -71,8 +71,8 @@ def create_nodes_for_alphabet(test_environment):
 	motors = [motor_node_a, motor_node_b, motor_node_c, motor_node_d, motor_node_e, motor_node_f, motor_node_g, motor_node_h, motor_node_i, motor_node_j, motor_node_k, motor_node_l, motor_node_m, motor_node_n, motor_node_o, motor_node_p, motor_node_q, motor_node_r, motor_node_s, motor_node_t, motor_node_u, motor_node_v, motor_node_w, motor_node_x, motor_node_y, motor_node_z]
 
 	from random import shuffle
-	shuffle(sensors)
-	shuffle(motors)
+	#shuffle(sensors)
+	#shuffle(motors)
 
 	return sensors, motors
 
@@ -162,7 +162,7 @@ def evaluate_step_one():
 
 def evaluate_step_two():
 	#Define constatns (for this run)
-	TOTAL_NUMBER_OF_WORDS = 20
+	TOTAL_NUMBER_OF_WORDS = 10
 	AVERAGE_NUMBER_OF_OCCURENCES_OF_EACH_WORD = 10
 	SEQ_FORMATION_PROBABILITY = 1
 
@@ -174,6 +174,9 @@ def evaluate_step_two():
 
 	#Create the Animat
 	test_environment = Environment()	
+
+
+
 	sensors, motors = create_nodes_for_alphabet(test_environment)
 
 	totlal_number_of_sensors = len(sensors)
@@ -204,7 +207,7 @@ def evaluate_step_two():
 		test_environment.temporal_state = word
 
 		#Update the Animat
-		test_animat.update(t,len(word))
+		test_animat.update_step_two_version(t,len(word))
 
 		#update results
 		tmp_animat_words = [n.get_word() for n in test_animat.network.perception_nodes]
@@ -219,7 +222,7 @@ def evaluate_step_two():
 		#Give the Animat a space between words
 		t = t + 1
 		test_environment.temporal_state = " "
-		test_animat.update(t,1)
+		test_animat.update_step_two_version(t,1)
 
 		#update results
 		tmp_animat_words = [n.get_word() for n in test_animat.network.perception_nodes]
@@ -260,5 +263,149 @@ def evaluate_step_two():
 	file.write_line_to_file("TEMPORAL_MEMORY_CAPACITY = " + str(TEMPORAL_MEMORY_CAPACITY) +";")
 	file.write_line_to_file("SEQ_FORMATION_MAX_ATTEMPTS = " + str(SEQ_FORMATION_MAX_ATTEMPTS) +";")
 
+def evaluate_step_three():
+	#Define constatns (for this run)
+	TOTAL_NUMBER_OF_WORDS = 10
+	AVERAGE_NUMBER_OF_OCCURENCES_OF_EACH_WORD = 10
+	SEQ_FORMATION_PROBABILITY = 1
+
+	#Define constatns (for all runs)
+	TEMPORAL_MEMORY_CAPACITY = 5
+	SEQ_FORMATION_MAX_ATTEMPTS = 10
+	MAX_TIME = AVERAGE_NUMBER_OF_OCCURENCES_OF_EACH_WORD * TOTAL_NUMBER_OF_WORDS *2 #*2 to allow for spaces between words.
+	INPUT_FILE_NAME = "evaluationIO/animal_words.txt"
+
+	test_environment = Environment()	
+	sensors, motors = create_nodes_for_alphabet(test_environment)
+	totlal_number_of_sensors = len(sensors)
+	test_animat = Animat("TheDod", sensors, motors, temporal_memory_capacity = TEMPORAL_MEMORY_CAPACITY, seq_formation_probability = SEQ_FORMATION_PROBABILITY, seq_formation_max_attempts = SEQ_FORMATION_MAX_ATTEMPTS)
+
+	time = 0
+
+
+	#Let the animat discover generators for the sensors by babbling
+	while((-1) in test_animat.network.generator_list):
+		time = time + 1
+		test_animat.update_step_three_version(time, babble = True)
+		test_environment.update()
+
+	print("last action")
+	print(test_animat.last_action)
+	time = time + 1
+	test_animat.update_step_three_version(time, babble = False)
+	print("last action")
+	print(test_animat.last_action)
+	generators = test_animat.network.generator_list
+
+	number_of_correct_generators = 0
+	for node in sensors:
+		index = node.get_index()
+		generator_index = generators[index]
+		if not generator_index == -1: #does have a generator.
+			if node.get_word() == motors[generator_index].get_word(): #is the right sensor.
+				number_of_correct_generators = number_of_correct_generators + 1
+	if number_of_correct_generators == len(sensors):
+		print("The animat is finished babbling, and has found all generators.")
+	else:
+		print("Error")
+
+	print(test_animat.network.generator_list)
+
+	#Let the animat learn new words
+	input_file = FileReader(INPUT_FILE_NAME)
+	all_words = input_file.get_entire_file_as_array()
+	words_to_use = all_words[0:TOTAL_NUMBER_OF_WORDS]
+
+	#DEBUG
+	#words_to_use = ['elephant', 'donkey', 'dolphin', 'guineapig', 'sealion']
+	#TOTAL_NUMBER_OF_WORDS = 5
+	#DEBUG
+
+	#Arrays to store results.
+	#RESULT_number_of_words_learnt = []
+	#RESULT_number_of_perception_nodes = []
+	#RESULT_word_occurenses = [0] * TOTAL_NUMBER_OF_WORDS
+
+	#Train the Animat
+	
+	while time < MAX_TIME:
+		time = time + 1
+		#update environment
+		index = np.random.randint(0, TOTAL_NUMBER_OF_WORDS)
+		word = words_to_use[index]
+		test_environment.temporal_state = word
+
+		#Update the Animat
+		test_animat.update_step_three_version(time,len(word))
+
+		#update results
+		#tmp_animat_words = [n.get_word() for n in test_animat.network.perception_nodes]
+		#c = 0
+		#for w in words_to_use:
+		#	if w in tmp_animat_words:
+		#		c = c + 1
+		#RESULT_number_of_words_learnt.append(c)
+		#RESULT_number_of_perception_nodes.append(len(tmp_animat_words))
+		#RESULT_word_occurenses[index] = RESULT_word_occurenses[index] + 1
+
+		#Give the Animat a space between words
+		time = time + 1
+		test_environment.temporal_state = " "
+		test_animat.update_step_three_version(time,1)
+
+		#update results
+		#tmp_animat_words = [n.get_word() for n in test_animat.network.perception_nodes]
+		#c = 0
+		#for w in words_to_use:
+		#	if w in tmp_animat_words:
+		#		c = c + 1
+		#RESULT_number_of_words_learnt.append(c)
+		#RESULT_number_of_perception_nodes.append(len(tmp_animat_words))
+		#RESULT_word_occurenses[index] = RESULT_word_occurenses[index] + 1
+	#End for loop
+
+	#Calculate final results
+	#RESULT_word_lengths = [len(s) for s in words_to_use]
+	RESULT_animat_words = [n.get_word() for n in test_animat.network.perception_nodes] # All 'words' that the Animat has learnt.
+	RESULT_learnt_words = [w for w in words_to_use if w in RESULT_animat_words]
+	RESULT_not_learnt_words = [w for w in words_to_use if not (w in RESULT_animat_words)] #Words that the animat failed to learn
+
+	print(test_animat.network.generator_list)
+
+	RESULT_animat_spoken_words = [n.get_word() for n in test_animat.network.action_nodes] # All 'words' that the Animat has learnt.
+	RESULT_learnt_spoken_words = [w for w in words_to_use if w in RESULT_animat_spoken_words]
+
+	for n in test_animat.network.perception_nodes :
+		if n.get_word() in words_to_use:
+			perception_node_index = n.index
+			perception_node_word = n.get_word()
+			action_node_index = test_animat.network.generator_list[perception_node_index]
+			output_nodes = test_animat.network.motors + test_animat.network.action_nodes
+			action_node = output_nodes[action_node_index]
+			action_node_word = action_node.get_word()
+			print("perception node: '" + perception_node_word + "', has generator '" + action_node_word + "'")
+
+	#Save results:
+	file = FileWriter("evaluationIO/" + "STEP3_Results" + datetime.datetime.now().strftime("%y%m%d_%H%M%S") + ".m")
+	#self.file_writer = FileWriter("output/" + output_file_name + datetime.datetime.now().strftime("%y%m%d-%H%M%S") + ".txt")
+	file.write_line_to_file("")
+
+	file.write_line_to_file("% Results to save:")
+	file.write_line_to_file("RESULT_animat_words = " + str(RESULT_animat_words) +";")
+	file.write_line_to_file("RESULT_learnt_words = " + str(RESULT_learnt_words) +";")
+	file.write_line_to_file("RESULT_not_learnt_words = " + str(RESULT_not_learnt_words) +";")
+	file.write_line_to_file("RESULT_animat_spoken_words = " + str(RESULT_animat_spoken_words) +";")
+	file.write_line_to_file("RESULT_learnt_spoken_words = " + str(RESULT_learnt_spoken_words) +";")
+	file.write_line_to_file("% Input to save:")
+	file.write_line_to_file("TOTAL_NUMBER_OF_WORDS = " + str(TOTAL_NUMBER_OF_WORDS) +";")
+	file.write_line_to_file("AVERAGE_NUMBER_OF_OCCURENCES_OF_EACH_WORD = " + str(AVERAGE_NUMBER_OF_OCCURENCES_OF_EACH_WORD) +";")
+	file.write_line_to_file("SEQ_FORMATION_PROBABILITY = " + str(SEQ_FORMATION_PROBABILITY) +";")
+	file.write_line_to_file("words_to_use = " + str(words_to_use) +";")
+	file.write_line_to_file("% Absolute constatns to save:")
+	file.write_line_to_file("TEMPORAL_MEMORY_CAPACITY = " + str(TEMPORAL_MEMORY_CAPACITY) +";")
+	file.write_line_to_file("SEQ_FORMATION_MAX_ATTEMPTS = " + str(SEQ_FORMATION_MAX_ATTEMPTS) +";")
+
+
+#End evaluate_step_three()
 
 
