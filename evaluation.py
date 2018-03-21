@@ -266,7 +266,7 @@ def evaluate_step_two():
 def evaluate_step_three():
 	#Define constatns (for this run)
 	TOTAL_NUMBER_OF_WORDS = 10
-	AVERAGE_NUMBER_OF_OCCURRENCES_OF_EACH_WORD = 10
+	AVERAGE_NUMBER_OF_OCCURRENCES_OF_EACH_WORD = 30
 	SEQ_FORMATION_PROBABILITY = 1
 
 	#Define constatns (for all runs)
@@ -336,13 +336,13 @@ def evaluate_step_three():
 	RESULT_nbr_spoken_words = 0
 	RESULT_nbr_not_spoken_words = 0
 
-	print("__")
-	print(len(test_animat.network.motors))
-	print(test_animat.network.number_of_motors)
-	print("__")
-	print(len(test_animat.network.action_nodes))
-	print(test_animat.network.number_of_action_nodes)
-	print("__")
+	#print("__")
+	#print(len(test_animat.network.motors))
+	#print(test_animat.network.number_of_motors)
+	#print("__")
+	#print(len(test_animat.network.action_nodes))
+	#print(test_animat.network.number_of_action_nodes)
+	#print("__")
 
 	#Test the animat
 	for word in words_to_use:
@@ -351,15 +351,16 @@ def evaluate_step_three():
 		test_animat.repeat(time,len(word))
 
 		test_environment.update()
-		animat_output = test_environment.temporal_state
+		animat_output_list = test_environment.temporal_state
+		animat_output = convert_list_to_word(animat_output_list)
 
-		print("-----")
-		print(word)
-		print(test_animat.network.get_topactive_nodes()[-1].get_word())
-		print(test_animat.network.generator_list[test_animat.network.get_topactive_nodes()[-1].get_index()])
-		print(test_animat.network.get_action_node(test_animat.network.generator_list[test_animat.network.get_topactive_nodes()[-1].get_index()]).get_word())
-		print(animat_output)
-		print("-----")
+		#print("-----")
+		#print(word)
+		#print(test_animat.network.get_topactive_nodes()[-1].get_word())
+		#print(test_animat.network.generator_list[test_animat.network.get_topactive_nodes()[-1].get_index()])
+		#print(test_animat.network.get_action_node(test_animat.network.generator_list[test_animat.network.get_topactive_nodes()[-1].get_index()]).get_word())
+		#print(animat_output)
+		#print("-----")
 
 		if word == animat_output:
 			RESULT_spoken_words.append(word)

@@ -49,13 +49,21 @@ class Animat:
 		top_actives = self.network.get_topactive_nodes()
 		actions = self.network.motors + self.network.action_nodes
 
+		max_sequence_length = 0
+		generator = -1
+
 		if speak:
 			if not len(top_actives) == 1: # A word is recognised
 				for i in range(1,len(top_actives)):
 					n = top_actives[i]
+					#print(":::"+n.get_word())
 					g = self.network.generator_list[n.index]
 					if not g == -1:
-						 self.network.activate_action_node(g, time, True)
+						if n.activation_time() > max_sequence_length:
+							max_sequence_length = n.activation_time()
+							generator = g
+				if not generator == -1:
+					self.network.activate_action_node(generator, time, True)
 
 	#End repeat
 

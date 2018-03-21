@@ -311,7 +311,7 @@ class Network():
 	def activate_action_node(self, index, time, temporal = False):
 		if index < self.number_of_motors:
 			return self.motors[index].activate(time, temporal)
-		elif index < self.number_of_action_nodes:
+		elif (index-self.number_of_sensors) < self.number_of_action_nodes:
 			return self.action_nodes[index-self.number_of_motors].activate(time, temporal)
 		else:
 			return False
