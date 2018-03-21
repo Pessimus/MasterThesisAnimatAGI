@@ -78,14 +78,14 @@ def create_nodes_for_alphabet(test_environment):
 
 def evaluate_step_one():
 	#test_how_often_the_animat_learns_the_entire_alphabet():	
-	print("------------------Testing how often the animat learns the entire alphabet------------------")
+	#print("------------------Testing how often the animat learns the entire alphabet------------------")
 	import numpy as np
 	avg_nbr = 100
 	tests_to_run = [10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,210,220,230,240,250,260,270,280,290,300]
 
-	print("Running tests with the nomber of iterations to babble set to:")
-	print(tests_to_run)
-	print("And averages over %d averaging runs." % (avg_nbr))
+	#print("Running tests with the nomber of iterations to babble set to:")
+	#print(tests_to_run)
+	#print("And averages over %d averaging runs." % (avg_nbr))
 
 	results_all_generators_found = []
 	results_avg_number_of_generators_found = []
@@ -134,30 +134,23 @@ def evaluate_step_one():
 		#results_avg_number_of_generators_found.append(avg_number_of_generators_found/totlal_number_of_sensors)
 		results_avg_number_of_generators_found.append(float(format(avg_number_of_generators_found/totlal_number_of_sensors, '.2f')))
 	
-	print("Percentage of times that all generators were found for the different tests:")
-	print(results_all_generators_found)
-	print("Average percentage of generators found for the different tests:")
-	print(results_avg_number_of_generators_found)
+	#print("Percentage of times that all generators were found for the different tests:")
+	#print(results_all_generators_found)
+	#print("Average percentage of generators found for the different tests:")
+	#print(results_avg_number_of_generators_found)
 
-	file = FileWriter("output/babbling_result.m")
-	file.write_line_to_file("clear all, clf, clc")
-	file.write_line_to_file("%The tests to run")
-	file.write_line_to_file("tests_to_run = "+str(tests_to_run))
-	file.write_line_to_file("%Percentage of times that all generators were found for the different tests:")
+	#file = FileWriter("output/babbling_result.m")
+
+	file = FileWriter("evaluationIO/" + "STEP1_Results" + datetime.datetime.now().strftime("%y%m%d_%H%M%S") + ".m")
+
+	file.write_line_to_file("% Results to save:")
 	file.write_line_to_file("results_all_generators_found = "+str(results_all_generators_found))
-	file.write_line_to_file("% Average percentage of generators found for the different tests:")
 	file.write_line_to_file("results_avg_number_of_generators_found = "+str(results_avg_number_of_generators_found))
-	file.write_line_to_file("plot(tests_to_run,results_all_generators_found)")
-	file.write_line_to_file("figure")
-	file.write_line_to_file("yyaxis left")
-	file.write_line_to_file("ylabel('Percentage of runs where all generators were found')")
-	file.write_line_to_file("plot(tests_to_run,results_all_generators_found)")
-	file.write_line_to_file("hold on")
-	file.write_line_to_file("yyaxis right")
-	file.write_line_to_file("ylabel('Average number of generators found');")
-	file.write_line_to_file("plot(tests_to_run,results_avg_number_of_generators_found)")
-	file.write_line_to_file("title('Statistics of how well the Animat finds generators');")
-	file.write_line_to_file("xlabel('Number of timesteps spent babbling');")
+	
+	file.write_line_to_file("% Input to save:")
+	file.write_line_to_file("tests_to_run = "+str(tests_to_run))
+	
+	
 	#file.write_line_to_file("legend('Runs where all generators were found','Average number of generators found','Location','east')")
 
 def evaluate_step_two():
@@ -336,14 +329,6 @@ def evaluate_step_three():
 	RESULT_nbr_spoken_words = 0
 	RESULT_nbr_not_spoken_words = 0
 
-	#print("__")
-	#print(len(test_animat.network.motors))
-	#print(test_animat.network.number_of_motors)
-	#print("__")
-	#print(len(test_animat.network.action_nodes))
-	#print(test_animat.network.number_of_action_nodes)
-	#print("__")
-
 	#Test the animat
 	for word in words_to_use:
 		time = time + 1
@@ -353,14 +338,6 @@ def evaluate_step_three():
 		test_environment.update()
 		animat_output_list = test_environment.temporal_state
 		animat_output = convert_list_to_word(animat_output_list)
-
-		#print("-----")
-		#print(word)
-		#print(test_animat.network.get_topactive_nodes()[-1].get_word())
-		#print(test_animat.network.generator_list[test_animat.network.get_topactive_nodes()[-1].get_index()])
-		#print(test_animat.network.get_action_node(test_animat.network.generator_list[test_animat.network.get_topactive_nodes()[-1].get_index()]).get_word())
-		#print(animat_output)
-		#print("-----")
 
 		if word == animat_output:
 			RESULT_spoken_words.append(word)
