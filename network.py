@@ -291,8 +291,8 @@ class Network():
 	def get_action_node(self, index):
 		if index < self.number_of_motors:
 			return self.motors[index]
-		elif index < self.number_of_action_nodes:
-			return self.action_nodes[index-number_of_motors]
+		elif (index-self.number_of_motors) < self.number_of_action_nodes:
+			return self.action_nodes[index-self.number_of_motors]
 		else:
 			return None
 	#End get_action_node()
@@ -302,17 +302,17 @@ class Network():
 	def get_perception_node(self, index):
 		if index < self.number_of_sensors:
 			return self.sensors[index]
-		elif index < self.number_of_perception_nodes:
-			return self.perception_nodes[index-number_of_sensors]
+		elif (index-self.number_of_sensors) < self.number_of_perception_nodes:
+			return self.perception_nodes[index-self.number_of_sensors]
 		else:
 			return None
-	#End get_action_node()
+	#End get_perception_node()
 
-	def activate_action_node(self, index, time):
+	def activate_action_node(self, index, time, temporal = False):
 		if index < self.number_of_motors:
-			return self.motors[index].activate(time)
+			return self.motors[index].activate(time, temporal)
 		elif index < self.number_of_action_nodes:
-			return self.action_nodes[index-number_of_motors].activate(time)
+			return self.action_nodes[index-self.number_of_motors].activate(time, temporal)
 		else:
 			return False
 	#End activate_action_node()
@@ -406,7 +406,7 @@ class Network():
 		success_perception = self.add_perception_node(node)
 
 		if success_perception and should_add_action_node:
-				output_nodes = self.motors + self.perception_nodes
+				output_nodes = self.motors + self.action_nodes
 				a_input_1 = self.generator_list[input1]
 				a_input_2 = self.generator_list[input2]
 				action_node = temporal_action_node_types.TemporalASEQNode(outputs = [output_nodes[a_input_1], output_nodes[a_input_2]])

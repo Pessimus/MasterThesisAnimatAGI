@@ -36,8 +36,28 @@ class Animat:
 			#print("babbles")
 			self.babble(time)
 
-
 	#End update_step_three_version()
+
+	def repeat(self, time, temporal_input_length = 0, speak = True):
+		self.network.update_previous_active()
+		
+		for tt in range(0,temporal_input_length):
+			self.temporal_update(time, tt)
+
+		self.network.tick(time)
+
+		top_actives = self.network.get_topactive_nodes()
+		actions = self.network.motors + self.network.action_nodes
+
+		if speak:
+			if not len(top_actives) == 1: # A word is recognised
+				for i in range(1,len(top_actives)):
+					n = top_actives[i]
+					g = self.network.generator_list[n.index]
+					if not g == -1:
+						 self.network.activate_action_node(g, time, True)
+
+	#End repeat
 
 	def update_step_two_version(self, time, temporal_input_length = 0):
 
