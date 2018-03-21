@@ -265,12 +265,12 @@ def evaluate_step_two():
 
 def evaluate_step_three():
 	#Define constatns (for this run)
-	TOTAL_NUMBER_OF_WORDS = 10
-	AVERAGE_NUMBER_OF_OCCURRENCES_OF_EACH_WORD = 30
+	TOTAL_NUMBER_OF_WORDS = 100
+	AVERAGE_NUMBER_OF_OCCURRENCES_OF_EACH_WORD = 50
 	SEQ_FORMATION_PROBABILITY = 1
 
 	#Define constatns (for all runs)
-	TEMPORAL_MEMORY_CAPACITY = 5
+	TEMPORAL_MEMORY_CAPACITY = 7
 	SEQ_FORMATION_MAX_ATTEMPTS = 10
 	MAX_TIME = AVERAGE_NUMBER_OF_OCCURRENCES_OF_EACH_WORD * TOTAL_NUMBER_OF_WORDS *2 #*2 to allow for spaces between words.
 	INPUT_FILE_NAME = "evaluationIO/animal_words.txt"
