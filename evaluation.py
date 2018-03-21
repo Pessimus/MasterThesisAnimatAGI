@@ -278,6 +278,7 @@ def evaluate_step_three():
 	#//-----------------------------------------------------------------------------------------------------------------------------------------------------\\
 	#Let the animat discover generators for the sensors by babbling
 	while((-1) in test_animat.network.generator_list):
+	#for y in range(0,300):
 		time = time + 1
 		test_animat.update_step_three_version(time, babble = True)
 		test_environment.update()
@@ -297,7 +298,7 @@ def evaluate_step_three():
 	words_to_use = all_words[0:TOTAL_NUMBER_OF_WORDS]
 
 	#Train the Animat	
-	while time < MAX_TIME:
+	while time < MAX_TIME + RESULT_time_to_learn_all_generators:
 		time = time + 1
 		#update environment
 		index = np.random.randint(0, TOTAL_NUMBER_OF_WORDS)
