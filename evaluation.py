@@ -109,7 +109,7 @@ def evaluate_step_one():
 
 			#let the animat learn
 			for x in range(1, nbr_iterations+1): #+1 needed ass the loop does NOT include the last iteration
-				test_animat.update(x)
+				test_animat.update_step_one_version(x)
 				test_environment.update()
 
 			generators = test_animat.network.generator_list
@@ -144,11 +144,11 @@ def evaluate_step_one():
 	file = FileWriter("evaluationIO/" + "STEP1_Results" + datetime.datetime.now().strftime("%y%m%d_%H%M%S") + ".m")
 
 	file.write_line_to_file("% Results to save:")
-	file.write_line_to_file("results_all_generators_found = "+str(results_all_generators_found))
-	file.write_line_to_file("results_avg_number_of_generators_found = "+str(results_avg_number_of_generators_found))
+	file.write_line_to_file("results_all_generators_found = "+str(results_all_generators_found)+";")
+	file.write_line_to_file("results_avg_number_of_generators_found = "+str(results_avg_number_of_generators_found)+";")
 	
 	file.write_line_to_file("% Input to save:")
-	file.write_line_to_file("tests_to_run = "+str(tests_to_run))
+	file.write_line_to_file("tests_to_run = "+str(tests_to_run)+";")
 	
 	
 	#file.write_line_to_file("legend('Runs where all generators were found','Average number of generators found','Location','east')")
