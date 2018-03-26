@@ -48,7 +48,8 @@ class Network():
 		#--transition_matrix--
 		#probability of 3 becoming topactive if 2 was preformed when 1 was active.
 		#axis 0 (layer) perception, axis 1 (row) action, axis 2 (column) perception
-		self.transition_matrix = np.zeros((self.total_number_of_input_nodes, self.total_number_of_output_nodes, self.total_number_of_input_nodes), dtype=(float,2))
+		#self.transition_matrix = np.zeros((self.total_number_of_input_nodes, self.total_number_of_output_nodes, self.total_number_of_input_nodes), dtype=(float,2))# OLD
+		self.transition_matrix = [([ [(0,0)] * self.total_number_of_input_nodes for _ in range(self.total_number_of_output_nodes) ]) for _ in range(self.total_number_of_input_nodes)]
 
 		#self.sequence_matrix = np.zeros((total_number_of_input_nodes,total_number_of_input_nodes)) #might be added later...
 		#self.temporal_sequence_matrix = np.zeros((self.total_number_of_input_nodes, self.total_number_of_input_nodes)) #Fraction over the last 100 ticks that 1 has been top active at t and 2 at (t-1)
@@ -79,10 +80,16 @@ class Network():
 		self.total_number_of_nodes = self.total_number_of_nodes + 1
 
 		#update transition_matrix
-		new_layer = np.zeros((1,self.total_number_of_output_nodes, self.total_number_of_input_nodes-1), dtype=(float,2))
-		self.transition_matrix = np.append(self.transition_matrix, new_layer, 0)
-		new_column = np.zeros((self.total_number_of_input_nodes,self.total_number_of_output_nodes,1), dtype=(float,2))
-		self.transition_matrix = np.append(self.transition_matrix, new_column, 2)
+		#new_layer = np.zeros((1,self.total_number_of_output_nodes, self.total_number_of_input_nodes-1), dtype=(float,2))
+		#self.transition_matrix = np.append(self.transition_matrix, new_layer, 0)
+		#new_column = np.zeros((self.total_number_of_input_nodes,self.total_number_of_output_nodes,1), dtype=(float,2))
+		#self.transition_matrix = np.append(self.transition_matrix, new_column, 2)
+		self.transition_matrix.append([ [(0,0)] * (self.total_number_of_input_nodes-1) for _ in range(self.total_number_of_output_nodes) ])
+		for x in self.transition_matrix:
+			for y in x:
+				y.append((0,0))
+		#S = S + 1
+
 
 		#update temporal_sequence_matrix
 		v1 = np.zeros((1,self.total_number_of_input_nodes-1), dtype = object)
@@ -119,42 +126,46 @@ class Network():
 		self.total_number_of_nodes = self.total_number_of_nodes + 1
 
 		#update transition_matrix
-		new_layer = np.zeros((self.total_number_of_input_nodes, 1, self.total_number_of_input_nodes), dtype=(float,2))
+		#new_layer = np.zeros((self.total_number_of_input_nodes, 1, self.total_number_of_input_nodes), dtype=(float,2))#OLD
+		#self.transition_matrix = np.append(self.transition_matrix, new_layer, 1)
 
-		self.transition_matrix = np.append(self.transition_matrix, new_layer, 1)
+		for x in self.transition_matrix:
+			x.append([(0,0)] * self.total_number_of_input_nodes)
+
 	#End add_action_node
 
 	#Removes a preception node from the graph and all matrices, iff the node is a top node.
-	def remove_perception_node(self, node):
-		if self.is_top_perception_node(node):
-			index = node.get_index()
-			list_position = index - self.number_of_sensors
-
-			for n in self.perception_nodes:
-				if n.get_index() > index:
-					n.index = n.index - 1
-
-			del self.perception_nodes[list_position]
-
-			self.transition_matrix = np.delete(self.transition_matrix, index, 0)
-			self.transition_matrix = np.delete(self.transition_matrix, index, 2)
-
-			self.temporal_sequence_matrix = np.delete(self.temporal_sequence_matrix, index, 0)
-			self.temporal_sequence_matrix = np.delete(self.temporal_sequence_matrix, index, 1)
-			
-			self.conditional_matrix = np.delete(self.conditional_matrix, index, 0)
-			self.conditional_matrix = np.delete(self.conditional_matrix, index, 1)
-
-			self.time_extended_conditional_matrix = np.delete(self.time_extended_conditional_matrix, index, 0)
-			self.time_extended_conditional_matrix = np.delete(self.time_extended_conditional_matrix, index, 1)
-
-			self.number_of_perception_nodes=self.number_of_perception_nodes-1
-			self.total_number_of_input_nodes=self.total_number_of_input_nodes-1
-			self.total_number_of_nodes=self.total_number_of_nodes-1
-
-			return True
-		else:
-			return False
+	#DEPRICATED after change of data srtucture for transition_matrix
+	#def remove_perception_node(self, node):
+	#	if self.is_top_perception_node(node):
+	#		index = node.get_index()
+	#		list_position = index - self.number_of_sensors
+	#
+	#		for n in self.perception_nodes:
+	#			if n.get_index() > index:
+	#				n.index = n.index - 1
+	#
+	#		del self.perception_nodes[list_position]
+	#
+	#		self.transition_matrix = np.delete(self.transition_matrix, index, 0)
+	#		self.transition_matrix = np.delete(self.transition_matrix, index, 2)
+	#
+	#		self.temporal_sequence_matrix = np.delete(self.temporal_sequence_matrix, index, 0)
+	#		self.temporal_sequence_matrix = np.delete(self.temporal_sequence_matrix, index, 1)
+	#		
+	#		self.conditional_matrix = np.delete(self.conditional_matrix, index, 0)
+	#		self.conditional_matrix = np.delete(self.conditional_matrix, index, 1)
+	#
+	#		self.time_extended_conditional_matrix = np.delete(self.time_extended_conditional_matrix, index, 0)
+	#		self.time_extended_conditional_matrix = np.delete(self.time_extended_conditional_matrix, index, 1)
+	#
+	#		self.number_of_perception_nodes=self.number_of_perception_nodes-1
+	#		self.total_number_of_input_nodes=self.total_number_of_input_nodes-1
+	#		self.total_number_of_nodes=self.total_number_of_nodes-1
+	#
+	#		return True
+	#	else:
+	#		return False
 	#End remove_perception_node()
 
 	# Returns true if the node is not input to any other node.
@@ -166,26 +177,27 @@ class Network():
 	#End is_top_perception_node()
 
 	#Removes a action node from the graph and all matrices, iff the node is a top node.
-	def remove_action_node(self,node):
-		if self.is_top_action_node(node):
-			index = node.get_index()
-			list_position = index - self.number_of_motors
-
-			for n in self.action_nodes:
-				if n.get_index() > index:
-					n.index = n.index - 1
-
-			del self.action_nodes[list_position]
-
-			self.transition_matrix = np.delete(self.transition_matrix, index, 1)
-
-			self.number_of_action_nodes = self.number_of_action_nodes - 1
-			self.total_number_of_output_nodes = self.total_number_of_output_nodes - 1
-			self.total_number_of_nodes = self.total_number_of_nodes - 1
-
-			return True
-		else:
-			return False
+	#DEPRICATED after change of data srtucture for transition_matrix
+	#def remove_action_node(self,node):
+	#	if self.is_top_action_node(node):
+	#		index = node.get_index()
+	#		list_position = index - self.number_of_motors
+	#
+	#		for n in self.action_nodes:
+	#			if n.get_index() > index:
+	#				n.index = n.index - 1
+	#
+	#		del self.action_nodes[list_position]
+	#
+	#		self.transition_matrix = np.delete(self.transition_matrix, index, 1)
+	#
+	#		self.number_of_action_nodes = self.number_of_action_nodes - 1
+	#		self.total_number_of_output_nodes = self.total_number_of_output_nodes - 1
+	#		self.total_number_of_nodes = self.total_number_of_nodes - 1
+	#
+	#		return True
+	#	else:
+	#		return False
 	#End remove_action_node()
 
 	# Returns true if the node is not input to any other node.
