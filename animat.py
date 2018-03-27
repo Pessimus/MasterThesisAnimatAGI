@@ -126,7 +126,8 @@ class Animat:
 				attempts = attempts + 1
 				r = np.random.random() * probabilities[-1]
 				indices = bisect.bisect(probabilities, r)
-				node2_index,node1_index = np.unravel_index(indices, self.network.temporal_sequence_matrix.shape)
+				#node2_index,node1_index = np.unravel_index(indices, self.network.temporal_sequence_matrix.shape)
+				node2_index,node1_index = np.unravel_index(indices, (len(self.network.temporal_sequence_matrix),len(self.network.temporal_sequence_matrix[0])))
 				#success = self.network.create_and_add_temporal_seq_node(node1_index, node2_index)
 				success = self.network.create_and_add_temporal_seq_node(node1_index, node2_index, probabilistic_add_action)
 			#print("added node")
