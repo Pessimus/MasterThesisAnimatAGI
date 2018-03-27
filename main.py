@@ -11,8 +11,8 @@ import random
 def init():
 	#run_tests()
 	#evaluate_step_one()
-	#evaluate_step_two()
-	evaluate_step_three()
+	evaluate_step_two()
+	#evaluate_step_three()
 
 if __name__ == "__main__":
 	init()

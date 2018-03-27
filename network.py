@@ -429,15 +429,25 @@ class Network():
 		x = len(self.temporal_sequence_matrix)
 		y = len(self.temporal_sequence_matrix[0])
 		#temp_mat = np.zeros((x,y))
-		temp_mat = [ [0] * x for _ in range(y) ]
+		#temp_mat = [ [0] * x for _ in range(y) ]
+		try:
+			temp_mat = [0] *(x*y)
+		except MemoryError:
+			print("x: = ")
+			print(x)
+			print("y: = ")
+			print(y)
 
 		#loop from 1 to avoid True node which is at index 1
+		last_value = 0
 		for i in range(1,x):
 			for j in range(1,y):
 				v = self.temporal_sequence_matrix[i][j]
-				temp_mat[i][j] = len(v)
+				last_value = last_value + len(v)
+				temp_mat[(i*y)+j] = last_value
 
-		return np.cumsum(temp_mat)
+		return temp_mat
+		#return np.cumsum(temp_mat)
 	#End get_cumulative_temporal_seq_matrix()
 
 	def create_and_add_temporal_seq_node(self, input1, input2, should_add_action_node = False):
