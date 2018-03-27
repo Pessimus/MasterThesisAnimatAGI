@@ -406,7 +406,8 @@ class Network():
 
 	def get_cumulative_temporal_seq_matrix(self):
 		x,y = self.temporal_sequence_matrix.shape
-		temp_mat = np.zeros((x,y))
+		#temp_mat = np.zeros((x,y))
+		temp_mat = [ [0] * x for _ in range(y) ]
 
 		#loop from 1 to avoid True node which is at index 1
 		for i in range(1,x):
