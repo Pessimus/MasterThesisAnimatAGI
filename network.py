@@ -49,8 +49,8 @@ class Network():
 		#probability of 3 becoming topactive if 2 was preformed when 1 was active.
 		#axis 0 (layer) perception, axis 1 (row) action, axis 2 (column) perception
 		#self.transition_matrix = np.zeros((self.total_number_of_input_nodes, self.total_number_of_output_nodes, self.total_number_of_input_nodes), dtype=(float,2))# OLD
-		self.transition_matrix = [([ [(0,0)] * self.total_number_of_input_nodes for _ in range(self.total_number_of_output_nodes) ]) for _ in range(self.total_number_of_input_nodes)]
-
+		#self.transition_matrix = [([ [(0,0)] * self.total_number_of_input_nodes for _ in range(self.total_number_of_output_nodes) ]) for _ in range(self.total_number_of_input_nodes)]
+		self.simple_transition_matrix = [([ [(0,0)] * self.total_number_of_input_nodes for _ in range(self.total_number_of_output_nodes) ]) for _ in range(1)]
 		#self.sequence_matrix = np.zeros((total_number_of_input_nodes,total_number_of_input_nodes)) #might be added later...
 		#self.temporal_sequence_matrix = np.zeros((self.total_number_of_input_nodes, self.total_number_of_input_nodes)) #Fraction over the last 100 ticks that 1 has been top active at t and 2 at (t-1)
 		#self.temporal_sequence_matrix = np.zeros((self.total_number_of_input_nodes, self.total_number_of_input_nodes), dtype = object) #Fraction over the last 100 ticks that 1 has been top active at t and 2 at (t-1)
@@ -92,11 +92,13 @@ class Network():
 		#self.transition_matrix = np.append(self.transition_matrix, new_layer, 0)
 		#new_column = np.zeros((self.total_number_of_input_nodes,self.total_number_of_output_nodes,1), dtype=(float,2))
 		#self.transition_matrix = np.append(self.transition_matrix, new_column, 2)
-		self.transition_matrix.append([ [(0,0)] * (self.total_number_of_input_nodes-1) for _ in range(self.total_number_of_output_nodes) ])
-		for x in self.transition_matrix:
+		#self.transition_matrix.append([ [(0,0)] * (self.total_number_of_input_nodes-1) for _ in range(self.total_number_of_output_nodes) ])
+		#for x in self.transition_matrix:
+		#	for y in x:
+		#		y.append((0,0))
+		for x in self.simple_transition_matrix:
 			for y in x:
 				y.append((0,0))
-		#S = S + 1
 
 
 		#update temporal_sequence_matrix
@@ -147,7 +149,7 @@ class Network():
 		#new_layer = np.zeros((self.total_number_of_input_nodes, 1, self.total_number_of_input_nodes), dtype=(float,2))#OLD
 		#self.transition_matrix = np.append(self.transition_matrix, new_layer, 1)
 
-		for x in self.transition_matrix:
+		for x in self.simple_transition_matrix:
 			x.append([(0,0)] * self.total_number_of_input_nodes)
 
 	#End add_action_node
@@ -389,20 +391,40 @@ class Network():
 
 	#Updates the values of the transition matrix, depending on what nodes were active, and what nodes are topactive.
 	#Assumes that last_action is a valid action.
+	#def update_transition_matrix(self, last_action):
+	#	#probability of 3 becoming topactive if 2 was preformed when 1 was active.
+	#	topactive_nodes = self.get_topactive_nodes()
+	#	input_nodes = self.sensors + self.perception_nodes
+	#	for last_state_node in input_nodes:
+	#		if last_state_node.was_active():
+	#			i = last_state_node.get_index()
+	#			for current_state_node in input_nodes:
+	#				j = current_state_node.get_index()
+	#				dividend, divisor = self.transition_matrix[i][last_action][j]
+	#				divisor = divisor + 1
+	#				if current_state_node in topactive_nodes:
+	#					dividend = dividend + 1
+	#				self.transition_matrix[i][last_action][j] = (dividend, divisor)
+	#End update_transition_matrix()
+
+	#Updates the values of the transition matrix, depending on what nodes were active, and what nodes are topactive.
+	#Simple version using only the true node as the previous node.
+	#Assumes that last_action is a valid action.
 	def update_transition_matrix(self, last_action):
 		#probability of 3 becoming topactive if 2 was preformed when 1 was active.
 		topactive_nodes = self.get_topactive_nodes()
 		input_nodes = self.sensors + self.perception_nodes
-		for last_state_node in input_nodes:
-			if last_state_node.was_active():
-				i = last_state_node.get_index()
-				for current_state_node in input_nodes:
-					j = current_state_node.get_index()
-					dividend, divisor = self.transition_matrix[i][last_action][j]
-					divisor = divisor + 1
-					if current_state_node in topactive_nodes:
-						dividend = dividend + 1
-					self.transition_matrix[i][last_action][j] = (dividend, divisor)
+		#for last_state_node in input_nodes:
+		#	if last_state_node.was_active():
+		#		i = last_state_node.get_index()
+		i = 0 #Index of true node
+		for current_state_node in input_nodes:
+			j = current_state_node.get_index()
+			dividend, divisor = self.simple_transition_matrix[i][last_action][j]
+			divisor = divisor + 1
+			if current_state_node in topactive_nodes:
+				dividend = dividend + 1
+			self.simple_transition_matrix[i][last_action][j] = (dividend, divisor)
 	#End update_transition_matrix()
 
 	#Updates a list of generators for all perception nodes. TODO: should be more general.
@@ -413,13 +435,13 @@ class Network():
 			b = node.get_index()
 			#self.generator_list[b] = -1
 			if not self.generator_list[b] == -1:
-				dividend, divisor = self.transition_matrix[0][self.generator_list[b]][b]
+				dividend, divisor = self.simple_transition_matrix[0][self.generator_list[b]][b]
 				if not dividend == divisor:
 					self.generator_list[b] = -1 # This was NOT a generator, as this has now been proven false (if divisor is 0 it has not been attempted, and can thus still be true.)
 
 			for action in output_nodes: # Might not be needed depending on if-statement above, but could be used to find more than one generator.
 				a = action.get_index()
-				dividend, divisor = self.transition_matrix[0][a][b]
+				dividend, divisor = self.simple_transition_matrix[0][a][b]
 				if divisor == dividend and not divisor == 0: #If the probability is one (not true if divisor is 0)
 					self.generator_list[b] = a
 	#End update_generators()

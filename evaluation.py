@@ -258,7 +258,7 @@ def evaluate_step_two():
 
 def evaluate_step_three():
 	#Define constatns (for this run)
-	TOTAL_NUMBER_OF_WORDS = 100
+	TOTAL_NUMBER_OF_WORDS = 10
 	AVERAGE_NUMBER_OF_OCCURRENCES_OF_EACH_WORD = 10
 	SEQ_FORMATION_PROBABILITY = 1
 
