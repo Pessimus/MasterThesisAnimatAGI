@@ -11,6 +11,7 @@ class Animat:
 		self.last_action = -1
 		self.seq_formation_probability = seq_formation_probability
 		self.seq_formation_max_attempts = seq_formation_max_attempts
+		self.time = 0
 
 	#End __init__()
 
@@ -110,6 +111,16 @@ class Animat:
 		#begin learning
 	#End update()
 
+	def update_goal_one_version(self, time, temporal_input_length = 0):
+		if(self.time < time):
+			self.time = time
+			self.network.update_previous_active()
+			for tt in range(0,temporal_input_length):
+				self.temporal_update(time, tt)
+			self.network.tick(time)
+			self.update_experiences()
+	#End update_goal_one_version()
+
 	#Should handle all the Animats learning, i.e. adding and removing nodes in the network.
 	def learn(self, probabilistic_add_action = False):
 	#	print("Animat: learn")
@@ -163,6 +174,7 @@ class Animat:
 		if not self.last_action == -1:
 			self.network.update_transition_matrix(self.last_action)
 			self.network.update_generators()
+		self.network.update_conditional_matrix()
 	#End update_experiences()
 
 	def update_temporal_experiences(self):

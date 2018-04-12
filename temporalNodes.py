@@ -9,12 +9,12 @@ class TemporalSEQNode(Node):
 		self.possible_activations = []
 	#End __init__
 
-	# Overrides the 'tick' function. Does not update if the tick is not temporal. 
+	# Overrides the 'tick' function. 
 	# Else, (temporal) ticks all input nodes, and then activates if the first input was temporal active in the past, and the second is active as soon after as possible.
 	# Updates the variable 'previous_temporal_active'
 	def tick(self, time, temporal_time = 0, temporal = False):
-		if not temporal:
-			return False
+		#if not temporal:
+		#	return False
 		if Node.tick(self, time, temporal_time, temporal):
 			if len(self.inputs) > 1:
 				self.previous_temporal_active = self.active 	#temporal nodes should update this value in tick (TODO: sould this be moved outside the if? Should not matter?)

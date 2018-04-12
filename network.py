@@ -64,7 +64,9 @@ class Network():
 
 
 		#self.conditional_matrix = np.zeros((self.total_number_of_input_nodes, self.total_number_of_input_nodes)) #Intuition: Probability that 1 is top active at t given that 2 is top active at t: Pr(1|2)
-		self.conditional_matrix = [ [0] * self.total_number_of_input_nodes for _ in range(self.total_number_of_input_nodes) ]
+		self.conditional_matrix = [ [0] * self.total_number_of_input_nodes for _ in range(self.total_number_of_input_nodes) ] #dividends
+		self.conditional_matrix_divisor = [0] * self.total_number_of_input_nodes #divisors
+
 		#self.time_extended_conditional_matrix = np.zeros((self.total_number_of_input_nodes, self.total_number_of_input_nodes)) #Intuition: Probability that 1 is top active at ~t given that 2 is top active at t: Pr(1|2)
 		self.time_extended_conditional_matrix = [ [0] * self.total_number_of_input_nodes for _ in range(self.total_number_of_input_nodes) ]
 
@@ -118,14 +120,14 @@ class Network():
 		#update conditional_matrix
 		#self.conditional_matrix = np.append(self.conditional_matrix, np.zeros((1,self.total_number_of_input_nodes-1)), 0)
 		#self.conditional_matrix = np.append(self.conditional_matrix, np.zeros((self.total_number_of_input_nodes, 1)), 1)
-		self.conditional_matrix.append([ [] * (self.total_number_of_input_nodes-1) for _ in range((self.total_number_of_input_nodes-1)) ])
+		self.conditional_matrix.append( [0] * (self.total_number_of_input_nodes-1)) #add another list with zeros
 		for i in self.conditional_matrix:
-			i.append([])
-
+			i.append(0) #in each list, add a zero
+		self.conditional_matrix_divisor.append(0)
 		#update time_extended_conditional_matrix
 		#self.time_extended_conditional_matrix = np.append(self.time_extended_conditional_matrix, np.zeros((1,self.total_number_of_input_nodes-1)), 0)
 		#self.time_extended_conditional_matrix = np.append(self.time_extended_conditional_matrix, np.zeros((self.total_number_of_input_nodes, 1)), 1)
-		self.time_extended_conditional_matrix.append([ [] * (self.total_number_of_input_nodes-1) for _ in range((self.total_number_of_input_nodes-1)) ])
+		self.time_extended_conditional_matrix.append([ [] * (self.total_number_of_input_nodes-1) for _ in range((self.total_number_of_input_nodes-1)) ]) #TODO: probably broken
 		for i in self.time_extended_conditional_matrix:
 			i.append([])
 
@@ -445,6 +447,20 @@ class Network():
 				if divisor == dividend and not divisor == 0: #If the probability is one (not true if divisor is 0)
 					self.generator_list[b] = a
 	#End update_generators()
+
+	def update_conditional_matrix(self):
+		top_active_nodes = self.get_topactive_nodes()
+		for first_node in top_active_nodes:
+			first_node_index = first_node.get_index()
+			for second_node in top_active_nodes:
+				second_node_index = second_node.get_index()
+				dividend = self.conditional_matrix[first_node_index][second_node_index]
+				self.conditional_matrix[first_node_index][second_node_index] = dividend + 1
+			divisor = self.conditional_matrix_divisor[first_node_index]
+			self.conditional_matrix_divisor[first_node_index] = divisor + 1
+
+
+	#End update_conditional_matrix()
 
 	def get_cumulative_temporal_seq_matrix(self):
 		#x,y = self.temporal_sequence_matrix.shape
