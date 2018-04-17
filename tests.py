@@ -1241,7 +1241,7 @@ def test_that_conditional_matrix_updates_correctly():
 	sensors = [sensor_node_snow,sensor_node_cold,sensor_node_sun, sensor_node_warm, sensor_node_apple, sensor_node_fluff, sensor_node_d,sensor_node_o,sensor_node_g,t_seq_do,t_seq_dog]
 
 	totlal_number_of_sensors = len(sensors)
-	test_animat = Animat("TheCat", sensors, [], temporal_memory_capacity = 5, seq_formation_probability = 0)
+	test_animat = Animat("TheCat", sensors, [], temporal_memory_capacity = 5, seq_formation_probability = 0, memory_capacity = 2)
 
 	test_environment.state = {"apple"}
 	test_animat.update_goal_one_version(1)
@@ -1258,12 +1258,18 @@ def test_that_conditional_matrix_updates_correctly():
 	test_environment.state = {"dog"}
 	test_animat.update_goal_one_version(5)
 
-	print("-----dividends")
+	print("-----conditional: dividends")
 	print(test_animat.network.conditional_matrix)
+
+	print("-----time-extended conditional: dividends")
+	print(test_animat.network.time_extended_conditional_matrix)
+
 	print("-----divisors:")
 	print(test_animat.network.conditional_matrix_divisor)
 
-
+	print("---- associations for snow")
+	list = test_animat.network.associate(1)
+	print(list)
 	
 def run_tests(verbose = False):
 	print ("------------------------------------Starting Tests------------------------------------")

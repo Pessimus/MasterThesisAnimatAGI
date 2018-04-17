@@ -2,6 +2,7 @@ import numpy as np
 import nodes as node_types
 import temporalNodes as temporal_node_types
 import temporalActionNodes as temporal_action_node_types
+from scipy import spatial
 
 #Class reprecenting the network used by a Animat. Containing all nodes and the matrices for them.
 class Network():
@@ -278,6 +279,12 @@ class Network():
 			node.tick(time)
 		for node in self.perception_nodes:
 			node.tick(time)
+
+		#update short term memory
+		topactive_nodes = self.get_topactive_nodes()
+		self.short_term_memory.insert(0,topactive_nodes)
+		if(len(self.short_term_memory) > self.memory_capacity):
+			self.short_term_memory.pop()
 	#End tick()
 
 	#Ticks all the sensor and perseption nodes in the network with a temporal tick.  
@@ -448,19 +455,31 @@ class Network():
 					self.generator_list[b] = a
 	#End update_generators()
 
-	def update_conditional_matrix(self):
+	def update_conditional_matrices(self):
 		top_active_nodes = self.get_topactive_nodes()
 		for first_node in top_active_nodes:
 			first_node_index = first_node.get_index()
+
+			#update conditional matrix
 			for second_node in top_active_nodes:
 				second_node_index = second_node.get_index()
 				dividend = self.conditional_matrix[first_node_index][second_node_index]
 				self.conditional_matrix[first_node_index][second_node_index] = dividend + 1
+			
+
+			#update time-extended conditional matrix
+			for previous_top_actives in (self.short_term_memory[1:]):
+				for second_node in previous_top_actives:
+					second_node_index = second_node.get_index()
+					dividend = self.time_extended_conditional_matrix[first_node_index][second_node_index]
+					self.time_extended_conditional_matrix[first_node_index][second_node_index] = dividend + 1
+					dividend = self.time_extended_conditional_matrix[second_node_index][first_node_index]
+					self.time_extended_conditional_matrix[second_node_index][first_node_index] = dividend + 1
+
+			#count total nbr of occurences of this node
 			divisor = self.conditional_matrix_divisor[first_node_index]
 			self.conditional_matrix_divisor[first_node_index] = divisor + 1
-
-
-	#End update_conditional_matrix()
+	#End update_conditional_matrices()
 
 	def get_cumulative_temporal_seq_matrix(self):
 		#x,y = self.temporal_sequence_matrix.shape
@@ -502,6 +521,23 @@ class Network():
 				self.generator_list[node.index] = action_node.index
 		return success_perception
 	#End create_and_add_temporal_seq_node()
+
+	def associate(self, node_index):
+		result_indices = []
+		result_values = []
+
+		vector_to_compare = self.time_extended_conditional_matrix[node_index]
+
+		for i in range(0,len(self.time_extended_conditional_matrix)):
+			if(not i == node_index):
+				tmp_vector = self.time_extended_conditional_matrix[i]
+				tmp_res = spatial.distance.cosine(vector_to_compare,tmp_vector)
+				result_values.append(tmp_res)
+			else:
+				result_values.append(-1)
+		return result_values
+
+
 
 #End class
 

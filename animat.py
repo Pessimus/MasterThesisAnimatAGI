@@ -121,6 +121,19 @@ class Animat:
 			self.update_experiences()
 	#End update_goal_one_version()
 
+	def associate(self):
+		top_active_nodes_now = self.network.get_topactive_nodes()
+
+		most_specific_so_far = -1
+		max_sequence_length = 0
+		for node in top_active_nodes_now:
+			if(len(node) > max_sequence_length):
+				max_sequence_length = len(node)
+				most_specific_so_far = node.get_index()
+
+		
+	#End associate()
+
 	#Should handle all the Animats learning, i.e. adding and removing nodes in the network.
 	def learn(self, probabilistic_add_action = False):
 	#	print("Animat: learn")
@@ -174,7 +187,7 @@ class Animat:
 		if not self.last_action == -1:
 			self.network.update_transition_matrix(self.last_action)
 			self.network.update_generators()
-		self.network.update_conditional_matrix()
+		self.network.update_conditional_matrices()
 	#End update_experiences()
 
 	def update_temporal_experiences(self):
