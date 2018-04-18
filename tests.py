@@ -1223,6 +1223,7 @@ def test_that_conditional_matrix_updates_correctly():
 	sensor_node_warm = SensorNode(name = "warm-sensor",sensor = "warm", environment =  test_environment)
 	sensor_node_apple = SensorNode(name = "apple-sensor",sensor = "apple", environment =  test_environment)
 	sensor_node_fluff = SensorNode(name = "fluff-sensor",sensor = "fluff", environment =  test_environment)
+	sensor_node_ice = SensorNode(name = "ice-sensor",sensor = "ice", environment =  test_environment)
 
 	sensor_node_d = SensorNode(name = "d-sensor",sensor = "d", environment =  test_environment)
 	sensor_node_o = SensorNode(name = "o-sensor",sensor = "o", environment =  test_environment)
@@ -1238,7 +1239,7 @@ def test_that_conditional_matrix_updates_correctly():
 	t_seq_cat = TemporalSEQNode(inputs = [t_seq_ca,sensor_node_t])
 	
 
-	sensors = [sensor_node_snow,sensor_node_cold,sensor_node_sun, sensor_node_warm, sensor_node_apple, sensor_node_fluff, sensor_node_d,sensor_node_o,sensor_node_g,t_seq_do,t_seq_dog]
+	sensors = [sensor_node_snow,sensor_node_cold,sensor_node_sun, sensor_node_warm, sensor_node_apple, sensor_node_fluff, sensor_node_d,sensor_node_o,sensor_node_g,t_seq_do,t_seq_dog,sensor_node_ice]
 
 	totlal_number_of_sensors = len(sensors)
 	test_animat = Animat("TheCat", sensors, [], temporal_memory_capacity = 5, seq_formation_probability = 0, memory_capacity = 2)
@@ -1257,6 +1258,17 @@ def test_that_conditional_matrix_updates_correctly():
 	test_animat.update_goal_one_version(5)
 	test_environment.state = {"dog"}
 	test_animat.update_goal_one_version(5)
+	#test_environment.state = {"cold","snow"}
+	#test_animat.update_goal_one_version(6)
+	test_environment.state = {"cold"}
+	test_animat.update_goal_one_version(6)
+	test_environment.state = {"apple"}
+	test_animat.update_goal_one_version(7)
+	test_environment.state = {"cold", "ice"}
+	test_animat.update_goal_one_version(8)
+	test_environment.state = {"fluff"}
+	test_environment.temporal_state = ["d", "o", "g"]
+	test_animat.update_goal_one_version(9,3)
 
 	print("-----conditional: dividends")
 	print(test_animat.network.conditional_matrix)
@@ -1267,9 +1279,11 @@ def test_that_conditional_matrix_updates_correctly():
 	print("-----divisors:")
 	print(test_animat.network.conditional_matrix_divisor)
 
+	#list1, list2 = test_animat.network.associate(1)
 	print("---- associations for snow")
-	list = test_animat.network.associate(1)
-	print(list)
+	print(test_animat.associate())
+	#print(list1)
+	#print(list2)
 	
 def run_tests(verbose = False):
 	print ("------------------------------------Starting Tests------------------------------------")

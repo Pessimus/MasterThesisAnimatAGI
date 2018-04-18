@@ -3,6 +3,13 @@ import nodes as node_types
 import temporalNodes as temporal_node_types
 import temporalActionNodes as temporal_action_node_types
 from scipy import spatial
+import bisect
+import math
+
+def safe_div(x,y):
+	if y == 0:
+		return 0
+	return x/(y*1.0)
 
 #Class reprecenting the network used by a Animat. Containing all nodes and the matrices for them.
 class Network():
@@ -525,18 +532,39 @@ class Network():
 	def associate(self, node_index):
 		result_indices = []
 		result_values = []
+		simple = []
 
-		vector_to_compare = self.time_extended_conditional_matrix[node_index]
+		#vector_to_compare = self.time_extended_conditional_matrix[node_index]
+		vector_to_compare = [safe_div(x,y) for x, y in zip(self.time_extended_conditional_matrix[node_index], self.conditional_matrix_divisor)]
+		#vector_to_compare = map(truediv, self.time_extended_conditional_matrix[node_index], self.conditional_matrix_divisor)
+
+
+		if(sum(vector_to_compare) == 0):
+			return []
 
 		for i in range(0,len(self.time_extended_conditional_matrix)):
 			if(not i == node_index):
-				tmp_vector = self.time_extended_conditional_matrix[i]
-				tmp_res = spatial.distance.cosine(vector_to_compare,tmp_vector)
-				result_values.append(tmp_res)
-			else:
-				result_values.append(-1)
-		return result_values
+				#tmp_vector = self.time_extended_conditional_matrix[i]
+				tmp_vector = [safe_div(x,y) for x, y in zip(self.time_extended_conditional_matrix[i], self.conditional_matrix_divisor)]
+				#tmp_vector = map(truediv, self.time_extended_conditional_matrix[i], self.conditional_matrix_divisor)
 
+				if(not sum(tmp_vector) == 0):
+					tmp_res = spatial.distance.cosine(vector_to_compare,tmp_vector)
+
+					insertion_point = bisect.bisect(result_values,tmp_res)
+
+					result_values.insert(insertion_point, tmp_res)
+					result_indices.insert(insertion_point, i)
+
+					simple.append(tmp_res)
+			else:
+				simple.append(-1)
+
+		print(simple)
+
+		print(result_values)
+		print(result_indices)
+		return result_values, result_indices
 
 
 #End class

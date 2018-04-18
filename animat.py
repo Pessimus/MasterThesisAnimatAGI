@@ -122,15 +122,23 @@ class Animat:
 	#End update_goal_one_version()
 
 	def associate(self):
+		nodes = self.network.sensors + self.network.perception_nodes
+
 		top_active_nodes_now = self.network.get_topactive_nodes()
 
 		most_specific_so_far = -1
 		max_sequence_length = 0
 		for node in top_active_nodes_now:
-			if(len(node) > max_sequence_length):
-				max_sequence_length = len(node)
+			if(node.activation_time() > max_sequence_length and not node.get_word() == "true"):
+				max_sequence_length = node.activation_time()
 				most_specific_so_far = node.get_index()
 
+		association_values, associated_nodes = self.network.associate(most_specific_so_far)
+#		association_values, associated_nodes = self.network.associate(1)
+
+		return_list = [nodes[n].get_word() for n in associated_nodes]
+
+		return return_list
 		
 	#End associate()
 
