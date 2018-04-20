@@ -1,13 +1,13 @@
-from node import *
-from nodes import *
-from temporalNodes import *
-from environment import *
-from actionNodes import *
-from temporalActionNodes import *
+from AnimatImplementation.node import *
+from AnimatImplementation.nodes import *
+from AnimatImplementation.temporalNodes import *
+from AnimatImplementation.environment import *
+from AnimatImplementation.actionNodes import *
+from AnimatImplementation.temporalActionNodes import *
 from textHandler import *
 from controller import *
-from network import *
-from animat import *
+from AnimatImplementation.network import *
+from AnimatImplementation.animat import *
 import random
 
 

@@ -1,7 +1,7 @@
 import numpy as np
-import nodes as node_types
-import temporalNodes as temporal_node_types
-import temporalActionNodes as temporal_action_node_types
+import AnimatImplementation.nodes as node_types
+import AnimatImplementation.temporalNodes as temporal_node_types
+import AnimatImplementation.temporalActionNodes as temporal_action_node_types
 from scipy import spatial
 import bisect
 import math

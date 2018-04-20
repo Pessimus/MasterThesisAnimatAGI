@@ -1,4 +1,4 @@
-from actionNode import *
+from AnimatImplementation.actionNode import *
 
 # Represents a action SEQ node
 # Extends 'ActionNode', and overrides the 'activate' function.
