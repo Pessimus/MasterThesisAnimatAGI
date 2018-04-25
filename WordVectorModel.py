@@ -14,6 +14,7 @@ class WordVectorModel:
 		self.context_size = context_size #number of words on each side of target word (before and after it) that are in included in context
 
 		self.text = text_handler.get_entire_file_as_array()
+		print("text len: " + str(len(self.text)))
 		self.words = []
 		#print("dummy")
 		for w in self.text:
@@ -61,18 +62,31 @@ class WordVectorModel:
 
 				result_list_values.insert(insertion_point, r)
 				result_list_words.insert(insertion_point, self.words[i])
-		return result_list_words
+		return result_list_words[0:20],result_list_values[0:20]
 	#End get_ordered_associations
 
-text_handler = FileReader("testtext.txt")
+#text_handler = FileReader("testtext.txt")
+#text_handler = FileReader("UK_weather_2018_march_clean.txt")
+#text_handler = FileReader("fables_and_animal_stories_all_clean.txt")
+text_handler = FileReader("texts/test_text_shuffled_clean.txt")
 wvm = WordVectorModel(text_handler, 2)
 wvm.update_matrix()
 #print("Associations for 'dogs'")
 #print(wvm.get_ordered_associations("dogs"))
-print("Associations for 'cats'")
-print(wvm.get_ordered_associations("cats"))
+#print("Associations for 'cats'")
+#print(wvm.get_ordered_associations("cats"))
 #print("Associations for 'puppies'")
 #print(wvm.get_ordered_associations("puppies"))
+
+print("Nbr of unique words in text file: " + str(len(wvm.words)))
+print(wvm.words)
+print()
+print("Associations for 'dog'")
+words,dist = wvm.get_ordered_associations("dog")
+#print(dist[0])
+for i in range(20):
+	print(" %s : %f " % (words[i],dist[i]))
+
 
 
 
