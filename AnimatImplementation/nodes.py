@@ -1,4 +1,4 @@
-from node import *
+from AnimatImplementation.node import *
 
 # Represents a logical AND node
 # Extends 'Node', and overrides the 'tick' function.
@@ -157,11 +157,16 @@ class SensorNode(Node):
 		Node.__init__(self, name, temporal=True, permanent=True)
 		self.sensor = sensor
 		self.environment = environment
+		self.last_tick_temporal = False
 	#End __init__()
 
 	# Overrides the 'tick' function. Ticks this node, looking att different parts of the environment depending on if the tick is temporal or not.
 	def tick(self, time, temporal_time=0, temporal=False):
+		if (not temporal) and self.last_tick_temporal:
+			self.last_tick_temporal = False
+			self.time = time - 1
 		if Node.tick(self,time,temporal_time, temporal):
+			self.last_tick_temporal = temporal
 			if self.read_sensor(temporal_time,temporal):
 				self.activate(time)
 			else:

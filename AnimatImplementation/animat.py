@@ -1,7 +1,8 @@
 import numpy as np
 import random
 import bisect
-from network import *
+from AnimatImplementation.network import *
+from scipy import spatial
 
 
 class Animat:
@@ -11,6 +12,7 @@ class Animat:
 		self.last_action = -1
 		self.seq_formation_probability = seq_formation_probability
 		self.seq_formation_max_attempts = seq_formation_max_attempts
+		self.time = 0
 
 	#End __init__()
 
@@ -110,6 +112,37 @@ class Animat:
 		#begin learning
 	#End update()
 
+	def update_goal_one_version(self, time, temporal_input_length = 0):
+		if(self.time < time):
+			self.time = time
+			self.network.update_previous_active()
+			for tt in range(0,temporal_input_length):
+				self.temporal_update(time, tt)
+			self.network.tick(time)
+			self.update_experiences()
+	#End update_goal_one_version()
+
+	def associate(self):
+		nodes = self.network.sensors + self.network.perception_nodes
+
+		top_active_nodes_now = self.network.get_topactive_nodes()
+
+		most_specific_so_far = -1
+		max_sequence_length = 0
+		for node in top_active_nodes_now:
+			if(node.activation_time() > max_sequence_length and not node.get_word() == "true"):
+				max_sequence_length = node.activation_time()
+				most_specific_so_far = node.get_index()
+
+		association_values, associated_nodes = self.network.associate(most_specific_so_far)
+#		association_values, associated_nodes = self.network.associate(1)
+
+		return_list = [nodes[n].get_word() for n in associated_nodes]
+
+		return return_list
+		
+	#End associate()
+
 	#Should handle all the Animats learning, i.e. adding and removing nodes in the network.
 	def learn(self, probabilistic_add_action = False):
 	#	print("Animat: learn")
@@ -163,6 +196,7 @@ class Animat:
 		if not self.last_action == -1:
 			self.network.update_transition_matrix(self.last_action)
 			self.network.update_generators()
+		self.network.update_conditional_matrices()
 	#End update_experiences()
 
 	def update_temporal_experiences(self):

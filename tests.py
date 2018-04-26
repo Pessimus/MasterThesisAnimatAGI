@@ -1,13 +1,13 @@
-from node import *
-from nodes import *
-from temporalNodes import *
-from environment import *
-from actionNodes import *
-from temporalActionNodes import *
+from AnimatImplementation.node import *
+from AnimatImplementation.nodes import *
+from AnimatImplementation.temporalNodes import *
+from AnimatImplementation.environment import *
+from AnimatImplementation.actionNodes import *
+from AnimatImplementation.temporalActionNodes import *
 from textHandler import *
 from controller import *
-from network import *
-from animat import *
+from AnimatImplementation.network import *
+from AnimatImplementation.animat import *
 import random
 
 
@@ -1212,10 +1212,82 @@ def test_step_two_animat():
 	print("perception nodes: ")
 	print([n.name for n in test_animat.network.perception_nodes])
 
+def test_that_conditional_matrix_updates_correctly():
+	print("------------------test_that_conditional_matrix_updates_correctly------------------")
+	test_environment = Environment()	
+	#sensors, motors = create_nodes_for_alphabet(test_environment)
+
+	sensor_node_snow = SensorNode(name = "snow-sensor",sensor = "snow", environment =  test_environment)
+	sensor_node_cold = SensorNode(name = "cold-sensor",sensor = "cold", environment =  test_environment)
+	sensor_node_sun = SensorNode(name = "sun-sensor",sensor = "sun", environment =  test_environment)
+	sensor_node_warm = SensorNode(name = "warm-sensor",sensor = "warm", environment =  test_environment)
+	sensor_node_apple = SensorNode(name = "apple-sensor",sensor = "apple", environment =  test_environment)
+	sensor_node_fluff = SensorNode(name = "fluff-sensor",sensor = "fluff", environment =  test_environment)
+	sensor_node_ice = SensorNode(name = "ice-sensor",sensor = "ice", environment =  test_environment)
+
+	sensor_node_d = SensorNode(name = "d-sensor",sensor = "d", environment =  test_environment)
+	sensor_node_o = SensorNode(name = "o-sensor",sensor = "o", environment =  test_environment)
+	sensor_node_g = SensorNode(name = "g-sensor",sensor = "g", environment =  test_environment)
+
+	sensor_node_c = SensorNode(name = "c-sensor",sensor = "c", environment =  test_environment)
+	sensor_node_a = SensorNode(name = "a-sensor",sensor = "a", environment =  test_environment)
+	sensor_node_t = SensorNode(name = "t-sensor",sensor = "t", environment =  test_environment)
+
+	t_seq_do = TemporalSEQNode(inputs = [sensor_node_d, sensor_node_o])
+	t_seq_dog = TemporalSEQNode(inputs = [t_seq_do, sensor_node_g])
+	t_seq_ca = TemporalSEQNode(inputs = [sensor_node_c, sensor_node_a])
+	t_seq_cat = TemporalSEQNode(inputs = [t_seq_ca,sensor_node_t])
+	
+
+	sensors = [sensor_node_snow,sensor_node_cold,sensor_node_sun, sensor_node_warm, sensor_node_apple, sensor_node_fluff, sensor_node_d,sensor_node_o,sensor_node_g,t_seq_do,t_seq_dog,sensor_node_ice]
+
+	totlal_number_of_sensors = len(sensors)
+	test_animat = Animat("TheCat", sensors, [], temporal_memory_capacity = 5, seq_formation_probability = 0, memory_capacity = 2)
+
+	test_environment.state = {"apple"}
+	test_animat.update_goal_one_version(1)
+	test_environment.state = {"cold", "snow"}
+	test_animat.update_goal_one_version(2)
+	test_environment.state = {"fluff"}
+	test_environment.temporal_state = ["d", "o", "g"]
+	test_animat.update_goal_one_version(3,3)
+	test_environment.temporal_state = []
+	test_environment.state = {"sun", "warm"}
+	test_animat.update_goal_one_version(4)
+	test_environment.state = {"sun", "warm"}
+	test_animat.update_goal_one_version(5)
+	test_environment.state = {"dog"}
+	test_animat.update_goal_one_version(5)
+	#test_environment.state = {"cold","snow"}
+	#test_animat.update_goal_one_version(6)
+	test_environment.state = {"cold"}
+	test_animat.update_goal_one_version(6)
+	test_environment.state = {"apple"}
+	test_animat.update_goal_one_version(7)
+	test_environment.state = {"cold", "ice"}
+	test_animat.update_goal_one_version(8)
+	test_environment.state = {"fluff"}
+	test_environment.temporal_state = ["d", "o", "g"]
+	test_animat.update_goal_one_version(9,3)
+
+	print("-----conditional: dividends")
+	print(test_animat.network.conditional_matrix)
+
+	print("-----time-extended conditional: dividends")
+	print(test_animat.network.time_extended_conditional_matrix)
+
+	print("-----divisors:")
+	print(test_animat.network.conditional_matrix_divisor)
+
+	#list1, list2 = test_animat.network.associate(1)
+	print("---- associations for snow")
+	print(test_animat.associate())
+	#print(list1)
+	#print(list2)
 	
 def run_tests(verbose = False):
 	print ("------------------------------------Starting Tests------------------------------------")
-	if(True):
+	if(False):
 		test_if_nodes_update_when_they_should(verbose)
 		test_if_nodes_update_to_the_value_they_should(verbose)
 		test_if_sensors_react_to_input(verbose)
@@ -1229,7 +1301,9 @@ def run_tests(verbose = False):
 		test_if_network_works(verbose)
 		test_if_animat_can_run_first_step_code()
 		test_if_animat_can_learn_alphabet_in_step_one(verbose)
-#	test_how_often_the_animat_learns_the_entire_alphabet() #Note, this is slow. Prints statistics of how often the Animat learns generators.
-	test_step_two_animat() 
+	#	test_how_often_the_animat_learns_the_entire_alphabet() #Note, this is slow. Prints statistics of how often the Animat learns generators.
+	#	test_step_two_animat()
+
+	test_that_conditional_matrix_updates_correctly() 
 
 

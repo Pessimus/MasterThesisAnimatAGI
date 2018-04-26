@@ -1,7 +1,15 @@
 import numpy as np
-import nodes as node_types
-import temporalNodes as temporal_node_types
-import temporalActionNodes as temporal_action_node_types
+import AnimatImplementation.nodes as node_types
+import AnimatImplementation.temporalNodes as temporal_node_types
+import AnimatImplementation.temporalActionNodes as temporal_action_node_types
+from scipy import spatial
+import bisect
+import math
+
+def safe_div(x,y):
+	if y == 0:
+		return 0
+	return x/(y*1.0)
 
 #Class reprecenting the network used by a Animat. Containing all nodes and the matrices for them.
 class Network():
@@ -64,7 +72,9 @@ class Network():
 
 
 		#self.conditional_matrix = np.zeros((self.total_number_of_input_nodes, self.total_number_of_input_nodes)) #Intuition: Probability that 1 is top active at t given that 2 is top active at t: Pr(1|2)
-		self.conditional_matrix = [ [0] * self.total_number_of_input_nodes for _ in range(self.total_number_of_input_nodes) ]
+		self.conditional_matrix = [ [0] * self.total_number_of_input_nodes for _ in range(self.total_number_of_input_nodes) ] #dividends
+		self.conditional_matrix_divisor = [0] * self.total_number_of_input_nodes #divisors
+
 		#self.time_extended_conditional_matrix = np.zeros((self.total_number_of_input_nodes, self.total_number_of_input_nodes)) #Intuition: Probability that 1 is top active at ~t given that 2 is top active at t: Pr(1|2)
 		self.time_extended_conditional_matrix = [ [0] * self.total_number_of_input_nodes for _ in range(self.total_number_of_input_nodes) ]
 
@@ -118,14 +128,14 @@ class Network():
 		#update conditional_matrix
 		#self.conditional_matrix = np.append(self.conditional_matrix, np.zeros((1,self.total_number_of_input_nodes-1)), 0)
 		#self.conditional_matrix = np.append(self.conditional_matrix, np.zeros((self.total_number_of_input_nodes, 1)), 1)
-		self.conditional_matrix.append([ [] * (self.total_number_of_input_nodes-1) for _ in range((self.total_number_of_input_nodes-1)) ])
+		self.conditional_matrix.append( [0] * (self.total_number_of_input_nodes-1)) #add another list with zeros
 		for i in self.conditional_matrix:
-			i.append([])
-
+			i.append(0) #in each list, add a zero
+		self.conditional_matrix_divisor.append(0)
 		#update time_extended_conditional_matrix
 		#self.time_extended_conditional_matrix = np.append(self.time_extended_conditional_matrix, np.zeros((1,self.total_number_of_input_nodes-1)), 0)
 		#self.time_extended_conditional_matrix = np.append(self.time_extended_conditional_matrix, np.zeros((self.total_number_of_input_nodes, 1)), 1)
-		self.time_extended_conditional_matrix.append([ [] * (self.total_number_of_input_nodes-1) for _ in range((self.total_number_of_input_nodes-1)) ])
+		self.time_extended_conditional_matrix.append([ [] * (self.total_number_of_input_nodes-1) for _ in range((self.total_number_of_input_nodes-1)) ]) #TODO: probably broken
 		for i in self.time_extended_conditional_matrix:
 			i.append([])
 
@@ -276,6 +286,12 @@ class Network():
 			node.tick(time)
 		for node in self.perception_nodes:
 			node.tick(time)
+
+		#update short term memory
+		topactive_nodes = self.get_topactive_nodes()
+		self.short_term_memory.insert(0,topactive_nodes)
+		if(len(self.short_term_memory) > self.memory_capacity):
+			self.short_term_memory.pop()
 	#End tick()
 
 	#Ticks all the sensor and perseption nodes in the network with a temporal tick.  
@@ -446,6 +462,32 @@ class Network():
 					self.generator_list[b] = a
 	#End update_generators()
 
+	def update_conditional_matrices(self):
+		top_active_nodes = self.get_topactive_nodes()
+		for first_node in top_active_nodes:
+			first_node_index = first_node.get_index()
+
+			#update conditional matrix
+			for second_node in top_active_nodes:
+				second_node_index = second_node.get_index()
+				dividend = self.conditional_matrix[first_node_index][second_node_index]
+				self.conditional_matrix[first_node_index][second_node_index] = dividend + 1
+			
+
+			#update time-extended conditional matrix
+			for previous_top_actives in (self.short_term_memory[1:]):
+				for second_node in previous_top_actives:
+					second_node_index = second_node.get_index()
+					dividend = self.time_extended_conditional_matrix[first_node_index][second_node_index]
+					self.time_extended_conditional_matrix[first_node_index][second_node_index] = dividend + 1
+					dividend = self.time_extended_conditional_matrix[second_node_index][first_node_index]
+					self.time_extended_conditional_matrix[second_node_index][first_node_index] = dividend + 1
+
+			#count total nbr of occurences of this node
+			divisor = self.conditional_matrix_divisor[first_node_index]
+			self.conditional_matrix_divisor[first_node_index] = divisor + 1
+	#End update_conditional_matrices()
+
 	def get_cumulative_temporal_seq_matrix(self):
 		#x,y = self.temporal_sequence_matrix.shape
 		x = len(self.temporal_sequence_matrix)
@@ -486,6 +528,44 @@ class Network():
 				self.generator_list[node.index] = action_node.index
 		return success_perception
 	#End create_and_add_temporal_seq_node()
+
+	def associate(self, node_index):
+		result_indices = []
+		result_values = []
+		simple = []
+
+		#vector_to_compare = self.time_extended_conditional_matrix[node_index]
+		vector_to_compare = [safe_div(x,y) for x, y in zip(self.time_extended_conditional_matrix[node_index], self.conditional_matrix_divisor)]
+		#vector_to_compare = map(truediv, self.time_extended_conditional_matrix[node_index], self.conditional_matrix_divisor)
+
+
+		if(sum(vector_to_compare) == 0):
+			return []
+
+		for i in range(0,len(self.time_extended_conditional_matrix)):
+			if(not i == node_index):
+				#tmp_vector = self.time_extended_conditional_matrix[i]
+				tmp_vector = [safe_div(x,y) for x, y in zip(self.time_extended_conditional_matrix[i], self.conditional_matrix_divisor)]
+				#tmp_vector = map(truediv, self.time_extended_conditional_matrix[i], self.conditional_matrix_divisor)
+
+				if(not sum(tmp_vector) == 0):
+					tmp_res = spatial.distance.cosine(vector_to_compare,tmp_vector)
+
+					insertion_point = bisect.bisect(result_values,tmp_res)
+
+					result_values.insert(insertion_point, tmp_res)
+					result_indices.insert(insertion_point, i)
+
+					simple.append(tmp_res)
+			else:
+				simple.append(-1)
+
+		print(simple)
+
+		print(result_values)
+		print(result_indices)
+		return result_values, result_indices
+
 
 #End class
 

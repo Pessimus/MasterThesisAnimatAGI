@@ -17,7 +17,7 @@ class FileReader:
 	#Returns the next word in the file, and updates the variable current_sentence.
 	def get_next_word(self): 
 		if len(self.current_sentence) == 0:
-			self.current_sentence = convert_sentence_to_list(remove_sign_from_string(self.get_next_sentence()))
+			self.current_sentence = convert_sentence_to_list(remove_sign_from_string(self.get_next_sentence()).lower())
 			if len(self.current_sentence) == 0:
 				self.end_of_file = True
 				return ""
@@ -92,7 +92,7 @@ def remove_sign_from_string(string):
 	res_list = []
 
 	for char in string:
-		if not char in ".,?!-;:/\n":
+		if not char in "'\"`´“’‘.,?!-;:/\n":
 			res_list.append(char)
 	return "".join(res_list)
 #End remove_sign_from_string()
