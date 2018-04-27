@@ -1245,30 +1245,30 @@ def test_that_conditional_matrix_updates_correctly():
 	test_animat = Animat("TheCat", sensors, [], temporal_memory_capacity = 5, seq_formation_probability = 0, memory_capacity = 2)
 
 	test_environment.state = {"apple"}
-	test_animat.update_goal_one_version(1)
+	test_animat.update_goal_one_version_test(1)
 	test_environment.state = {"cold", "snow"}
-	test_animat.update_goal_one_version(2)
+	test_animat.update_goal_one_version_test(2)
 	test_environment.state = {"fluff"}
 	test_environment.temporal_state = ["d", "o", "g"]
-	test_animat.update_goal_one_version(3,3)
+	test_animat.update_goal_one_version_test(3,3)
 	test_environment.temporal_state = []
 	test_environment.state = {"sun", "warm"}
-	test_animat.update_goal_one_version(4)
+	test_animat.update_goal_one_version_test(4)
 	test_environment.state = {"sun", "warm"}
-	test_animat.update_goal_one_version(5)
+	test_animat.update_goal_one_version_test(5)
 	test_environment.state = {"dog"}
-	test_animat.update_goal_one_version(5)
+	test_animat.update_goal_one_version_test(5)
 	#test_environment.state = {"cold","snow"}
 	#test_animat.update_goal_one_version(6)
 	test_environment.state = {"cold"}
-	test_animat.update_goal_one_version(6)
+	test_animat.update_goal_one_version_test(6)
 	test_environment.state = {"apple"}
-	test_animat.update_goal_one_version(7)
+	test_animat.update_goal_one_version_test(7)
 	test_environment.state = {"cold", "ice"}
-	test_animat.update_goal_one_version(8)
+	test_animat.update_goal_one_version_test(8)
 	test_environment.state = {"fluff"}
 	test_environment.temporal_state = ["d", "o", "g"]
-	test_animat.update_goal_one_version(9,3)
+	test_animat.update_goal_one_version_test(9,3)
 
 	print("-----conditional: dividends")
 	print(test_animat.network.conditional_matrix)
