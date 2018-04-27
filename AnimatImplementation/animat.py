@@ -20,6 +20,38 @@ class Animat:
 		print("not yet implemented")
 	#End update()
 
+	def update_goal_one_version(self,time,temporal_input_length = 0, babble = False):
+		if(self.time < time):
+			self.time = time
+			
+			if not babble and time > 1:
+				self.learn(True)
+			
+			self.network.update_previous_active()
+			
+			if not babble:
+				for tt in range(0,temporal_input_length):
+					self.temporal_update(time, tt)
+
+			self.network.tick(time)
+			self.update_experiences()
+
+			self.last_action = -1
+			if babble:
+				self.babble(time)
+		#end if(self.time < time)
+	#End update()
+
+	def update_goal_one_version_test(self, time, temporal_input_length = 0):
+		if(self.time < time):
+			self.time = time
+			self.network.update_previous_active()
+			for tt in range(0,temporal_input_length):
+				self.temporal_update(time, tt)
+			self.network.tick(time)
+			self.update_experiences()
+	#End update_goal_one_version()
+	
 	def update_step_three_version(self, time, temporal_input_length = 0, babble = False):
 		if not babble and time > 1:
 			self.learn(True)
@@ -112,15 +144,7 @@ class Animat:
 		#begin learning
 	#End update()
 
-	def update_goal_one_version(self, time, temporal_input_length = 0):
-		if(self.time < time):
-			self.time = time
-			self.network.update_previous_active()
-			for tt in range(0,temporal_input_length):
-				self.temporal_update(time, tt)
-			self.network.tick(time)
-			self.update_experiences()
-	#End update_goal_one_version()
+	
 
 	def associate(self):
 		nodes = self.network.sensors + self.network.perception_nodes
