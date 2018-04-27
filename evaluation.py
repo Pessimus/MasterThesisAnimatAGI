@@ -474,7 +474,7 @@ def evalaute_goal_one():
 
 	#MAX_TIME = AVERAGE_NUMBER_OF_OCCURRENCES_OF_EACH_WORD * TOTAL_NUMBER_OF_WORDS *2 #*2 to allow for spaces between words.
 	
-	INPUT_FILE_NAME = "texts/test_text.txt"
+	INPUT_FILE_NAME = "texts/cats_dogs_and_trees_shuffled_clean.txt"
 	input_file = FileReader(INPUT_FILE_NAME)
 	entire_text = input_file.get_entire_file_as_array()
 	unique_words = []
@@ -489,7 +489,7 @@ def evalaute_goal_one():
 	test_environment = Environment()	
 	sensors, motors = create_nodes_for_alphabet(test_environment)
 	totlal_number_of_sensors = len(sensors)
-	test_animat = Animat("TheDod", sensors, motors, temporal_memory_capacity = TEMPORAL_MEMORY_CAPACITY, memory_capacity = MEMORY_CAPACITY, seq_formation_probability = SEQ_FORMATION_PROBABILITY, seq_formation_max_attempts = SEQ_FORMATION_MAX_ATTEMPTS)
+	test_animat = Animat("TheOnkeydogdonk", sensors, motors, temporal_memory_capacity = TEMPORAL_MEMORY_CAPACITY, memory_capacity = MEMORY_CAPACITY, seq_formation_probability = SEQ_FORMATION_PROBABILITY, seq_formation_max_attempts = SEQ_FORMATION_MAX_ATTEMPTS)
 
 	time = 0
 
