@@ -1,18 +1,19 @@
 import numpy as np
 import random
 import bisect
-from AnimatImplementation.network import *
+from network import *
 from scipy import spatial
 
 
 class Animat:
-	def __init__(self, name = None, sensors = [], motors = [], perception_nodes = [], action_nodes = [], memory_capacity = 0, temporal_memory_capacity = 0, seq_formation_probability = 0, seq_formation_max_attempts = 0):
+	def __init__(self, name = None, sensors = [], motors = [], perception_nodes = [], action_nodes = [], memory_capacity = 0, temporal_memory_capacity = 0, seq_formation_probability = 0, seq_formation_max_attempts = 0, learn_to_associate = False):
 		self.name = name
 		self.network = Network(sensors, motors, perception_nodes, action_nodes, memory_capacity, temporal_memory_capacity)
 		self.last_action = -1
 		self.seq_formation_probability = seq_formation_probability
 		self.seq_formation_max_attempts = seq_formation_max_attempts
 		self.time = 0
+		self.learn_to_associate = learn_to_associate
 
 	#End __init__()
 
@@ -51,7 +52,7 @@ class Animat:
 			self.network.tick(time)
 			self.update_experiences()
 	#End update_goal_one_version()
-	
+
 	def update_step_three_version(self, time, temporal_input_length = 0, babble = False):
 		if not babble and time > 1:
 			self.learn(True)
@@ -220,7 +221,8 @@ class Animat:
 		if not self.last_action == -1:
 			self.network.update_transition_matrix(self.last_action)
 			self.network.update_generators()
-		self.network.update_conditional_matrices()
+		if self.learn_to_associate:
+			self.network.update_conditional_matrices()
 	#End update_experiences()
 
 	def update_temporal_experiences(self):

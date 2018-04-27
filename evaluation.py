@@ -1,17 +1,18 @@
 
-from AnimatImplementation.node import *
-from AnimatImplementation.nodes import *
-from AnimatImplementation.temporalNodes import *
-from AnimatImplementation.environment import *
-from AnimatImplementation.actionNodes import *
-from AnimatImplementation.temporalActionNodes import *
+from node import *
+from nodes import *
+from temporalNodes import *
+from environment import *
+from actionNodes import *
+from temporalActionNodes import *
 from textHandler import *
 from controller import *
-from AnimatImplementation.network import *
+from network import *
 from AnimatImplementation.animat import *
 from random import shuffle
 import random
 import datetime
+from WordVectorModel import *
 
 def create_nodes_for_alphabet(test_environment):
 	sensor_node_a = SensorNode(name = "a-sensor",sensor = "a", environment =  test_environment)
@@ -319,11 +320,6 @@ def save_graph_as_matrix(animat, words):
 			l.append(c)
 	file.write_line_to_file("".join(l))
 
-
-
-
-
-
 def evaluate_step_three():
 	#Define constatns (for this run)
 	TOTAL_NUMBER_OF_WORDS = 10
@@ -355,7 +351,8 @@ def evaluate_step_three():
 
 	#Handle transition from babbling
 	time = time + 1
-	test_animat.update_step_three_version(time, babble = False)
+	test_animat.update_step_three_version(time, babble = False)	
+	test_environment.update()
 	#\\-----------------------------------------------------------------------------------------------------------------------------------------------------//
 
 
@@ -461,111 +458,179 @@ def evaluate_step_three():
 	file.write_line_to_file("TEMPORAL_MEMORY_CAPACITY = " + str(TEMPORAL_MEMORY_CAPACITY) +";")
 	file.write_line_to_file("SEQ_FORMATION_MAX_ATTEMPTS = " + str(SEQ_FORMATION_MAX_ATTEMPTS) +";")
 	#\\-----------------------------------------------------------------------------------------------------------------------------------------------------//
-
 #End evaluate_step_three()
 
 def evalaute_goal_one():
+	verbose = True
 	#Define constatns (for this run)
-	TOTAL_NUMBER_OF_WORDS = 10
+	#TOTAL_NUMBER_OF_WORDS = 10
 	AVERAGE_NUMBER_OF_OCCURRENCES_OF_EACH_WORD = 10
 	SEQ_FORMATION_PROBABILITY = 1
 
 	#Define constatns (for all runs)
 	TEMPORAL_MEMORY_CAPACITY = 7
+	MEMORY_CAPACITY = 3
 	SEQ_FORMATION_MAX_ATTEMPTS = 10
+
+	#MAX_TIME = AVERAGE_NUMBER_OF_OCCURRENCES_OF_EACH_WORD * TOTAL_NUMBER_OF_WORDS *2 #*2 to allow for spaces between words.
+	
+	INPUT_FILE_NAME = "texts/test_text.txt"
+	input_file = FileReader(INPUT_FILE_NAME)
+	entire_text = input_file.get_entire_file_as_array()
+	unique_words = []
+	for word in entire_text:
+		if not word in unique_words:
+			unique_words.append(word)
+
+	TOTAL_NUMBER_OF_WORDS = len(unique_words)
+
 	MAX_TIME = AVERAGE_NUMBER_OF_OCCURRENCES_OF_EACH_WORD * TOTAL_NUMBER_OF_WORDS *2 #*2 to allow for spaces between words.
-	INPUT_FILE_NAME = "evaluationIO/animal_words.txt"
 
 	test_environment = Environment()	
 	sensors, motors = create_nodes_for_alphabet(test_environment)
 	totlal_number_of_sensors = len(sensors)
-	test_animat = Animat("TheDod", sensors, motors, temporal_memory_capacity = TEMPORAL_MEMORY_CAPACITY, seq_formation_probability = SEQ_FORMATION_PROBABILITY, seq_formation_max_attempts = SEQ_FORMATION_MAX_ATTEMPTS)
+	test_animat = Animat("TheDod", sensors, motors, temporal_memory_capacity = TEMPORAL_MEMORY_CAPACITY, memory_capacity = MEMORY_CAPACITY, seq_formation_probability = SEQ_FORMATION_PROBABILITY, seq_formation_max_attempts = SEQ_FORMATION_MAX_ATTEMPTS)
 
 	time = 0
 
 	#//-----------------------------------------------------------------------------------------------------------------------------------------------------\\
+	if verbose:
+		print("Starting babbling")
 	#Let the animat discover generators for the sensors by babbling
 	while((-1) in test_animat.network.generator_list):
 	#for y in range(0,300):
 		time = time + 1
-		test_animat.update_step_three_version(time, babble = True)
+		test_animat.update_goal_one_version(time, babble = True)
 		test_environment.update()
 
 	RESULT_time_to_learn_all_generators = time
 
 	#Handle transition from babbling
 	time = time + 1
-	test_animat.update_step_three_version(time, babble = False)
+	test_animat.update_goal_one_version(time, babble = False)
+	test_environment.update()
+
+
+	if verbose:
+		print("Done babbling")
 	#\\-----------------------------------------------------------------------------------------------------------------------------------------------------//
-
-
+	
 	#//-----------------------------------------------------------------------------------------------------------------------------------------------------\\
 	#Let the animat learn new words
-	input_file = FileReader(INPUT_FILE_NAME)
-	all_words = input_file.get_entire_file_as_array()
-	words_to_use = all_words[0:TOTAL_NUMBER_OF_WORDS]
+	if verbose:
+		print("Starting learning words")
 
-	#Train the Animat	
+	#Train the Animat
 	while time < MAX_TIME + RESULT_time_to_learn_all_generators:
 		time = time + 1
 		#update environment
 		index = np.random.randint(0, TOTAL_NUMBER_OF_WORDS)
-		word = words_to_use[index]
+		word = unique_words[index]
 		test_environment.temporal_state = word
 
 		#Update the Animat
-		test_animat.update_step_three_version(time,len(word))
+		test_animat.update_goal_one_version(time,len(word))
 
 		#Give the Animat a space between words
 		time = time + 1
 		test_environment.temporal_state = " "
-		test_animat.update_step_three_version(time,1)
+		test_animat.update_goal_one_version(time,1)
 	#End for loop
-
-	#Calculate training results
-	RESULT_animat_words = [n.get_word() for n in test_animat.network.perception_nodes] # All 'words' that the Animat has learnt.
-	RESULT_learnt_words = [w for w in words_to_use if w in RESULT_animat_words] # All actuall words that the Animat has learnt.
-	RESULT_not_learnt_words = [w for w in words_to_use if not (w in RESULT_animat_words)] # Words that the animat failed to learn
-
-	RESULT_animat_producable_words = [n.get_word() for n in test_animat.network.action_nodes] 
-	RESULT_learnt_producable_words = [w for w in words_to_use if w in RESULT_animat_producable_words]
-	RESULT_not_learnt_producable_words = [w for w in words_to_use if not (w in RESULT_animat_producable_words)] 
+	if verbose:
+		print("Done learning words")
 	#\\-----------------------------------------------------------------------------------------------------------------------------------------------------//
-
+	
 	#//-----------------------------------------------------------------------------------------------------------------------------------------------------\\
-	RESULT_spoken_words = []
-	RESULT_not_spoken_words = []
-	RESULT_nbr_spoken_words = 0
-	RESULT_nbr_not_spoken_words = 0
+	#Let the Animat lear to associate
+	if verbose:
+		print("Starting learning associations")
+	test_animat.seq_formation_probability = 0
+	test_animat.learn_to_associate = True
 
-	#Test the animat
-	for word in words_to_use:
+	for word in entire_text:
 		time = time + 1
 		test_environment.temporal_state = word
-		test_animat.repeat(time,len(word))
 
-		test_environment.update()
-		animat_output_list = test_environment.temporal_state
-		animat_output = convert_list_to_word(animat_output_list)
+		test_animat.update_goal_one_version(time,len(word))
 
-		if word == animat_output:
-			RESULT_spoken_words.append(word)
-			RESULT_nbr_spoken_words = RESULT_nbr_spoken_words + 1
-		else:
-			RESULT_not_spoken_words.append(word)
-			RESULT_nbr_not_spoken_words = RESULT_nbr_not_spoken_words + 1
+	if verbose:
+		print("Done learning associations")
+	#\\-----------------------------------------------------------------------------------------------------------------------------------------------------//
+	
+	#//-----------------------------------------------------------------------------------------------------------------------------------------------------\\
+	#Evaluate
+	if verbose:
+		print("Begining actual evaluation")
+	test_animat.learn_to_associate = False
 
-		#Give the Animat a space between words
+	file = FileWriter("evaluationIO/" + "Goal1_Result" + datetime.datetime.now().strftime("%y%m%d_%H%M%S") + ".m")
+	file.write_line_to_file("")
+
+	file.write_line_to_file("% Animat Associations:")
+
+	animat_associations = []
+
+	for word in unique_words:
 		time = time + 1
-		test_environment.temporal_state = " "
-		test_animat.update_step_three_version(time,1, False)
-	#End for
+		test_environment.temporal_state = word
+		test_animat.update_goal_one_version(time,len(word))
 
-	RESULT_failed_productions = []
-	RESULT_nbr_failed_productions = 0
-	for w in RESULT_not_spoken_words:
-		if w in RESULT_learnt_words:
-			RESULT_failed_productions.append(w)
-			RESULT_nbr_failed_productions = RESULT_nbr_failed_productions + 1
+		word_associations = test_animat.associate()
+		animat_associations.append(word_associations)
+		file.write_line_to_file("animat_associations_"+word+" = " + str(word_associations) + ";")
+	#End getting associations from the Animat
 
+	file.write_line_to_file("")
+	file.write_line_to_file("%Vector Space Associations:")
+	file.write_line_to_file("")
+
+
+	reader = FileReader(INPUT_FILE_NAME)
+	wvm = WordVectorModel(reader, MEMORY_CAPACITY-1)
+	wvm.update_matrix()
+
+	vector_space_associations = []
+	for word in unique_words:
+		#print("LOOOOOP")
+		word_associations, association_values = wvm.get_ordered_associations(word)
+		vector_space_associations.append(word_associations)
+		#print(len(word_associations))
+		file.write_line_to_file("vsm_associations_"+word+" = " + str(word_associations) + ";")
+	#End getting associations from the vector space
+
+	score = 0
+	for i in range (0,len(unique_words)):
+		x = animat_associations[i]
+		y = vector_space_associations[i]
+		for word in y:
+			if word in x:
+				score = score + 1
+
+	max_score = len(unique_words)*10
+
+	result = (score*1.0)/max_score
+
+	print(result)
+	file.write_line_to_file("")
+	file.write_line_to_file("%Result is: "+str(score)+" of "+str(max_score))
+	file.write_line_to_file("result = "+str(result))
+
+
+
+
+
+#	time = time + 1
+#	test_environment.temporal_state = "cat"
+#	test_animat.update_goal_one_version(time,3)
+
+#	l = test_animat.associate()
+#	print(l)
+
+	#l = []
+	#for c in s:
+	#	if c in "'":
+	#		l.append("\"")
+	#	else:
+	#		l.append(c)
+	
 #End evaluate_goal_one()

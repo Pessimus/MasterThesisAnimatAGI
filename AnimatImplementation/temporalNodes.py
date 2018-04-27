@@ -1,4 +1,4 @@
-from AnimatImplementation.node import *
+from node import *
 
 # Represents a logical SEQ node
 # Extends 'Node', and overrides the 'tick' function.

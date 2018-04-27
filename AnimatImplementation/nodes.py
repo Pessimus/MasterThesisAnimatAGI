@@ -1,4 +1,4 @@
-from AnimatImplementation.node import *
+from node import *
 
 # Represents a logical AND node
 # Extends 'Node', and overrides the 'tick' function.

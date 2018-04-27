@@ -1,4 +1,4 @@
-from AnimatImplementation.actionNode import *
+from actionNode import *
 
 # Represents a action AND node
 # Extends 'ActionNode', and overrides the 'tick' function.

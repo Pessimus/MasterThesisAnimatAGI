@@ -1,7 +1,7 @@
 import numpy as np
-import AnimatImplementation.nodes as node_types
-import AnimatImplementation.temporalNodes as temporal_node_types
-import AnimatImplementation.temporalActionNodes as temporal_action_node_types
+import nodes as node_types
+import temporalNodes as temporal_node_types
+import temporalActionNodes as temporal_action_node_types
 from scipy import spatial
 import bisect
 import math
@@ -135,9 +135,10 @@ class Network():
 		#update time_extended_conditional_matrix
 		#self.time_extended_conditional_matrix = np.append(self.time_extended_conditional_matrix, np.zeros((1,self.total_number_of_input_nodes-1)), 0)
 		#self.time_extended_conditional_matrix = np.append(self.time_extended_conditional_matrix, np.zeros((self.total_number_of_input_nodes, 1)), 1)
-		self.time_extended_conditional_matrix.append([ [] * (self.total_number_of_input_nodes-1) for _ in range((self.total_number_of_input_nodes-1)) ]) #TODO: probably broken
+		#self.time_extended_conditional_matrix.append([ [] * (self.total_number_of_input_nodes-1) for _ in range((self.total_number_of_input_nodes-1)) ]) #TODO: probably broken
+		self.time_extended_conditional_matrix.append([0] * (self.total_number_of_input_nodes-1))
 		for i in self.time_extended_conditional_matrix:
-			i.append([])
+			i.append(0)
 
 		self.input_nodes_names.append(node.name)
 
@@ -479,6 +480,8 @@ class Network():
 				for second_node in previous_top_actives:
 					second_node_index = second_node.get_index()
 					dividend = self.time_extended_conditional_matrix[first_node_index][second_node_index]
+					#print("Debug")
+					#print(dividend)
 					self.time_extended_conditional_matrix[first_node_index][second_node_index] = dividend + 1
 					dividend = self.time_extended_conditional_matrix[second_node_index][first_node_index]
 					self.time_extended_conditional_matrix[second_node_index][first_node_index] = dividend + 1
@@ -540,7 +543,7 @@ class Network():
 
 
 		if(sum(vector_to_compare) == 0):
-			return []
+			return [],[]
 
 		for i in range(0,len(self.time_extended_conditional_matrix)):
 			if(not i == node_index):
@@ -560,11 +563,11 @@ class Network():
 			else:
 				simple.append(-1)
 
-		print(simple)
+		#print(simple)
 
-		print(result_values)
-		print(result_indices)
-		return result_values, result_indices
+		#print(result_values)[0:10]
+		#print(result_indices)[0:10]
+		return result_values[0:10], result_indices[0:10]
 
 
 #End class

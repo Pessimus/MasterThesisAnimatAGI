@@ -92,7 +92,7 @@ def remove_sign_from_string(string):
 	res_list = []
 
 	for char in string:
-		if not char in "'\"`´“’‘.,?!-;:/\n":
+		if not char in "'\"`.,?!-;:/\n":
 			res_list.append(char)
 	return "".join(res_list)
 #End remove_sign_from_string()
