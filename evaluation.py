@@ -257,6 +257,73 @@ def evaluate_step_two():
 	file.write_line_to_file("TEMPORAL_MEMORY_CAPACITY = " + str(TEMPORAL_MEMORY_CAPACITY) +";")
 	file.write_line_to_file("SEQ_FORMATION_MAX_ATTEMPTS = " + str(SEQ_FORMATION_MAX_ATTEMPTS) +";")
 
+	save_graph_as_matrix(test_animat, words_to_use) #Uncomment to save the graph to a file such that it can be ploted.
+
+def save_graph_as_matrix(animat, words):
+	print("Saving Graph")
+
+	file = FileWriter("evaluationIO/" + "STEP2_Graph" + datetime.datetime.now().strftime("%y%m%d_%H%M%S") + ".m")
+	file.write_line_to_file("")
+
+	nbr_nodes = animat.network.total_number_of_input_nodes
+	matrix = [ [0] * nbr_nodes for _ in range(nbr_nodes) ]
+
+	nodes = animat.network.sensors + animat.network.perception_nodes
+
+	for node in nodes:
+		#print(node.get_word())
+
+		i = node.index
+		t = 0
+		for input in node.inputs:
+			j = input.index
+			matrix[i][j] = 1
+			t = t + 1
+		if(t>2):
+			print("ERROR")
+
+
+	file.write_line_to_file("nbr_sensors = " + str(animat.network.number_of_sensors) +";")
+	sensor_labels = [s.get_word() for s in animat.network.sensors]
+	s = "sensor_labels = " + str(sensor_labels) +";"
+	l = []
+	for c in s:
+		if c in "'":
+			l.append("\"")
+		else:
+			l.append(c)
+	file.write_line_to_file("".join(l))
+	file.write_line_to_file("")
+
+	nodes_for_words = [n.index for n in nodes if n.get_word() in words]
+	file.write_line_to_file("nodes_for_words = " + str(nodes_for_words) +";")
+	word_labels = [n.get_word() for n in nodes if n.get_word() in words]
+	s = "word_labels = " + str(word_labels) +";"
+	l = []
+	for c in s:
+		if c in "'":
+			l.append("\"")
+		else:
+			l.append(c)
+	file.write_line_to_file("".join(l))
+	file.write_line_to_file("")
+
+	s = "matrix = " + str(matrix) +";"
+	l = []
+	for c in s:
+		if c in ",":
+			l.append(";")
+		elif c in "]":
+			l.append("].';")
+		else:
+			l.append(c)
+	file.write_line_to_file("".join(l))
+
+
+
+
+
+
 def evaluate_step_three():
 	#Define constatns (for this run)
 	TOTAL_NUMBER_OF_WORDS = 10
