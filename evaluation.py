@@ -464,4 +464,108 @@ def evaluate_step_three():
 
 #End evaluate_step_three()
 
+def evalaute_goal_one():
+	#Define constatns (for this run)
+	TOTAL_NUMBER_OF_WORDS = 10
+	AVERAGE_NUMBER_OF_OCCURRENCES_OF_EACH_WORD = 10
+	SEQ_FORMATION_PROBABILITY = 1
 
+	#Define constatns (for all runs)
+	TEMPORAL_MEMORY_CAPACITY = 7
+	SEQ_FORMATION_MAX_ATTEMPTS = 10
+	MAX_TIME = AVERAGE_NUMBER_OF_OCCURRENCES_OF_EACH_WORD * TOTAL_NUMBER_OF_WORDS *2 #*2 to allow for spaces between words.
+	INPUT_FILE_NAME = "evaluationIO/animal_words.txt"
+
+	test_environment = Environment()	
+	sensors, motors = create_nodes_for_alphabet(test_environment)
+	totlal_number_of_sensors = len(sensors)
+	test_animat = Animat("TheDod", sensors, motors, temporal_memory_capacity = TEMPORAL_MEMORY_CAPACITY, seq_formation_probability = SEQ_FORMATION_PROBABILITY, seq_formation_max_attempts = SEQ_FORMATION_MAX_ATTEMPTS)
+
+	time = 0
+
+	#//-----------------------------------------------------------------------------------------------------------------------------------------------------\\
+	#Let the animat discover generators for the sensors by babbling
+	while((-1) in test_animat.network.generator_list):
+	#for y in range(0,300):
+		time = time + 1
+		test_animat.update_step_three_version(time, babble = True)
+		test_environment.update()
+
+	RESULT_time_to_learn_all_generators = time
+
+	#Handle transition from babbling
+	time = time + 1
+	test_animat.update_step_three_version(time, babble = False)
+	#\\-----------------------------------------------------------------------------------------------------------------------------------------------------//
+
+
+	#//-----------------------------------------------------------------------------------------------------------------------------------------------------\\
+	#Let the animat learn new words
+	input_file = FileReader(INPUT_FILE_NAME)
+	all_words = input_file.get_entire_file_as_array()
+	words_to_use = all_words[0:TOTAL_NUMBER_OF_WORDS]
+
+	#Train the Animat	
+	while time < MAX_TIME + RESULT_time_to_learn_all_generators:
+		time = time + 1
+		#update environment
+		index = np.random.randint(0, TOTAL_NUMBER_OF_WORDS)
+		word = words_to_use[index]
+		test_environment.temporal_state = word
+
+		#Update the Animat
+		test_animat.update_step_three_version(time,len(word))
+
+		#Give the Animat a space between words
+		time = time + 1
+		test_environment.temporal_state = " "
+		test_animat.update_step_three_version(time,1)
+	#End for loop
+
+	#Calculate training results
+	RESULT_animat_words = [n.get_word() for n in test_animat.network.perception_nodes] # All 'words' that the Animat has learnt.
+	RESULT_learnt_words = [w for w in words_to_use if w in RESULT_animat_words] # All actuall words that the Animat has learnt.
+	RESULT_not_learnt_words = [w for w in words_to_use if not (w in RESULT_animat_words)] # Words that the animat failed to learn
+
+	RESULT_animat_producable_words = [n.get_word() for n in test_animat.network.action_nodes] 
+	RESULT_learnt_producable_words = [w for w in words_to_use if w in RESULT_animat_producable_words]
+	RESULT_not_learnt_producable_words = [w for w in words_to_use if not (w in RESULT_animat_producable_words)] 
+	#\\-----------------------------------------------------------------------------------------------------------------------------------------------------//
+
+	#//-----------------------------------------------------------------------------------------------------------------------------------------------------\\
+	RESULT_spoken_words = []
+	RESULT_not_spoken_words = []
+	RESULT_nbr_spoken_words = 0
+	RESULT_nbr_not_spoken_words = 0
+
+	#Test the animat
+	for word in words_to_use:
+		time = time + 1
+		test_environment.temporal_state = word
+		test_animat.repeat(time,len(word))
+
+		test_environment.update()
+		animat_output_list = test_environment.temporal_state
+		animat_output = convert_list_to_word(animat_output_list)
+
+		if word == animat_output:
+			RESULT_spoken_words.append(word)
+			RESULT_nbr_spoken_words = RESULT_nbr_spoken_words + 1
+		else:
+			RESULT_not_spoken_words.append(word)
+			RESULT_nbr_not_spoken_words = RESULT_nbr_not_spoken_words + 1
+
+		#Give the Animat a space between words
+		time = time + 1
+		test_environment.temporal_state = " "
+		test_animat.update_step_three_version(time,1, False)
+	#End for
+
+	RESULT_failed_productions = []
+	RESULT_nbr_failed_productions = 0
+	for w in RESULT_not_spoken_words:
+		if w in RESULT_learnt_words:
+			RESULT_failed_productions.append(w)
+			RESULT_nbr_failed_productions = RESULT_nbr_failed_productions + 1
+
+#End evaluate_goal_one()

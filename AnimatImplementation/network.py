@@ -72,7 +72,7 @@ class Network():
 
 
 		#self.conditional_matrix = np.zeros((self.total_number_of_input_nodes, self.total_number_of_input_nodes)) #Intuition: Probability that 1 is top active at t given that 2 is top active at t: Pr(1|2)
-		self.conditional_matrix = [ [0] * self.total_number_of_input_nodes for _ in range(self.total_number_of_input_nodes) ] #dividends
+		#self.conditional_matrix = [ [0] * self.total_number_of_input_nodes for _ in range(self.total_number_of_input_nodes) ] #dividends
 		self.conditional_matrix_divisor = [0] * self.total_number_of_input_nodes #divisors
 
 		#self.time_extended_conditional_matrix = np.zeros((self.total_number_of_input_nodes, self.total_number_of_input_nodes)) #Intuition: Probability that 1 is top active at ~t given that 2 is top active at t: Pr(1|2)
@@ -128,9 +128,9 @@ class Network():
 		#update conditional_matrix
 		#self.conditional_matrix = np.append(self.conditional_matrix, np.zeros((1,self.total_number_of_input_nodes-1)), 0)
 		#self.conditional_matrix = np.append(self.conditional_matrix, np.zeros((self.total_number_of_input_nodes, 1)), 1)
-		self.conditional_matrix.append( [0] * (self.total_number_of_input_nodes-1)) #add another list with zeros
-		for i in self.conditional_matrix:
-			i.append(0) #in each list, add a zero
+		#self.conditional_matrix.append( [0] * (self.total_number_of_input_nodes-1)) #add another list with zeros
+		#for i in self.conditional_matrix:
+		#	i.append(0) #in each list, add a zero
 		self.conditional_matrix_divisor.append(0)
 		#update time_extended_conditional_matrix
 		#self.time_extended_conditional_matrix = np.append(self.time_extended_conditional_matrix, np.zeros((1,self.total_number_of_input_nodes-1)), 0)
@@ -468,10 +468,10 @@ class Network():
 			first_node_index = first_node.get_index()
 
 			#update conditional matrix
-			for second_node in top_active_nodes:
-				second_node_index = second_node.get_index()
-				dividend = self.conditional_matrix[first_node_index][second_node_index]
-				self.conditional_matrix[first_node_index][second_node_index] = dividend + 1
+			#for second_node in top_active_nodes:
+			#	second_node_index = second_node.get_index()
+			#	dividend = self.conditional_matrix[first_node_index][second_node_index]
+			#	self.conditional_matrix[first_node_index][second_node_index] = dividend + 1
 			
 
 			#update time-extended conditional matrix
