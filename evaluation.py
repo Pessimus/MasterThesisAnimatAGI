@@ -1,13 +1,13 @@
 
-from node import *
-from nodes import *
-from temporalNodes import *
-from environment import *
-from actionNodes import *
-from temporalActionNodes import *
+from AnimatImplementation.node import *
+from AnimatImplementation.nodes import *
+from AnimatImplementation.temporalNodes import *
+from AnimatImplementation.environment import *
+from AnimatImplementation.actionNodes import *
+from AnimatImplementation.temporalActionNodes import *
 from textHandler import *
 from controller import *
-from network import *
+from AnimatImplementation.network import *
 from AnimatImplementation.animat import *
 from random import shuffle
 import random
@@ -462,6 +462,12 @@ def evaluate_step_three():
 
 def evalaute_goal_one():
 	verbose = True
+	TIME_OF_START_OF_RUN = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
+	TIME_OF_START_OF_BABBLING = ""
+	TIME_OF_START_OF_LEARNING_WORDS = ""
+	TIME_OF_START_OF_LEARNING_ASSOCIATIONS = ""
+	TIME_OF_START_OF_EVALUATION = ""
+	TIME_OF_END = ""
 	#Define constatns (for this run)
 	#TOTAL_NUMBER_OF_WORDS = 10
 	AVERAGE_NUMBER_OF_OCCURRENCES_OF_EACH_WORD = 10
@@ -474,7 +480,8 @@ def evalaute_goal_one():
 
 	#MAX_TIME = AVERAGE_NUMBER_OF_OCCURRENCES_OF_EACH_WORD * TOTAL_NUMBER_OF_WORDS *2 #*2 to allow for spaces between words.
 	
-	INPUT_FILE_NAME = "texts/cats_dogs_and_trees_shuffled_clean.txt"
+	#INPUT_FILE_NAME = "texts/cats_dogs_and_trees_shuffled_clean.txt"
+	INPUT_FILE_NAME = "texts/test_text.txt"
 	input_file = FileReader(INPUT_FILE_NAME)
 	entire_text = input_file.get_entire_file_as_array()
 	unique_words = []
@@ -494,6 +501,7 @@ def evalaute_goal_one():
 	time = 0
 
 	#//-----------------------------------------------------------------------------------------------------------------------------------------------------\\
+	TIME_OF_START_OF_BABBLING = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
 	if verbose:
 		print("Starting babbling")
 	#Let the animat discover generators for the sensors by babbling
@@ -517,6 +525,7 @@ def evalaute_goal_one():
 	
 	#//-----------------------------------------------------------------------------------------------------------------------------------------------------\\
 	#Let the animat learn new words
+	TIME_OF_START_OF_LEARNING_WORDS = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
 	if verbose:
 		print("Starting learning words")
 
@@ -542,6 +551,7 @@ def evalaute_goal_one():
 	
 	#//-----------------------------------------------------------------------------------------------------------------------------------------------------\\
 	#Let the Animat lear to associate
+	TIME_OF_START_OF_LEARNING_ASSOCIATIONS = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
 	if verbose:
 		print("Starting learning associations")
 	test_animat.seq_formation_probability = 0
@@ -549,7 +559,9 @@ def evalaute_goal_one():
 
 	for word in entire_text:
 		time = time + 1
-		test_environment.temporal_state = word
+		#test_environment.temporal_state = word
+		test_environment.next_temporal_state = word
+		test_environment.update()
 
 		test_animat.update_goal_one_version(time,len(word))
 
@@ -559,6 +571,7 @@ def evalaute_goal_one():
 	
 	#//-----------------------------------------------------------------------------------------------------------------------------------------------------\\
 	#Evaluate
+	TIME_OF_START_OF_EVALUATION = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
 	if verbose:
 		print("Begining actual evaluation")
 	test_animat.learn_to_associate = False
@@ -572,7 +585,10 @@ def evalaute_goal_one():
 
 	for word in unique_words:
 		time = time + 1
-		test_environment.temporal_state = word
+		#test_environment.temporal_state = word
+		test_environment.next_temporal_state = word
+		test_environment.update()
+
 		test_animat.update_goal_one_version(time,len(word))
 
 		word_associations = test_animat.associate()
@@ -616,8 +632,19 @@ def evalaute_goal_one():
 	file.write_line_to_file("result = "+str(result))
 
 
+	TIME_OF_END = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
 
+	file.write_line_to_file("")
+	file.write_line_to_file("TIME_OF_START_OF_RUN = " + TIME_OF_START_OF_RUN)
+	file.write_line_to_file("TIME_OF_START_OF_BABBLING = " + TIME_OF_START_OF_BABBLING)
+	file.write_line_to_file("TIME_OF_START_OF_LEARNING_WORDS = " + TIME_OF_START_OF_LEARNING_WORDS)
+	file.write_line_to_file("TIME_OF_START_OF_LEARNING_ASSOCIATIONS = " + TIME_OF_START_OF_LEARNING_ASSOCIATIONS)
+	file.write_line_to_file("TIME_OF_START_OF_EVALUATION = " + TIME_OF_START_OF_EVALUATION)
+	file.write_line_to_file("TIME_OF_END = " + TIME_OF_END)
 
+	file.write_line_to_file("")
+	
+	#print(test_animat.network.time_extended_conditional_matrix[])
 
 #	time = time + 1
 #	test_environment.temporal_state = "cat"

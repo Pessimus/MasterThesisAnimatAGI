@@ -39,6 +39,9 @@ class Environment:
 		self.state = self.next_state
 		self.next_state = set()
 
+		if(len(self.next_temporal_state) > 0):
+			self.state.add(self.next_temporal_state[-1])
+
 		self.temporal_state = self.next_temporal_state
 		self.next_temporal_state = []
 	#End update()
