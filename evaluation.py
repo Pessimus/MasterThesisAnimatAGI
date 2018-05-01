@@ -470,12 +470,12 @@ def evalaute_goal_one():
 	TIME_OF_END = ""
 	#Define constatns (for this run)
 	#TOTAL_NUMBER_OF_WORDS = 10
-	AVERAGE_NUMBER_OF_OCCURRENCES_OF_EACH_WORD = 10
+	AVERAGE_NUMBER_OF_OCCURRENCES_OF_EACH_WORD = 15
 	SEQ_FORMATION_PROBABILITY = 1
 
 	#Define constatns (for all runs)
 	TEMPORAL_MEMORY_CAPACITY = 7
-	MEMORY_CAPACITY = 3
+	MEMORY_CAPACITY = 3 #Animat will use x2 to handle space between words.
 	SEQ_FORMATION_MAX_ATTEMPTS = 10
 
 	#MAX_TIME = AVERAGE_NUMBER_OF_OCCURRENCES_OF_EACH_WORD * TOTAL_NUMBER_OF_WORDS *2 #*2 to allow for spaces between words.
@@ -496,7 +496,7 @@ def evalaute_goal_one():
 	test_environment = Environment()	
 	sensors, motors = create_nodes_for_alphabet(test_environment)
 	totlal_number_of_sensors = len(sensors)
-	test_animat = Animat("TheOnkeydogdonk", sensors, motors, temporal_memory_capacity = TEMPORAL_MEMORY_CAPACITY, memory_capacity = MEMORY_CAPACITY, seq_formation_probability = SEQ_FORMATION_PROBABILITY, seq_formation_max_attempts = SEQ_FORMATION_MAX_ATTEMPTS)
+	test_animat = Animat("TheOnkeydogdonk", sensors, motors, temporal_memory_capacity = TEMPORAL_MEMORY_CAPACITY, memory_capacity = MEMORY_CAPACITY*2, seq_formation_probability = SEQ_FORMATION_PROBABILITY, seq_formation_max_attempts = SEQ_FORMATION_MAX_ATTEMPTS)
 
 	time = 0
 
@@ -521,6 +521,12 @@ def evalaute_goal_one():
 
 	if verbose:
 		print("Done babbling")
+		#print(str(test_environment.state))
+		#print(str(test_environment.temporal_state))
+		#print(str(test_environment.next_state))
+		#print(str(test_environment.next_temporal_state))
+		#print(str([n.get_word() for n in test_animat.network.perception_nodes]))
+
 	#\\-----------------------------------------------------------------------------------------------------------------------------------------------------//
 	
 	#//-----------------------------------------------------------------------------------------------------------------------------------------------------\\
@@ -535,18 +541,26 @@ def evalaute_goal_one():
 		#update environment
 		index = np.random.randint(0, TOTAL_NUMBER_OF_WORDS)
 		word = unique_words[index]
-		test_environment.temporal_state = word
+		#test_environment.temporal_state = word
+		test_environment.next_temporal_state = word
+		test_environment.update()
+
 
 		#Update the Animat
 		test_animat.update_goal_one_version(time,len(word))
 
 		#Give the Animat a space between words
 		time = time + 1
-		test_environment.temporal_state = " "
+		#test_environment.temporal_state = " "
+		test_environment.next_temporal_state = " "
+		test_environment.update()
+
 		test_animat.update_goal_one_version(time,1)
 	#End for loop
 	if verbose:
 		print("Done learning words")
+		#print("Nbr of nodes = " + str(test_animat.network.total_number_of_input_nodes))
+		#print("Association matrix sum = " + str(sum([sum(s) for s in test_animat.network.time_extended_conditional_matrix])))
 	#\\-----------------------------------------------------------------------------------------------------------------------------------------------------//
 	
 	#//-----------------------------------------------------------------------------------------------------------------------------------------------------\\
@@ -557,6 +571,8 @@ def evalaute_goal_one():
 	test_animat.seq_formation_probability = 0
 	test_animat.learn_to_associate = True
 
+	#last_word = "!"
+
 	for word in entire_text:
 		time = time + 1
 		#test_environment.temporal_state = word
@@ -565,8 +581,24 @@ def evalaute_goal_one():
 
 		test_animat.update_goal_one_version(time,len(word))
 
+		#Give the Animat a space between words
+		time = time + 1
+		#test_environment.temporal_state = " "
+		test_environment.next_temporal_state = " "
+		test_environment.update()
+		test_animat.update_goal_one_version(time,1)
+
+		#tas = [n.get_word() for n in test_animat.network.get_topactive_nodes()]
+		#if("la" in tas):
+		#	print("Ehuru evad?!")
+		#	print(last_word)
+		#	print(word)
+
+		#last_word = word
+
 	if verbose:
 		print("Done learning associations")
+		#print("Nbr of nodes = " + str(test_animat.network.total_number_of_input_nodes))
 	#\\-----------------------------------------------------------------------------------------------------------------------------------------------------//
 	
 	#//-----------------------------------------------------------------------------------------------------------------------------------------------------\\
@@ -642,9 +674,18 @@ def evalaute_goal_one():
 	file.write_line_to_file("TIME_OF_START_OF_EVALUATION = " + TIME_OF_START_OF_EVALUATION)
 	file.write_line_to_file("TIME_OF_END = " + TIME_OF_END)
 
+	tmp_animat_words = [n.get_word() for n in (test_animat.network.sensors + test_animat.network.perception_nodes)]
+	not_learnt_words = []
+	nbr_words_learnt = 0
+	for w in unique_words:
+		if w in tmp_animat_words:
+			nbr_words_learnt = nbr_words_learnt + 1
+		else:
+			not_learnt_words.append(w)
+
 	file.write_line_to_file("")
-	
-	#print(test_animat.network.time_extended_conditional_matrix[])
+	file.write_line_to_file("nbr_words_learnt = " + str(nbr_words_learnt) + ";")
+	file.write_line_to_file("not_learnt_words = " + str(not_learnt_words) + ";")
 
 #	time = time + 1
 #	test_environment.temporal_state = "cat"
