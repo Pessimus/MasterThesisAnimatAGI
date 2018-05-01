@@ -608,7 +608,7 @@ def evalaute_goal_one():
 		print("Begining actual evaluation")
 	test_animat.learn_to_associate = False
 
-	file = FileWriter("evaluationIO/" + "Goal1_Result" + datetime.datetime.now().strftime("%y%m%d_%H%M%S") + ".m")
+	file = FileWriter("evaluationIO/" + "Goal1_Result_from" + TIME_OF_START_OF_RUN + "_to" + datetime.datetime.now().strftime("%y%m%d_%H%M%S") + ".m")
 	file.write_line_to_file("")
 
 	file.write_line_to_file("% Animat Associations:")
