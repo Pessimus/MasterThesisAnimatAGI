@@ -1,4 +1,4 @@
-from node import *
+from AnimatImplementation.node import *
 
 # Represents a logical AND node
 # Extends 'Node', and overrides the 'tick' function.
@@ -165,6 +165,15 @@ class SensorNode(Node):
 		if (not temporal) and self.last_tick_temporal:
 			self.last_tick_temporal = False
 			self.time = time - 1
+			if Node.tick(self,time,temporal_time, temporal):
+				#self.last_tick_temporal = temporal
+				if self.read_sensor(temporal_time,temporal):
+					self.activate(time)
+				#else:
+				#	self.deactivate(time)
+				return True
+			else:
+				return False
 		if Node.tick(self,time,temporal_time, temporal):
 			self.last_tick_temporal = temporal
 			if self.read_sensor(temporal_time,temporal):

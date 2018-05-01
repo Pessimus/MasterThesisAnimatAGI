@@ -1,12 +1,12 @@
 
 
 
-from node import *
-from nodes import *
-from temporalNodes import *
-from environment import *
-from actionNodes import *
-from temporalActionNodes import *
+from AnimatImplementation.node import *
+from AnimatImplementation.nodes import *
+from AnimatImplementation.temporalNodes import *
+from AnimatImplementation.environment import *
+from AnimatImplementation.actionNodes import *
+from AnimatImplementation.temporalActionNodes import *
 #from tests import *
 from evaluation import *
 import random

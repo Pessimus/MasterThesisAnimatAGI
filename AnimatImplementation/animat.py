@@ -1,7 +1,7 @@
 import numpy as np
 import random
 import bisect
-from network import *
+from AnimatImplementation.network import *
 from scipy import spatial
 
 
