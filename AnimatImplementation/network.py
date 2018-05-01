@@ -538,17 +538,17 @@ class Network():
 		simple = []
 
 		#vector_to_compare = self.time_extended_conditional_matrix[node_index]
-		vector_to_compare = [safe_div(x,y) for x, y in zip(self.time_extended_conditional_matrix[node_index], self.conditional_matrix_divisor)]
+		vector_to_compare = [safe_div(x,y) for x, y in zip(self.time_extended_conditional_matrix[node_index][1:], self.conditional_matrix_divisor[1:])]
 		#vector_to_compare = map(truediv, self.time_extended_conditional_matrix[node_index], self.conditional_matrix_divisor)
 
 
 		if(sum(vector_to_compare) == 0):
 			return [],[]
 
-		for i in range(0,len(self.time_extended_conditional_matrix)):
+		for i in range(1,len(self.time_extended_conditional_matrix)):
 			if(not i == node_index):
 				#tmp_vector = self.time_extended_conditional_matrix[i]
-				tmp_vector = [safe_div(x,y) for x, y in zip(self.time_extended_conditional_matrix[i], self.conditional_matrix_divisor)]
+				tmp_vector = [safe_div(x,y) for x, y in zip(self.time_extended_conditional_matrix[i][1:], self.conditional_matrix_divisor[1:])]
 				#tmp_vector = map(truediv, self.time_extended_conditional_matrix[i], self.conditional_matrix_divisor)
 
 				if(not sum(tmp_vector) == 0):
