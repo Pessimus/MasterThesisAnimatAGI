@@ -480,8 +480,8 @@ def evalaute_goal_one():
 
 	#MAX_TIME = AVERAGE_NUMBER_OF_OCCURRENCES_OF_EACH_WORD * TOTAL_NUMBER_OF_WORDS *2 #*2 to allow for spaces between words.
 	
-	#INPUT_FILE_NAME = "texts/cats_dogs_and_trees_shuffled_clean.txt"
-	INPUT_FILE_NAME = "texts/test_text.txt"
+	INPUT_FILE_NAME = "texts/cats_dogs_and_trees_shuffled_clean.txt"
+	#INPUT_FILE_NAME = "texts/test_text.txt"
 	input_file = FileReader(INPUT_FILE_NAME)
 	entire_text = input_file.get_entire_file_as_array()
 	unique_words = []
