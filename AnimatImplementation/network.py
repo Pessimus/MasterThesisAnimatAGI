@@ -568,6 +568,48 @@ class Network():
 		#print(result_values)[0:10]
 		#print(result_indices)[0:10]
 		return result_values[0:10], result_indices[0:10]
+	#End associate()
+
+	def associate_action(self, node_index, number_of_associations):
+		result_indices = []
+		result_values = []
+
+		#vector_to_compare = self.time_extended_conditional_matrix[node_index]
+		vector_to_compare = [safe_div(x,y) for x, y in zip(self.time_extended_conditional_matrix[node_index][1:], self.conditional_matrix_divisor[1:])]
+		#vector_to_compare = map(truediv, self.time_extended_conditional_matrix[node_index], self.conditional_matrix_divisor)
+
+		if(sum(vector_to_compare) == 0):
+			return [],[]
+
+		for i in range(1,len(self.time_extended_conditional_matrix)):
+			if(not i == node_index):
+				#tmp_vector = self.time_extended_conditional_matrix[i]
+				tmp_vector = [safe_div(x,y) for x, y in zip(self.time_extended_conditional_matrix[i][1:], self.conditional_matrix_divisor[1:])]
+				#tmp_vector = map(truediv, self.time_extended_conditional_matrix[i], self.conditional_matrix_divisor)
+
+				if(not sum(tmp_vector) == 0):
+					tmp_res = spatial.distance.cosine(vector_to_compare,tmp_vector)
+
+					insertion_point = bisect.bisect(result_values,tmp_res)
+
+					result_values.insert(insertion_point, tmp_res)
+					result_indices.insert(insertion_point, i)
+
+		return_values = []
+		return_indices = []
+		i = 0
+		for node_index in result_indices:
+			generator = self.generator_list[node_index]
+			if not generator == -1:
+				return_indices.append(generator)
+				return_values.append(result_values[i])
+			if(len(return_indices) == number_of_associations):
+				break
+
+			i = i + 1
+
+
+		return return_values, return_indices
 
 
 #End class
