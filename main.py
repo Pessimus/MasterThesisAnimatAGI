@@ -16,7 +16,8 @@ def init():
 	#evaluate_step_one()
 	#evaluate_step_two()
 	#evaluate_step_three()
-	evalaute_goal_one()
+	#evalaute_goal_one()
+	evalaute_goal_two()
 
 if __name__ == "__main__":
 	init()

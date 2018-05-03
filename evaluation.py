@@ -13,6 +13,7 @@ from random import shuffle
 import random
 import datetime
 from WordVectorModel import *
+import goal_two_input
 
 def create_nodes_for_alphabet(test_environment):
 	sensor_node_a = SensorNode(name = "a-sensor",sensor = "a", environment =  test_environment)
@@ -731,10 +732,18 @@ def evalaute_goal_two():
 
 	#Variables nessecary for sensations in Goal 2.
 	sensation_probability = 0
-	keywords, key_to_sensations = goal_two_input.get_input()
-	for key in keywords:
+	keywords1, key_to_sensations = goal_two_input.get_input()
+	#print(keywords1)
+	#print("")
+	#print(unique_words)
+	#print(key_to_sensations)
+	keywords = []
+	for key in keywords1:
 		if key not in unique_words:
+	#		print(key)
 			del key_to_sensations[key]
+		else:
+			keywords.append(key)
 	all_sensations = []
 	sensations_to_key = {}
 	for key in keywords:
@@ -746,6 +755,10 @@ def evalaute_goal_two():
 			else:
 				sensations_to_key[e].add(key)
 
+	#print(all_sensations)
+	#print(keywords)
+
+	#return
 
 
 	MAX_TIME = AVERAGE_NUMBER_OF_OCCURRENCES_OF_EACH_WORD * TOTAL_NUMBER_OF_WORDS *2 #*2 to allow for spaces between words.
@@ -894,6 +907,9 @@ def evalaute_goal_two():
 			if word in x:
 				score = score + 1
 
+	print(len(all_sensations))
+	print(score)
+	print(max_score)
 	result = (score*1.0)/max_score
 
 	print(result)
