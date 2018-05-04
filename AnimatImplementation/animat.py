@@ -35,6 +35,7 @@ class Animat:
 					self.temporal_update(time, tt)
 
 			self.network.tick(time)
+
 			self.update_experiences()
 
 			self.last_action = -1
@@ -158,6 +159,7 @@ class Animat:
 				most_specific_so_far = node.get_index()
 
 		association_values, associated_nodes = self.network.associate_action(most_specific_so_far,number_of_associations)
+
 		#association_values, associated_nodes = self.network.associate(1)
 
 		return_list = [nodes[n].get_word() for n in associated_nodes]

@@ -731,7 +731,7 @@ def evalaute_goal_two():
 
 
 	#Variables nessecary for sensations in Goal 2.
-	sensation_probability = 0
+	sensation_probability = 1
 	keywords1, key_to_sensations = goal_two_input.get_input()
 	#print(keywords1)
 	#print("")
@@ -787,6 +787,9 @@ def evalaute_goal_two():
 		test_animat.update_goal_one_version(time, babble = True)
 		test_environment.update()
 
+		if(sum([a*-1 for a in test_animat.network.generator_list if a == -1]) == len(all_sensations) ):
+			break
+
 	RESULT_time_to_learn_all_generators = time
 
 	#Handle transition from babbling
@@ -805,7 +808,6 @@ def evalaute_goal_two():
 	TIME_OF_START_OF_LEARNING_WORDS = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
 	if verbose:
 		print("Starting learning words")
-
 	#Train the Animat
 	while time < MAX_TIME + RESULT_time_to_learn_all_generators:
 		time = time + 1
@@ -841,16 +843,22 @@ def evalaute_goal_two():
 	test_animat.learn_to_associate = True
 
 	for word in entire_text:
+		#print("Time is: "+str(time)+" and the word is: "+word)
 		time = time + 1
 		
 		if(word in keywords):
 			if(random.random() < sensation_probability):
+				#print("Adding sensations:"+str(key_to_sensations[word]))
 				test_environment.next_state = key_to_sensations[word]
 
 		test_environment.next_temporal_state = word
 		test_environment.update()
 
 		test_animat.update_goal_one_version(time,len(word))
+
+		#if(not len(test_environment.state) == 0):
+		#	print(test_environment.state)
+		#	print([n.get_word() for n in test_animat.network.get_topactive_nodes()])
 
 		#Give the Animat a space between words
 		time = time + 1
@@ -878,7 +886,7 @@ def evalaute_goal_two():
 
 	for sense in all_sensations:
 		time = time + 1
-		test_environment.next_state = sense
+		test_environment.next_state = {sense}
 		test_environment.update()
 
 		test_animat.update_goal_one_version(time,0)
@@ -907,9 +915,9 @@ def evalaute_goal_two():
 			if word in x:
 				score = score + 1
 
-	print(len(all_sensations))
-	print(score)
-	print(max_score)
+	#print(len(all_sensations))
+	#print(score)
+	#print(max_score)
 	result = (score*1.0)/max_score
 
 	print(result)
