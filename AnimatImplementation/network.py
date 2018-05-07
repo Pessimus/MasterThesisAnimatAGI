@@ -571,6 +571,7 @@ class Network():
 	#End associate()
 
 	def associate_action(self, node_index, number_of_associations):
+
 		result_indices = []
 		result_values = []
 
@@ -597,6 +598,7 @@ class Network():
 
 		return_values = []
 		return_indices = []
+
 		i = 0
 		for node_index in result_indices:
 			generator = self.generator_list[node_index]
@@ -608,6 +610,7 @@ class Network():
 
 			i = i + 1
 
+		#print(return_indices)
 
 		return return_values, return_indices
 
