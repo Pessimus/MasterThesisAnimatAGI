@@ -26,11 +26,11 @@ def senses_in_sentenses(sentence, keywords, senses_dict):
 
 
 
-file_name = "test_text"
-#file_name = "cats_dogs_and_trees"
+#file_name = "test_text"
+file_name = "cats_dogs_and_trees"
 #file_name = sys.argv[1]
 
-nbr_of_repetitions = 1
+nbr_of_repetitions = 5
 #nbr_of_repetitions = int(sys.argv[2])
 
 
@@ -47,7 +47,7 @@ while(not (current_sentence == "")):
 file_to_read.close()
 
 
-file_to_write = open("texts/" + file_name + "_shuffled.txt", "w+")
+file_to_write = open("texts/" + file_name + "_shuffled_2.txt", "w+")
 
 
 #for i in range(nbr_of_repetitions):
@@ -81,13 +81,13 @@ file_to_write.close()
 
 
 #Clean text from unnecessary stuff
-reader = FileReader("texts/" + file_name + "_shuffled.txt")
+reader = FileReader("texts/" + file_name + "_shuffled_2.txt")
 
 text = reader.get_entire_file_as_array()
 
 reader.close_file()
 
-writer = FileWriter("texts/" + file_name + "_shuffled_clean.txt")
+writer = FileWriter("texts/" + file_name + "_shuffled_clean_2.txt")
 
 writer.write_line_to_file(convert_list_to_sentence(text))
 
