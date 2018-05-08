@@ -950,3 +950,78 @@ def evalaute_goal_two():
 	file.write_line_to_file("not_learnt_words = " + str(not_learnt_words) + ";")
 	
 	#End evaluate_goal_two()
+
+def evaluate_goal_two_vector_space():
+	TIME_OF_START_OF_RUN = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
+	
+	MEMORY_CAPACITY = 3 #Animat will use x2 to handle space between words.
+	
+	
+	INPUT_FILE_NAME = "texts/cats_dogs_and_trees_shuffled_clean_2.txt"
+	#INPUT_FILE_NAME = "texts/test_text.txt"
+	#INPUT_FILE_NAME = "texts/test_text_shuffled_clean_2.txt"
+	input_file = FileReader(INPUT_FILE_NAME)
+	entire_text = input_file.get_entire_file_as_array()
+	unique_words = []
+	for word in entire_text:
+		if not word in unique_words:
+			unique_words.append(word)
+
+	TOTAL_NUMBER_OF_WORDS = len(unique_words)
+
+	keywords1, key_to_sensations = goal_two_input.get_input()
+	keywords = []
+	for key in keywords1:
+		if key not in unique_words:
+			del key_to_sensations[key]
+		else:
+			keywords.append(key)
+
+	all_sensations = []
+	sensations_to_key = {}
+	for key in keywords:
+		s = key_to_sensations[key]
+		for e in s:
+			if not e in all_sensations:
+				all_sensations.append(e) 
+				sensations_to_key[e] = {key}
+			else:
+				sensations_to_key[e].add(key)
+
+
+
+	reader = FileReader(INPUT_FILE_NAME)
+	wvm = WordVectorModel(reader, MEMORY_CAPACITY-1)
+	wvm.update_matrix()
+
+
+	file = FileWriter("evaluationIO/" + "Goal2_Vector_Space_Result_from" + TIME_OF_START_OF_RUN + "_to" + datetime.datetime.now().strftime("%y%m%d_%H%M%S") + ".m")
+	file.write_line_to_file("")
+
+
+	vector_space_associations = []
+	for sense in all_sensations:
+		sense_associations = wvm.get_excluding_ordered_associations(sense,all_sensations,len(sensations_to_key[sense]))
+		vector_space_associations.append(sense_associations)
+		#print(len(word_associations))
+		file.write_line_to_file("vsm_associations_"+sense+" = " + str(sense_associations) + ";")
+	#End getting associations from the vector space
+
+	score = 0
+	max_score = 0
+	for i in range (0,len(all_sensations)):
+		x = vector_space_associations[i]
+		y = sensations_to_key[all_sensations[i]]
+		file.write_line_to_file("sense_association_"+all_sensations[i]+" = "+ str(y)+";")
+		max_score = max_score + len(y)
+		for word in y:
+			if word in x:
+				score = score + 1
+
+
+	result = (score*1.0)/max_score
+
+	print(result)
+	file.write_line_to_file("")
+	file.write_line_to_file("%Result is: "+str(score)+" of "+str(max_score))
+	file.write_line_to_file("result = "+str(result))

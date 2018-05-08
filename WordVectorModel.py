@@ -65,6 +65,24 @@ class WordVectorModel:
 		return result_list_words[0:10],result_list_values[0:10]
 	#End get_ordered_associations
 
+	def get_excluding_ordered_associations(self,target_word,exclude_list,nbr_associations):
+		target_word_index = self.words.index(target_word)
+		result_list_values = []
+		result_list_words = []
+		for i in range(len(self.words)):
+			if not i == target_word_index:
+				#print(self.matrix[target_word_index])
+				#print(self.matrix[i])
+				r = spatial.distance.cosine(self.matrix[target_word_index],self.matrix[i])
+				insertion_point = bisect.bisect(result_list_values, r)
+
+				result_list_values.insert(insertion_point, r)
+				result_list_words.insert(insertion_point, self.words[i])
+
+		fina_result_list_words = [word for word in result_list_words if word not in exclude_list]
+		return fina_result_list_words[0:nbr_associations]
+	#End get_ordered_associations
+
 #text_handler = FileReader("testtext.txt")
 #text_handler = FileReader("UK_weather_2018_march_clean.txt")
 #text_handler = FileReader("fables_and_animal_stories_all_clean.txt")
