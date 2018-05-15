@@ -146,6 +146,8 @@ def evalaute_chunking():
 	
 	#//-----------------------------------------------------------------------------------------------------------------------------------------------------\\
 	#Let the animat learn new words
+	SPACE = True
+
 	TIME_OF_START_OF_LEARNING_WORDS = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
 	if verbose:
 		print("Starting learning words")
@@ -165,12 +167,13 @@ def evalaute_chunking():
 
 			time = time + 1
 
-		#Give the Animat a space between words
-		#time = time + 1
-		#test_environment.next_state = " "
-		#test_environment.update()
-		#test_animat.update(time)
-		
+		if(SPACE):
+			#Give the Animat a space between words
+			time = time + 1
+			test_environment.next_state = " "
+			test_environment.update()
+			test_animat.update(time)
+		#print(time)
 	#End for loop
 	if verbose:
 		print("Done learning words")

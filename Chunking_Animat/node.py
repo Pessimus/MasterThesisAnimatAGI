@@ -72,6 +72,12 @@ class Node:
 		return 1
 	#End activation_time()
 
+	def get_all_input(self):
+		res = {self}
+		for input in self.inputs:
+			res = res | input.get_all_input()
+		return res
+
 	#SHOULD BE OVERWRITTEN BY SUBCLASSES
 	#Returns true if this node has just gotten the first input it needs to become active.
 	def starting_active(self):

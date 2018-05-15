@@ -220,11 +220,85 @@ class Network():
 			node.tick(time)
 
 		#update short term memory
+		self.short_term_memory = [(t+1,s) for (t,s) in self.short_term_memory]#update all the times stored in the short term memory.
+
 		topactive_nodes = self.get_topactive_nodes()
-		self.short_term_memory.insert(0,topactive_nodes)
+
+
+		#memory_tuple = (0,topactive_nodes)
+		memory_tuple = self.chunk_short_term_memory(topactive_nodes)
+		self.short_term_memory.insert(0,memory_tuple)
+
 		if(len(self.short_term_memory) > self.memory_capacity):
 			self.short_term_memory.pop()
 	#End tick()
+
+	#Chunkes the short term memory, and returns a tuple of 0 and all nodes that are part of the new chunk to be inserted.
+	def chunk_short_term_memory(self, current_topactives):
+
+		debug = False
+		if("cat" in [n.get_word() for n in current_topactives]):
+			debug = True
+			print("CAT!!!!!!!")
+			for t,e in self.short_term_memory:
+				print(t)
+				print([n.get_word() for n in e])
+			print()
+			print([w.get_word() for w in current_topactives])
+
+
+		longest_node = 0
+		for node in current_topactives:
+			longest_node = max(longest_node, node.activation_time())
+
+		past_topactives = set()
+
+		i = 0
+		while i < len(self.short_term_memory):
+			time, tmp_topactives = self.short_term_memory[i]
+			if(time < longest_node):
+				longest_past = 0
+				for node in tmp_topactives:
+					longest_past = max(longest_past, node.activation_time())
+				if (time + longest_past) <= longest_node:
+					past_topactives = past_topactives | tmp_topactives
+				else:
+					break
+			else:
+				break
+			i = i + 1
+
+		while i > 0:
+			self.short_term_memory.pop(0)
+			i = i - 1
+
+#		all_inputs = set()
+#		for node in current_topactives:
+#			all_inputs = all_inputs | node.get_all_input()
+
+#		if debug:
+#			print("set minus:")
+#			print(past_topactives)
+#			print(all_inputs)
+#		past_topactives = past_topactives - all_inputs
+
+#		if debug:
+#			print(past_topactives)
+
+#		topactives = set(current_topactives) | past_topactives
+
+		if(debug):
+			print("CAT!!!!!!! (After)")
+			for t,e in self.short_term_memory:
+				print(t)
+				print([n.get_word() for n in e])
+			#print()
+			#print([w.get_word() for w in topactives])
+
+#		return (0,topactives)
+		return (0,set(current_topactives))
+
+	#End chunk_short_term_memory()
 
 	#Method for debugging, returns all the 'words' reprecented by the nodes in the network.
 	def print_network(self):
@@ -301,18 +375,30 @@ class Network():
 		#print(" ")
 		#print("usm")
 		#print([n.get_word() for n in self.get_topactive_nodes()])
+		#for node in topactive_nodes:
+		#	#print(node.get_word())
+		#	activation_time = node.activation_time()
+		#	if len(self.short__term_memory) > activation_time:
+		#		previous_top_actives = self.short__term_memory[activation_time]
+		#		#print(node.get_word())
+		#		#print([n.get_word() for n in previous_top_actives])
+		#		for node_prime in previous_top_actives:
+		#			node_index = node.get_index()
+		#			node_prime_index = node_prime.get_index()
+		#			(self.sequence_matrix[node_index][node_prime_index]).append(1)
+		#			#end else
+
 		for node in topactive_nodes:
-			#print(node.get_word())
 			activation_time = node.activation_time()
-			if len(self.short_term_memory) > activation_time:
-				previous_top_actives = self.short_term_memory[activation_time]
-				#print(node.get_word())
-				#print([n.get_word() for n in previous_top_actives])
-				for node_prime in previous_top_actives:
-					node_index = node.get_index()
-					node_prime_index = node_prime.get_index()
-					(self.sequence_matrix[node_index][node_prime_index]).append(1)
-					#end else
+			for i in range(len(self.short_term_memory)):
+				time, previous_top_actives = self.short_term_memory[i]
+				if time == activation_time:
+					for node_prime in previous_top_actives:
+						node_index = node.get_index()
+						node_prime_index = node_prime.get_index()
+						(self.sequence_matrix[node_index][node_prime_index]).append(1)
+
+
 	#End update_sequence_matrix()
 
 	#Updates the values of the transition matrix, depending on what nodes were active, and what nodes are topactive.
@@ -385,7 +471,7 @@ class Network():
 			
 
 			#update time-extended conditional matrix
-			for previous_top_actives in (self.short_term_memory[1:]):
+			for (time, previous_top_actives) in (self.short_term_memory[1:]):
 				for second_node in previous_top_actives:
 					second_node_index = second_node.get_index()
 					dividend = self.time_extended_conditional_matrix[first_node_index][second_node_index]
