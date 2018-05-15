@@ -14,7 +14,7 @@ import random
 import datetime
 from WordVectorModel import *
 #import goal_two_input
-import texts.goal_two_input
+import goal_two_input
 
 def create_nodes_for_alphabet(test_environment):
 	sensor_node_a = SensorNode(name = "a-sensor",sensor = "a", environment =  test_environment)
