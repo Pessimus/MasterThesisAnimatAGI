@@ -1,47 +1,47 @@
 def get_input():
 	
 	sensations = {}
-	sensations["winter"] = {"cold", "white"}
-	sensations["summer"] = {"warm", "light", "green"}
+	sensations["winter"] = {"[cold]", "[white]"}
+	sensations["summer"] = {"[warm]", "[light]", "[green]"}
 
-	sensations["cat"] = {"soft", "warm", "small", "sharp"}
-	sensations["dog"] = {"soft", "warm", "loud", "big"}
-	sensations["kitten"] = {"soft", "warm", "tiny", "sharp"}
-	sensations["puppy"] = {"soft", "warm", "loud", "small"}
-	sensations["bird"] = {"small", "loud", "tiny"}
+	sensations["cat"] = {"[soft]", "[warm]", "[small]", "[sharp]"}
+	sensations["dog"] = {"[soft]", "[warm]", "[loud]", "[big]"}
+	sensations["kitten"] = {"[soft]", "[warm]", "[tiny]", "[sharp]"}
+	sensations["puppy"] = {"[soft]", "[warm]", "[loud]", "[small]"}
+	sensations["bird"] = {"[small]", "[loud]", "[tiny]"}
 	#sensations["lamp"] = {"light"}
 
 	#sensations["cookie"] = {"sweet", "hard"}
-	sensations["berry"] = {"sweet", "soft", "tiny", "red"}
+	sensations["berry"] = {"[sweet]", "[soft]", "[tiny]", "[red]"}
 	#sensations["lemon"] = {"sour"}
 	#sensations["icecream"] = {"sweet", "cold", "soft"}
-	sensations["milk"] = {"white", "wet", "cold", "sweet"}
+	sensations["milk"] = {"[white]", "[wet]", "[cold]", "[sweet]"}
 
-	sensations["water"] = {"wet", "blue", "cold", "warm"}
-	sensations["ice"] = {"cold", "hard", "blue", "white"}
-	sensations["snow"] = {"cold", "white", "soft"}
-	sensations["rain"] = {"cold", "wet"}
-	sensations["sun"] = {"light", "warm", "yellow", "red"}
+	sensations["water"] = {"[wet]", "[blue]", "[cold]", "[warm]"}
+	sensations["ice"] = {"[cold]", "[hard]", "[blue]", "[white]"}
+	sensations["snow"] = {"[cold]", "[white]", "[soft]"}
+	sensations["rain"] = {"[cold]", "[wet]"}
+	sensations["sun"] = {"[light]", "[warm]", "[yellow]", "[red]"}
 
-	sensations["night"] = {"dark", "quiet", "black", "cold"}
-	sensations["day"] = {"light", "loud", "warm"}
+	sensations["night"] = {"[dark]", "[quiet]", "[black]", "[cold]"}
+	sensations["day"] = {"[light]", "[loud]", "[warm]"}
 
-	sensations["green"] = {"green"}
-	sensations["white"] = {"white"}
-	sensations["black"] = {"black"}
+	sensations["green"] = {"[green]"}
+	sensations["white"] = {"[white]"}
+	sensations["black"] = {"[black]"}
+	sensations["red"] = {"[red]"}
 
-	sensations["wet"] = {"wet"}
-	sensations["cold"] = {"cold"}
+	sensations["wet"] = {"[wet]"}
+	sensations["cold"] = {"[cold]"}
+	sensations["frozen"] = {"[cold]", "[hard]"}
 
-	sensations["frozen"] = {"cold", "hard"}
+	sensations["leaves"] = {"[green]", "[small]"}
+	sensations["tree"] = {"[green]", "[big]"}
+	sensations["bush"] = {"[green]", "[small]", "[soft]", "[sharp]"}
+	sensations["grass"] = {"[green]", "[soft]", "[tiny]"}
 
-	sensations["leaves"] = {"green", "small"}
-	sensations["tree"] = {"green", "big"}
-	sensations["bush"] = {"green", "small", "soft", "sharp"}
-	sensations["grass"] = {"green", "soft", "tiny"}
-
-	sensations["lake"] = {"wet", "blue", "big"}
-	sensations["river"] = {"wet", "blue"}
+	sensations["lake"] = {"[wet]", "[blue]", "[big]"}
+	sensations["river"] = {"[wet]", "[blue]"}
 
 	keywords = list(sensations.keys())
 
