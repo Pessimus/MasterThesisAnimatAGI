@@ -236,31 +236,35 @@ class Network():
 	#Chunkes the short term memory, and returns a tuple of 0 and all nodes that are part of the new chunk to be inserted.
 	def chunk_short_term_memory(self, current_topactives):
 
-		debug = False
-		if("cat" in [n.get_word() for n in current_topactives]):
-			debug = True
-			print("CAT!!!!!!!")
-			for t,e in self.short_term_memory:
-				print(t)
-				print([n.get_word() for n in e])
-			print()
-			print([w.get_word() for w in current_topactives])
+		#debug = False
+		#if("cat" in [n.get_word() for n in current_topactives]):
+		#	debug = True
+		#	print("CAT!!!!!!!")
+		#	for t,e in self.short_term_memory:
+		#		print(t)
+		#		print([n.get_word() for n in e])
+		#	print()
+		#	print([w.get_word() for w in current_topactives])
 
 
-		longest_node = 0
+		longest_node_length = 0
+		longest_node = -1
 		for node in current_topactives:
-			longest_node = max(longest_node, node.activation_time())
+			if longest_node_length < node.activation_time():
+				longest_node_length = node.activation_time()
+				longest_node = node
+			#longest_node_length = max(longest_node_length, node.activation_time())
 
 		past_topactives = set()
 
 		i = 0
 		while i < len(self.short_term_memory):
 			time, tmp_topactives = self.short_term_memory[i]
-			if(time < longest_node):
+			if(time < longest_node_length):
 				longest_past = 0
 				for node in tmp_topactives:
 					longest_past = max(longest_past, node.activation_time())
-				if (time + longest_past) <= longest_node:
+				if (time + longest_past) <= longest_node_length:
 					past_topactives = past_topactives | tmp_topactives
 				else:
 					break
@@ -271,6 +275,22 @@ class Network():
 		while i > 0:
 			self.short_term_memory.pop(0)
 			i = i - 1
+
+		memory_adds = current_topactives
+		#Handel interstellar bug (win, int, "winter")
+		if longest_node_length > 1 and not longest_node == -1:
+			last_time, last_tas = self.short_term_memory[0]
+			if last_time == 1: #current sequense overlaps previous sequense with all but one element.
+				longest_inputs = longest_node.get_all_input()
+				current_actives = [a for a in (self.sensors + self.perception_nodes) if a.is_active()]
+				possible_adds = [n for n in longest_inputs if (n in current_actives)]
+				possible_adds = [n for n in possible_adds if not (n in current_topactives)]
+				possible_adds = [n for n in possible_adds if n.activation_time() == 1]
+				if(len(possible_adds)>0):
+					memory_adds.append(possible_adds[0])
+
+
+
 
 #		all_inputs = set()
 #		for node in current_topactives:
@@ -287,16 +307,18 @@ class Network():
 
 #		topactives = set(current_topactives) | past_topactives
 
-		if(debug):
-			print("CAT!!!!!!! (After)")
-			for t,e in self.short_term_memory:
-				print(t)
-				print([n.get_word() for n in e])
+	#	if(debug):
+	#		print("CAT!!!!!!! (After)")
+	#	print("debug")
+	#	for t,e in self.short_term_memory:
+	#		print(t)
+	#		print([n.get_word() for n in e])
 			#print()
-			#print([w.get_word() for w in topactives])
+	#	print([w.get_word() for w in memory_adds])
 
 #		return (0,topactives)
-		return (0,set(current_topactives))
+		return (0,set(memory_adds))
+	#	return (0,set(current_topactives))
 
 	#End chunk_short_term_memory()
 
@@ -370,11 +392,13 @@ class Network():
 				self.sequence_matrix[i][j] = v2
 
 		#Add new tick counters.
-		topactive_nodes = self.get_topactive_nodes()
+		#topactive_nodes = self.get_topactive_nodes()
+		t, topactive_nodes = self.short_term_memory[0]
+
 
 		#print(" ")
 		#print("usm")
-		#print([n.get_word() for n in self.get_topactive_nodes()])
+		#print([n.get_word() for n in topactive_nodes])
 		#for node in topactive_nodes:
 		#	#print(node.get_word())
 		#	activation_time = node.activation_time()
@@ -424,7 +448,9 @@ class Network():
 	#Assumes that last_action is a valid action.
 	def update_transition_matrix(self, last_action):
 		#probability of 3 becoming topactive if 2 was preformed when 1 was active.
+		
 		topactive_nodes = self.get_topactive_nodes()
+
 		input_nodes = self.sensors + self.perception_nodes
 		#for last_state_node in input_nodes:
 		#	if last_state_node.was_active():
@@ -502,6 +528,8 @@ class Network():
 		#loop from 1 to avoid True node which is at index 1
 		last_value = 0
 		for i in range(1,x):
+			v = self.sequence_matrix[i][0] #possible bug fix (180516)
+			temp_mat[(i*y)+0] = last_value #possible bug fix (180516)
 			for j in range(1,y):
 				v = self.sequence_matrix[i][j]
 				last_value = last_value + len(v)
