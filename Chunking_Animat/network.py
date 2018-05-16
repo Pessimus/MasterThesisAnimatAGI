@@ -237,20 +237,12 @@ class Network():
 
 	#Chunkes the short term memory, and returns a tuple of 0 and all nodes that are part of the new chunk to be inserted.
 	def chunk_short_term_memory(self, current_topactives):
-		self.chunked_this_tick = False
-		#debug = False
-		#if("cat" in [n.get_word() for n in current_topactives]):
-		#	debug = True
-		#	print("CAT!!!!!!!")
-		#	for t,e in self.short_term_memory:
-		#		print(t)
-		#		print([n.get_word() for n in e])
-		#	print()
-		#	print([w.get_word() for w in current_topactives])
 
+		self.chunked_this_tick = False
 
 		longest_node_length = 0
 		longest_node = -1
+
 		for node in current_topactives:
 			if longest_node_length < node.activation_time():
 				longest_node_length = node.activation_time()
@@ -297,33 +289,21 @@ class Network():
 
 
 
-#		all_inputs = set()
-#		for node in current_topactives:
-#			all_inputs = all_inputs | node.get_all_input()
+	# 	if(debug):
+	# 		print("")
+	# 		print("This is what is in the short term memory at the end of chunking: ")
+	# 		for t, e in self.short_term_memory:
+	# 				print("Time t = " + str(t) + " elements e = " + str([n.get_word() for n in e]))
+	# 		print("")
+	# 		print("This is what chunking method returns: ")
+	# 		print("(0," + str([w.get_word() for w in memory_adds]))
 
-#		if debug:
-#			print("set minus:")
-#			print(past_topactives)
-#			print(all_inputs)
-#		past_topactives = past_topactives - all_inputs
-
-#		if debug:
-#			print(past_topactives)
-
-#		topactives = set(current_topactives) | past_topactives
-
-	#	if(debug):
-	#		print("CAT!!!!!!! (After)")
-	#	print("debug")
-	#	for t,e in self.short_term_memory:
-	#		print(t)
-	#		print([n.get_word() for n in e])
-			#print()
-	#	print([w.get_word() for w in memory_adds])
+	# 		print("-------------------- HERE THE CHUNKING METHOD ENDS -------------------------")	
 
 #		return (0,topactives)
 		return (0,set(memory_adds))
 	#	return (0,set(current_topactives))
+
 
 	#End chunk_short_term_memory()
 
