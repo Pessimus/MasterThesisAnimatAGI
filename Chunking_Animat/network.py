@@ -235,16 +235,31 @@ class Network():
 
 	#Chunkes the short term memory, and returns a tuple of 0 and all nodes that are part of the new chunk to be inserted.
 	def chunk_short_term_memory(self, current_topactives):
-
+		#print("-------------------- CALLING CHUNKING METHOD -------------------------")
 		debug = False
-		if("cat" in [n.get_word() for n in current_topactives]):
-			debug = True
-			print("CAT!!!!!!!")
-			for t,e in self.short_term_memory:
-				print(t)
-				print([n.get_word() for n in e])
-			print()
-			print([w.get_word() for w in current_topactives])
+
+		# if("win" in [n.get_word() for n in current_topactives] or "int" in [n.get_word() for n in current_topactives] or "ter" in [n.get_word() for n in current_topactives] or "inte" in [n.get_word() for n in current_topactives] or "nte" in [n.get_word() for n in current_topactives]):
+		# 	debug = True
+		# 	print("DEBUG!!!")
+		# 	for t,e in self.short_term_memory:
+		# 		print("At time ")
+		# 		print(t)
+		# 		print(" short term memory contains")
+		# 		print([n.get_word() for n in e])
+		# 	print("current top actives contains")
+		# 	print([w.get_word() for w in current_topactives])
+
+
+		# debug = True
+		# if (debug):
+		# 	print("")
+		# 	print("Short term memory:")
+		# 	for t, e in self.short_term_memory:
+		# 		print("Time t = " + str(t) + " elements e = " + str([n.get_word() for n in e]))
+
+		# 	print("")
+		# 	print("Current top actives:")
+		# 	print([w.get_word() for w in current_topactives])
 
 
 		longest_node = 0
@@ -287,15 +302,27 @@ class Network():
 
 #		topactives = set(current_topactives) | past_topactives
 
-		if(debug):
-			print("CAT!!!!!!! (After)")
-			for t,e in self.short_term_memory:
-				print(t)
-				print([n.get_word() for n in e])
+		# if(debug):
+		# 	print("DEBUG!!!!!!! (After)")
+		# 	for t,e in self.short_term_memory:
+		# 		print("At time ")
+		# 		print(t)
+		# 		print("short term memory contains ")
+		# 		print([n.get_word() for n in e])
 			#print()
 			#print([w.get_word() for w in topactives])
+	# 	if(debug):
+	# 		print("")
+	# 		print("This is what is in the short term memory at the end of chunking: ")
+	# 		for t, e in self.short_term_memory:
+	# 				print("Time t = " + str(t) + " elements e = " + str([n.get_word() for n in e]))
+	# 		print("")
+	# 		print("This is what chunking method returns: ")
+	# 		print("(0," + str([w.get_word() for w in current_topactives]))
 
-#		return (0,topactives)
+	# #		return (0,topactives)
+
+	# 		print("-------------------- HERE THE CHUNKING METHOD ENDS -------------------------")	
 		return (0,set(current_topactives))
 
 	#End chunk_short_term_memory()
