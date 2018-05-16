@@ -128,14 +128,9 @@ class Animat:
 				indices = bisect.bisect(probabilities, r)
 				node2_index,node1_index = np.unravel_index(indices, (len(self.network.sequence_matrix),len(self.network.sequence_matrix[0])))
 
-	#			w1 = (self.network.sensors+self.network.perception_nodes)[node1_index].get_word() 
-	#			w2 = (self.network.sensors+self.network.perception_nodes)[node2_index].get_word()
+				inputnodes = self.network.sensors + self.network.perception_nodes
 
 				success = self.network.create_and_add_seq_node(node1_index, node2_index, probabilistic_add_action)
-
-	#			if success:
-	#				print("Combining "+w1+" "+str(node1_index)+" with "+w2+" "+str(node2_index))
-			#print("added node")
 
 	#End learn
 

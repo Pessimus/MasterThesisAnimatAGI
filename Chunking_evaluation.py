@@ -71,7 +71,7 @@ def create_nodes_for_alphabet(test_environment):
 	sensors = [sensor_node_a, sensor_node_b, sensor_node_c, sensor_node_d, sensor_node_e, sensor_node_f, sensor_node_g, sensor_node_h, sensor_node_i, sensor_node_j, sensor_node_k, sensor_node_l, sensor_node_m, sensor_node_n, sensor_node_o, sensor_node_p, sensor_node_q, sensor_node_r, sensor_node_s, sensor_node_t, sensor_node_u, sensor_node_v, sensor_node_w, sensor_node_x, sensor_node_y, sensor_node_z]
 	motors = [motor_node_a, motor_node_b, motor_node_c, motor_node_d, motor_node_e, motor_node_f, motor_node_g, motor_node_h, motor_node_i, motor_node_j, motor_node_k, motor_node_l, motor_node_m, motor_node_n, motor_node_o, motor_node_p, motor_node_q, motor_node_r, motor_node_s, motor_node_t, motor_node_u, motor_node_v, motor_node_w, motor_node_x, motor_node_y, motor_node_z]
 
-	#sensors = [sensor_node_d,sensor_node_o,sensor_node_g]
+	#sensors = [sensor_node_a, sensor_node_d,sensor_node_o,sensor_node_g]
 	#motors = [motor_node_d,motor_node_o,motor_node_g]
 
 	#from random import shuffle
@@ -101,6 +101,7 @@ def evalaute_chunking():
 	#INPUT_FILE_NAME = "texts/test_text_shuffled_clean.txt"
 	input_file = FileReader(INPUT_FILE_NAME)
 	entire_text = input_file.get_entire_file_as_array()
+	#entire_text = ["dog"]
 	unique_words = []
 	for word in entire_text:
 		if not word in unique_words:
@@ -190,7 +191,8 @@ def evalaute_chunking():
 				print("Animat has learnt the word: "+word)
 			else:
 				print("Animat has not learnt word: "+word)
-
+	#	for r in test_animat.network.sequence_matrix:
+	#		print([len(e) for e in r])
 		#print("Nbr of nodes = " + str(test_animat.network.total_number_of_input_nodes))
 		#print("Association matrix sum = " + str(sum([sum(s) for s in test_animat.network.time_extended_conditional_matrix])))
 	#\\-----------------------------------------------------------------------------------------------------------------------------------------------------//
