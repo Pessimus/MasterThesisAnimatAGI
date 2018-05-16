@@ -45,6 +45,8 @@ class Network():
 		self.total_number_of_output_nodes = self.number_of_motors + self.number_of_action_nodes
 		self.total_number_of_nodes = self.total_number_of_input_nodes + self.total_number_of_output_nodes
 
+		self.chunked_this_tick = False
+
 		#initialize short term memories
 		self.memory_capacity = memory_capacity
 		self.short_term_memory = []
@@ -235,7 +237,7 @@ class Network():
 
 	#Chunkes the short term memory, and returns a tuple of 0 and all nodes that are part of the new chunk to be inserted.
 	def chunk_short_term_memory(self, current_topactives):
-
+		self.chunked_this_tick = False
 		#debug = False
 		#if("cat" in [n.get_word() for n in current_topactives]):
 		#	debug = True
@@ -271,6 +273,9 @@ class Network():
 			else:
 				break
 			i = i + 1
+
+		if i > 0:
+			self.chunked_this_tick = True
 
 		while i > 0:
 			self.short_term_memory.pop(0)
@@ -485,31 +490,27 @@ class Network():
 	#End update_generators()
 
 	def update_conditional_matrices(self):
-		top_active_nodes = self.get_topactive_nodes()
-		for first_node in top_active_nodes:
-			first_node_index = first_node.get_index()
+		if(not self.chunked_this_tick and len(self.short_term_memory) > 1):
 
-			#update conditional matrix
-			#for second_node in top_active_nodes:
-			#	second_node_index = second_node.get_index()
-			#	dividend = self.conditional_matrix[first_node_index][second_node_index]
-			#	self.conditional_matrix[first_node_index][second_node_index] = dividend + 1
-			
+			#top_active_nodes = self.get_topactive_nodes()
+			t, top_active_nodes = self.short_term_memory[1]
+			for first_node in top_active_nodes:
+				first_node_index = first_node.get_index()
 
-			#update time-extended conditional matrix
-			for (time, previous_top_actives) in (self.short_term_memory[1:]):
-				for second_node in previous_top_actives:
-					second_node_index = second_node.get_index()
-					dividend = self.time_extended_conditional_matrix[first_node_index][second_node_index]
-					#print("Debug")
-					#print(dividend)
-					self.time_extended_conditional_matrix[first_node_index][second_node_index] = dividend + 1
-					dividend = self.time_extended_conditional_matrix[second_node_index][first_node_index]
-					self.time_extended_conditional_matrix[second_node_index][first_node_index] = dividend + 1
+				#update time-extended conditional matrix
+				for (time, previous_top_actives) in (self.short_term_memory[2:]):
+					for second_node in previous_top_actives:
+						second_node_index = second_node.get_index()
+						dividend = self.time_extended_conditional_matrix[first_node_index][second_node_index]
+						#print("Debug")
+						#print(dividend)
+						self.time_extended_conditional_matrix[first_node_index][second_node_index] = dividend + 1
+						dividend = self.time_extended_conditional_matrix[second_node_index][first_node_index]
+						self.time_extended_conditional_matrix[second_node_index][first_node_index] = dividend + 1
 
-			#count total nbr of occurences of this node
-			divisor = self.conditional_matrix_divisor[first_node_index]
-			self.conditional_matrix_divisor[first_node_index] = divisor + 1
+				#count total nbr of occurences of this node
+				divisor = self.conditional_matrix_divisor[first_node_index]
+				self.conditional_matrix_divisor[first_node_index] = divisor + 1
 	#End update_conditional_matrices()
 
 	def get_cumulative_seq_matrix(self):

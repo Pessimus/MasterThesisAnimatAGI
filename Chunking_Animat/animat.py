@@ -104,7 +104,7 @@ class Animat:
 				most_specific_so_far = node.get_index()
 
 		association_values, associated_nodes = self.network.associate(most_specific_so_far)
-#		association_values, associated_nodes = self.network.associate(1)
+		#association_values, associated_nodes = self.network.associate(1)
 
 		return_list = [nodes[n].get_word() for n in associated_nodes]
 

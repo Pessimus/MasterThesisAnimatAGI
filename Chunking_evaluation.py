@@ -119,29 +119,25 @@ def evalaute_chunking():
 
 	#//-----------------------------------------------------------------------------------------------------------------------------------------------------\\
 	TIME_OF_START_OF_BABBLING = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
-#	if verbose:
-#		print("Starting babbling")
-#	#Let the animat discover generators for the sensors by babbling
-#	while((-1) in test_animat.network.generator_list):
-#	#for y in range(0,300):
-#		time = time + 1
-#		test_animat.update(time, babble = True)
-#		test_environment.update()
-#
+	if verbose:
+		print("Starting babbling")
+	#Let the animat discover generators for the sensors by babbling
+	while((-1) in test_animat.network.generator_list):
+	#for y in range(0,300):
+		time = time + 1
+		test_animat.update(time, babble = True)
+		test_environment.update()
+
 	RESULT_time_to_learn_all_generators = time
-#
-#	print(test_animat.network.sequence_matrix)
-#
-#	#Handle transition from babbling
-#	time = time + 1
-#	test_animat.update(time, babble = False)
-#	test_environment.update()
-#
-#
-#	if verbose:
-#		print("Done babbling")
-#		animat_nodes_as_strings = [n.get_word() for n in (test_animat.network.sensors + test_animat.network.perception_nodes)]
-#		print(animat_nodes_as_strings)
+
+	#Handle transition from babbling
+	time = time + 1
+	test_animat.update(time, babble = False)
+	test_environment.update()
+
+
+	if verbose:
+		print("Done babbling")
 
 	#\\-----------------------------------------------------------------------------------------------------------------------------------------------------//
 	
@@ -182,152 +178,150 @@ def evalaute_chunking():
 		#for i in range(0,len(test_animat.network.sequence_matrix)):
 		#	print([len(e) for e in test_animat.network.sequence_matrix[i]])
 
-		animat_nodes_as_strings = [n.get_word() for n in (test_animat.network.sensors + test_animat.network.perception_nodes)]
-		print(animat_nodes_as_strings)
+	#	animat_nodes_as_strings = [n.get_word() for n in (test_animat.network.sensors + test_animat.network.perception_nodes)]
+	#	print(animat_nodes_as_strings)
 
-		for word in unique_words:
-			if(word in animat_nodes_as_strings):
-				print("Animat has learnt the word: "+word)
-			else:
-				print("Animat has not learnt word: "+word)
+	#	for word in unique_words:
+	#		if(word in animat_nodes_as_strings):
+	#			print("Animat has learnt the word: "+word)
+	#		else:
+	#			print("Animat has not learnt word: "+word)
 	#	for r in test_animat.network.sequence_matrix:
 	#		print([len(e) for e in r])
 		#print("Nbr of nodes = " + str(test_animat.network.total_number_of_input_nodes))
 		#print("Association matrix sum = " + str(sum([sum(s) for s in test_animat.network.time_extended_conditional_matrix])))
 	#\\-----------------------------------------------------------------------------------------------------------------------------------------------------//
 	
-	# #//-----------------------------------------------------------------------------------------------------------------------------------------------------\\
-	# #Let the Animat lear to associate
-	# TIME_OF_START_OF_LEARNING_ASSOCIATIONS = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
-	# if verbose:
-	# 	print("Starting learning associations")
-	# test_animat.seq_formation_probability = 0
-	# test_animat.learn_to_associate = True
+	#//-----------------------------------------------------------------------------------------------------------------------------------------------------\\
+	 #Let the Animat lear to associate
+	TIME_OF_START_OF_LEARNING_ASSOCIATIONS = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
+	if verbose:
+		print("Starting learning associations")
+	test_animat.seq_formation_probability = 0
+	test_animat.learn_to_associate = True
 
-	# #last_word = "!"
+	for word in entire_text:
+		time = time + 1
 
-	# for word in entire_text:
-	# 	time = time + 1
-	# 	#test_environment.temporal_state = word
-	# 	test_environment.next_temporal_state = word
-	# 	test_environment.update()
+		for char in word:
+			test_environment.next_state = char
+			test_environment.update()
 
-	# 	test_animat.update_goal_one_version(time,len(word))
+			#Update the Animat
+			test_animat.update(time)
 
-	# 	#Give the Animat a space between words
-	# 	time = time + 1
-	# 	#test_environment.temporal_state = " "
-	# 	test_environment.next_temporal_state = " "
-	# 	test_environment.update()
-	# 	test_animat.update_goal_one_version(time,1)
+			time = time + 1
 
-	# 	#tas = [n.get_word() for n in test_animat.network.get_topactive_nodes()]
-	# 	#if("la" in tas):
-	# 	#	print("Ehuru evad?!")
-	# 	#	print(last_word)
-	# 	#	print(word)
+		if(SPACE):
+			#Give the Animat a space between words
+			time = time + 1
+			test_environment.next_state = " "
+			test_environment.update()
+			test_animat.update(time)
 
-	# 	#last_word = word
-
-	# if verbose:
-	# 	print("Done learning associations")
-	# 	#print("Nbr of nodes = " + str(test_animat.network.total_number_of_input_nodes))
-	# #\\-----------------------------------------------------------------------------------------------------------------------------------------------------//
+	if verbose:
+		print("Done learning associations")
+		#print("Nbr of nodes = " + str(test_animat.network.total_number_of_input_nodes))
+	#\\-----------------------------------------------------------------------------------------------------------------------------------------------------//
 	
-	# #//-----------------------------------------------------------------------------------------------------------------------------------------------------\\
-	# #Evaluate
-	# TIME_OF_START_OF_EVALUATION = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
-	# if verbose:
-	# 	print("Begining actual evaluation")
-	# test_animat.learn_to_associate = False
+	#//-----------------------------------------------------------------------------------------------------------------------------------------------------\\
+	#Evaluate
+	TIME_OF_START_OF_EVALUATION = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
+	if verbose:
+		print("Begining actual evaluation")
+	test_animat.learn_to_associate = False
 
-	# file = FileWriter("evaluationIO/" + "Goal1_Result_from" + TIME_OF_START_OF_RUN + "_to" + datetime.datetime.now().strftime("%y%m%d_%H%M%S") + ".m")
-	# file.write_line_to_file("")
+	file = FileWriter("evaluationIO/" + "Goal1_Chunk_Result_from" + TIME_OF_START_OF_RUN + "_to" + datetime.datetime.now().strftime("%y%m%d_%H%M%S") + ".m")
+	file.write_line_to_file("")
 
-	# file.write_line_to_file("% Animat Associations:")
+	file.write_line_to_file("% Animat Associations:")
 
-	# animat_associations = []
+	animat_associations = []
 
-	# for word in unique_words:
-	# 	time = time + 1
-	# 	#test_environment.temporal_state = word
-	# 	test_environment.next_temporal_state = word
-	# 	test_environment.update()
+	for word in unique_words:
+		time = time + 1
 
-	# 	test_animat.update_goal_one_version(time,len(word))
+		for char in word:
+			test_environment.next_state = char
+			test_environment.update()
 
-	# 	word_associations = test_animat.associate()
-	# 	animat_associations.append(word_associations)
-	# 	file.write_line_to_file("animat_associations_"+word+" = " + str(word_associations) + ";")
+			#Update the Animat
+			test_animat.update(time)
 
-	# 	#Give the Animat a space between words
-	# 	time = time + 1
-	# 	#test_environment.temporal_state = " "
-	# 	test_environment.next_temporal_state = " "
-	# 	test_environment.update()
-	# 	test_animat.update_goal_one_version(time,1)
+			time = time + 1
 
-	# #End getting associations from the Animat
+		word_associations = test_animat.associate()
+		animat_associations.append(word_associations)
+		file.write_line_to_file("animat_associations_"+word+" = " + str(word_associations) + ";")
 
-	# file.write_line_to_file("")
-	# file.write_line_to_file("%Vector Space Associations:")
-	# file.write_line_to_file("")
+		if(SPACE):
+			#Give the Animat a space between words
+			time = time + 1
+			test_environment.next_state = " "
+			test_environment.update()
+			test_animat.update(time)
 
+	#End getting associations from the Animat
 
-	# reader = FileReader(INPUT_FILE_NAME)
-	# wvm = WordVectorModel(reader, MEMORY_CAPACITY-1)
-	# wvm.update_matrix()
-
-	# vector_space_associations = []
-	# for word in unique_words:
-	# 	#print("LOOOOOP")
-	# 	word_associations, association_values = wvm.get_ordered_associations(word)
-	# 	vector_space_associations.append(word_associations)
-	# 	#print(len(word_associations))
-	# 	file.write_line_to_file("vsm_associations_"+word+" = " + str(word_associations) + ";")
-	# #End getting associations from the vector space
-
-	# score = 0
-	# for i in range (0,len(unique_words)):
-	# 	x = animat_associations[i]
-	# 	y = vector_space_associations[i]
-	# 	for word in y:
-	# 		if word in x:
-	# 			score = score + 1
-
-	# max_score = len(unique_words)*10
-
-	# result = (score*1.0)/max_score
-
-	# print(result)
-	# file.write_line_to_file("")
-	# file.write_line_to_file("%Result is: "+str(score)+" of "+str(max_score))
-	# file.write_line_to_file("result = "+str(result))
+	file.write_line_to_file("")
+	file.write_line_to_file("%Vector Space Associations:")
+	file.write_line_to_file("")
 
 
-	# TIME_OF_END = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
+	reader = FileReader(INPUT_FILE_NAME)
+	wvm = WordVectorModel(reader, MEMORY_CAPACITY-1)
+	wvm.update_matrix()
 
-	# file.write_line_to_file("")
-	# file.write_line_to_file("TIME_OF_START_OF_RUN = " + TIME_OF_START_OF_RUN)
-	# file.write_line_to_file("TIME_OF_START_OF_BABBLING = " + TIME_OF_START_OF_BABBLING)
-	# file.write_line_to_file("TIME_OF_START_OF_LEARNING_WORDS = " + TIME_OF_START_OF_LEARNING_WORDS)
-	# file.write_line_to_file("TIME_OF_START_OF_LEARNING_ASSOCIATIONS = " + TIME_OF_START_OF_LEARNING_ASSOCIATIONS)
-	# file.write_line_to_file("TIME_OF_START_OF_EVALUATION = " + TIME_OF_START_OF_EVALUATION)
-	# file.write_line_to_file("TIME_OF_END = " + TIME_OF_END)
+	vector_space_associations = []
+	for word in unique_words:
+		#print("LOOOOOP")
+		word_associations, association_values = wvm.get_ordered_associations(word)
+		vector_space_associations.append(word_associations)
+		#print(len(word_associations))
+		file.write_line_to_file("vsm_associations_"+word+" = " + str(word_associations) + ";")
+	#End getting associations from the vector space
 
-	# tmp_animat_words = [n.get_word() for n in (test_animat.network.sensors + test_animat.network.perception_nodes)]
-	# not_learnt_words = []
-	# nbr_words_learnt = 0
-	# for w in unique_words:
-	# 	if w in tmp_animat_words:
-	# 		nbr_words_learnt = nbr_words_learnt + 1
-	# 	else:
-	# 		not_learnt_words.append(w)
+	score = 0
+	for i in range (0,len(unique_words)):
+		x = animat_associations[i]
+		y = vector_space_associations[i]
+		for word in y:
+			if word in x:
+				score = score + 1
 
-	# file.write_line_to_file("")
-	# file.write_line_to_file("nbr_words_learnt = " + str(nbr_words_learnt) + ";")
-	# file.write_line_to_file("not_learnt_words = " + str(not_learnt_words) + ";")	
-	# #End evaluate_goal_one()
+	max_score = len(unique_words)*10
+
+	result = (score*1.0)/max_score
+
+	print(result)
+	file.write_line_to_file("")
+	file.write_line_to_file("%Result is: "+str(score)+" of "+str(max_score))
+	file.write_line_to_file("result = "+str(result))
+
+
+	TIME_OF_END = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
+
+	file.write_line_to_file("")
+	file.write_line_to_file("TIME_OF_START_OF_RUN = " + TIME_OF_START_OF_RUN)
+	file.write_line_to_file("TIME_OF_START_OF_BABBLING = " + TIME_OF_START_OF_BABBLING)
+	file.write_line_to_file("TIME_OF_START_OF_LEARNING_WORDS = " + TIME_OF_START_OF_LEARNING_WORDS)
+	file.write_line_to_file("TIME_OF_START_OF_LEARNING_ASSOCIATIONS = " + TIME_OF_START_OF_LEARNING_ASSOCIATIONS)
+	file.write_line_to_file("TIME_OF_START_OF_EVALUATION = " + TIME_OF_START_OF_EVALUATION)
+	file.write_line_to_file("TIME_OF_END = " + TIME_OF_END)
+
+	tmp_animat_words = [n.get_word() for n in (test_animat.network.sensors + test_animat.network.perception_nodes)]
+	not_learnt_words = []
+	nbr_words_learnt = 0
+	for w in unique_words:
+		if w in tmp_animat_words:
+			nbr_words_learnt = nbr_words_learnt + 1
+		else:
+			not_learnt_words.append(w)
+
+	file.write_line_to_file("")
+	file.write_line_to_file("nbr_words_learnt = " + str(nbr_words_learnt) + ";")
+	file.write_line_to_file("not_learnt_words = " + str(not_learnt_words) + ";")	
+	#End evaluate_goal_one()
 
 
 
