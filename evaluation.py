@@ -718,8 +718,8 @@ def evalaute_goal_two():
 
 	#MAX_TIME = AVERAGE_NUMBER_OF_OCCURRENCES_OF_EACH_WORD * TOTAL_NUMBER_OF_WORDS *2 #*2 to allow for spaces between words.
 	
-	INPUT_FILE_NAME = "texts/cats_dogs_and_trees_shuffled_clean.txt"
-	#INPUT_FILE_NAME = "texts/test_text.txt"
+	#INPUT_FILE_NAME = "texts/cats_dogs_and_trees_shuffled_clean.txt"
+	INPUT_FILE_NAME = "texts/test_text.txt"
 	#INPUT_FILE_NAME = "texts/test_text_shuffled_clean.txt"
 	input_file = FileReader(INPUT_FILE_NAME)
 	entire_text = input_file.get_entire_file_as_array()
@@ -915,16 +915,67 @@ def evalaute_goal_two():
 		for word in y:
 			if word in x:
 				score = score + 1
-
+	file.write_line_to_file("")
 	#print(len(all_sensations))
 	#print(score)
 	#print(max_score)
 	result = (score*1.0)/max_score
 
+
+#-----------key to sense
+
+	animat_associations_key_to_sense = []
+
+	for key in keywords:
+		time = time + 1
+		test_environment.next_temporal_state = key
+		test_environment.update()
+
+		test_animat.update_goal_one_version(time,len(key))
+
+		key_associations = test_animat.associate_non_action(len(key_to_sensations[key]))
+		animat_associations_key_to_sense.append(key_associations)
+		file.write_line_to_file("animat_associations_key_to_sense_"+key+" = " + str(key_associations) + ";")
+
+		#Give the Animat a space between words
+		time = time + 1
+		test_environment.next_temporal_state = " "
+		test_environment.update()
+		test_animat.update_goal_one_version(time,1)
+
+	#End getting associations from the Animat
+
+
+	score_key_to_sense = 0
+	max_score_key_to_sense = 0
+	for i in range (0,len(keywords)):
+		x = animat_associations_key_to_sense[i]
+		y = key_to_sensations[keywords[i]]
+		file.write_line_to_file("key_association_"+keywords[i]+" = "+ str(y)+";")
+		max_score_key_to_sense = max_score_key_to_sense + len(y)
+		for word in y:
+			if word in x:
+				score_key_to_sense = score_key_to_sense + 1
+	file.write_line_to_file("")
+	#print(len(all_sensations))
+	#print(score)
+	#print(max_score)
+	result_key_to_sense = (score_key_to_sense*1.0)/max_score_key_to_sense
+
+
+#-----------end key to sense
+
+
+
 	print(result)
 	file.write_line_to_file("")
 	file.write_line_to_file("%Result is: "+str(score)+" of "+str(max_score))
 	file.write_line_to_file("result = "+str(result))
+
+	print(result_key_to_sense)
+	file.write_line_to_file("")
+	file.write_line_to_file("%Result (key_to_sense) is: "+str(score_key_to_sense)+" of "+str(max_score_key_to_sense))
+	file.write_line_to_file("result = "+str(result_key_to_sense))
 
 
 	TIME_OF_END = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
@@ -958,8 +1009,8 @@ def evaluate_goal_two_vector_space():
 	MEMORY_CAPACITY = 3 #Animat will use x2 to handle space between words.
 	
 	
-	INPUT_FILE_NAME = "texts/cats_dogs_and_trees_shuffled_clean_2.txt"
-	#INPUT_FILE_NAME = "texts/test_text.txt"
+	#INPUT_FILE_NAME = "texts/cats_dogs_and_trees_shuffled_clean_2.txt"
+	INPUT_FILE_NAME = "texts/test_text.txt"
 	#INPUT_FILE_NAME = "texts/test_text_shuffled_clean_2.txt"
 	input_file = FileReader(INPUT_FILE_NAME)
 	entire_text = input_file.get_entire_file_as_array()
