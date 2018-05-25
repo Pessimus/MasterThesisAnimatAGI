@@ -399,13 +399,14 @@ class Network():
 
 		for node in topactive_nodes:
 			activation_time = node.activation_time()
-			for i in range(len(self.short_term_memory)):
-				time, previous_top_actives = self.short_term_memory[i]
-				if time == activation_time:
-					for node_prime in previous_top_actives:
-						node_index = node.get_index()
-						node_prime_index = node_prime.get_index()
-						(self.sequence_matrix[node_index][node_prime_index]).append(1)
+			if activation_time == 1: #REMOVE THIS! This is just a small test. Should (probably) be removed.
+				for i in range(len(self.short_term_memory)):
+					time, previous_top_actives = self.short_term_memory[i]
+					if time == activation_time:
+						for node_prime in previous_top_actives:
+							node_index = node.get_index()
+							node_prime_index = node_prime.get_index()
+							(self.sequence_matrix[node_index][node_prime_index]).append(1)
 
 
 	#End update_sequence_matrix()

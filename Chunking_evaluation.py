@@ -94,8 +94,8 @@ def evalaute_chunking():
 	MEMORY_CAPACITY = 7
 	SEQ_FORMATION_MAX_ATTEMPTS = 10
 
-	#INPUT_FILE_NAME = "texts/cats_dogs_and_trees_shuffled_clean.txt"
-	INPUT_FILE_NAME = "texts/test_text.txt"
+	INPUT_FILE_NAME = "texts/cats_dogs_and_trees_shuffled_clean.txt"
+	#INPUT_FILE_NAME = "texts/test_text.txt"
 	#INPUT_FILE_NAME = "texts/one_sentence.txt"
 	#INPUT_FILE_NAME = "texts/small.txt"
 	#INPUT_FILE_NAME = "texts/test_text_shuffled_clean.txt"
