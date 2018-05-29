@@ -231,6 +231,10 @@ class Network():
 		memory_tuple = self.chunk_short_term_memory(topactive_nodes)
 		self.short_term_memory.insert(0,memory_tuple)
 
+	#	print("Memory contains:")
+	#	for t, e in self.short_term_memory:
+	#		print([n.get_word() for n in e])
+
 		if(len(self.short_term_memory) > self.memory_capacity):
 			self.short_term_memory.pop()
 	#End tick()
@@ -273,7 +277,19 @@ class Network():
 			self.short_term_memory.pop(0)
 			i = i - 1
 
-		memory_adds = current_topactives
+		#memory_adds = current_topactives
+		#TODO: This is a simple method do avoid adding subsequenses to the shoer term memory. Discuss.
+		memory_adds = [longest_node]
+		longest_sequence = longest_node.get_all_sensor_input()
+		for node in current_topactives:
+			tmp_sequence = node.get_all_sensor_input()
+			tmp_len = len(tmp_sequence)
+			longest_end = longest_sequence[-tmp_len:]
+			if not (longest_end == tmp_sequence):
+				memory_adds.append(node)
+
+
+
 		#Handel interstellar bug (win, int, "winter")
 		if longest_node_length > 1 and not longest_node == -1:
 			last_time, last_tas = self.short_term_memory[0]

@@ -185,6 +185,9 @@ class SensorNode(Node):
 			return False
 	#End tick()
 
+	def get_all_sensor_input(self):
+		return [self]
+
 	#Returning the number of ticks required for this node to become active.
 	def activation_time(self):
 		return 1

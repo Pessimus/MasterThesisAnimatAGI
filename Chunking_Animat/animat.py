@@ -103,6 +103,8 @@ class Animat:
 				max_sequence_length = node.activation_time()
 				most_specific_so_far = node.get_index()
 
+	#	print(nodes[most_specific_so_far].get_word())
+
 		association_values, associated_nodes = self.network.associate(most_specific_so_far)
 		#association_values, associated_nodes = self.network.associate(1)
 

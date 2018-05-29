@@ -78,6 +78,12 @@ class Node:
 			res = res | input.get_all_input()
 		return res
 
+	def get_all_sensor_input(self):
+		res = []
+		for input in self.inputs:
+			res = res + input.get_all_sensor_input()
+		return res
+
 	#SHOULD BE OVERWRITTEN BY SUBCLASSES
 	#Returns true if this node has just gotten the first input it needs to become active.
 	def starting_active(self):

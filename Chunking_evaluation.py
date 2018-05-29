@@ -114,6 +114,7 @@ def evalaute_chunking():
 	test_environment = Environment()	
 	sensors, motors = create_nodes_for_alphabet(test_environment)
 	totlal_number_of_sensors = len(sensors)
+	#test_animat = Animat("TheOnkeydogdonk", sensors, motors, memory_capacity = MEMORY_CAPACITY*2, seq_formation_probability = SEQ_FORMATION_PROBABILITY, seq_formation_max_attempts = SEQ_FORMATION_MAX_ATTEMPTS)
 	test_animat = Animat("TheOnkeydogdonk", sensors, motors, memory_capacity = MEMORY_CAPACITY, seq_formation_probability = SEQ_FORMATION_PROBABILITY, seq_formation_max_attempts = SEQ_FORMATION_MAX_ATTEMPTS)
 
 	time = 0
@@ -200,6 +201,7 @@ def evalaute_chunking():
 		print("Starting learning associations")
 	test_animat.seq_formation_probability = 0
 	test_animat.learn_to_associate = True
+	SPACE = False
 
 	for word in entire_text:
 		time = time + 1
@@ -255,6 +257,10 @@ def evalaute_chunking():
 		animat_associations.append(word_associations)
 		file.write_line_to_file("animat_associations_"+word+" = " + str(word_associations) + ";")
 
+		#print("Getting associations for "+word)
+		#for i,e in test_animat.network.short_term_memory:
+		#	print([n.get_word() for n in e])
+
 		if(SPACE):
 			#Give the Animat a space between words
 			time = time + 1
@@ -270,7 +276,7 @@ def evalaute_chunking():
 
 
 	reader = FileReader(INPUT_FILE_NAME)
-	wvm = WordVectorModel(reader, MEMORY_CAPACITY-1)
+	wvm = WordVectorModel(reader, MEMORY_CAPACITY)
 	wvm.update_matrix()
 
 	vector_space_associations = []
@@ -324,7 +330,38 @@ def evalaute_chunking():
 	file.write_line_to_file("not_learnt_words = " + str(not_learnt_words) + ";")	
 	#End evaluate_goal_one()
 
+def vsm():
 
+	MEMORY_CAPACITY = 3
+
+	INPUT_FILE_NAME = "texts/cats_dogs_and_trees_shuffled_clean.txt"
+
+	input_file = FileReader(INPUT_FILE_NAME)
+	entire_text = input_file.get_entire_file_as_array()
+	#entire_text = ["dog"]
+	unique_words = []
+	for word in entire_text:
+		if not word in unique_words:
+			unique_words.append(word)
+
+	TOTAL_NUMBER_OF_WORDS = len(unique_words)
+
+	file = FileWriter("evaluationIO/" + "vsm_-1r_result" + ".m")
+	file.write_line_to_file("")
+
+	reader = FileReader(INPUT_FILE_NAME)
+	wvm = WordVectorModel(reader, MEMORY_CAPACITY-1)
+	wvm.update_matrix()
+
+	vector_space_associations = []
+	for word in unique_words:
+		#print("LOOOOOP")
+		word_associations, association_values = wvm.get_ordered_associations(word)
+		vector_space_associations.append(word_associations)
+		#print(len(word_associations))
+		file.write_line_to_file("vsm_associations_"+word+" = " + str(word_associations) + ";")
+	#End getting associations from the vector space
 
 
 evalaute_chunking()
+#vsm()
